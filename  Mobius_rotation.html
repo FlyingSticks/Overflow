@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotation in the Complex Plane</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a2e; color: #e0e0e0; font-family: Georgia, serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+  h1 { font-size: 1.3rem; color: #c9a0ff; margin-bottom: 4px; letter-spacing: 1px; }
+  .subtitle { font-size: 0.8rem; color: #888; margin-bottom: 16px; }
+  .container { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+  canvas { border: 1px solid #333; border-radius: 8px; background: #0f0f1e; }
+  .panel { background: #16213e; border: 1px solid #333; border-radius: 8px; padding: 16px; width: 260px; }
+  .panel h2 { font-size: 0.85rem; color: #c9a0ff; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+  .row { margin-bottom: 12px; }
+  label { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 4px; }
+  input[type=range] { width: 100%; accent-color: #c9a0ff; }
+  .value-display { font-size: 0.85rem; color: #fff; font-family: monospace; margin-top: 2px; }
+  .math-box { background: #0f0f1e; border-radius: 6px; padding: 10px; font-size: 0.78rem; line-height: 1.7; color: #ccc; margin-top: 8px; font-family: monospace; }
+  .highlight { color: #ffcc66; }
+  .highlight2 { color: #66ffcc; }
+  .highlight3 { color: #ff8888; }
+  .special-label { font-size: 0.7rem; color: #aaa; margin-top: 10px; }
+  .special-pts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .sp { background: #0f0f1e; border-radius: 4px; padding: 3px 7px; font-size: 0.72rem; font-family: monospace; }
+  .btn { background: #2a1a4e; border: 1px solid #c9a0ff; color: #c9a0ff; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 0.78rem; margin-right: 6px; transition: background 0.2s; }
+  .btn:hover { background: #3a2a6e; }
+  .btn.active { background: #4a2a8e; }
+</style>
+</head>
+<body>
+<h1>Rotation in the Complex Plane: z → e<sup>iφ</sup>·z</h1>
+<p class="subtitle">Multiply any complex number by e<sup>iφ</sup> to rotate it by φ around the origin</p>
+
+<div class="container">
+  <canvas id="canvas" width="480" height="480"></canvas>
+
+  <div class="panel">
+    <h2>Controls</h2>
+
+    <div class="row">
+      <label>Rotation angle φ</label>
+      <input type="range" id="phi" min="0" max="360" value="60" step="1">
+      <div class="value-display" id="phiVal"></div>
+    </div>
+
+    <div class="row">
+      <label>Point z — angle θ</label>
+      <input type="range" id="theta" min="0" max="360" value="30" step="1">
+      <div class="value-display" id="thetaVal"></div>
+    </div>
+
+    <div class="row">
+      <label>Point z — radius r</label>
+      <input type="range" id="radius" min="0.2" max="2.0" step="0.05" value="1.4">
+      <div class="value-display" id="radiusVal"></div>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="animBtn">▶ Animate</button>
+      <button class="btn" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="math-box" id="mathBox"></div>
+
+    <div class="special-label">Special angles (click to set φ):</div>
+    <div class="special-pts">
+      <span class="sp" style="cursor:pointer;color:#ffcc66" onclick="setPhi(180)">π → −1</span>
+      <span class="sp" style="cursor:pointer;color:#66ffcc" onclick="setPhi(90)">π/2 → i</span>
+      <span class="sp" style="cursor:pointer;color:#ff8888" onclick="setPhi(60)">π/3 → e<sup>iπ/3</sup></span>
+      <span class="sp" style="cursor:pointer;color:#aaffaa" onclick="setPhi(120)">2π/3</span>
+      <span class="sp" style="cursor:pointer;color:#aaaaff" onclick="setPhi(360)">2π → 1</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const W = 480, H = 480;
+const cx = W/2, cy = H/2;
+const scale = 100;
+
+let phi = 60, theta = 30, radius = 1.4;
+let animating = false, animId = null;
+
+function toScreen(x, y) { return [cx + x*scale, cy - y*scale]; }
+function toComplex(sx, sy) { return [(sx-cx)/scale, -(sy-cy)/scale]; }
+
+function deg(r) { return r * 180 / Math.PI; }
+function rad(d) { return d * Math.PI / 180; }
+
+function drawArrow(x1,y1,x2,y2,color,width=1.5) {
+  const [sx1,sy1] = toScreen(x1,y1);
+  const [sx2,sy2] = toScreen(x2,y2);
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = width;
+  ctx.beginPath(); ctx.moveTo(sx1,sy1); ctx.lineTo(sx2,sy2); ctx.stroke();
+  // arrowhead
+  const angle = Math.atan2(sy2-sy1, sx2-sx1);
+  const hs = 9;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(sx2, sy2);
+  ctx.lineTo(sx2 - hs*Math.cos(angle-0.4), sy2 - hs*Math.sin(angle-0.4));
+  ctx.lineTo(sx2 - hs*Math.cos(angle+0.4), sy2 - hs*Math.sin(angle+0.4));
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function drawArc(cx2, cy2, r, a1, a2, color, dashed=false) {
+  const [scx, scy] = toScreen(cx2, cy2);
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+  if(dashed) ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  ctx.arc(scx, scy, r*scale, -a1, -a2, a2 < a1);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function label(text, x, y, color='#ccc', size=12, align='left') {
+  const [sx,sy] = toScreen(x,y);
+  ctx.save();
+  ctx.font = `${size}px Georgia`;
+  ctx.fillStyle = color;
+  ctx.textAlign = align;
+  ctx.fillText(text, sx, sy);
+  ctx.restore();
+}
+
+function dot(x, y, color, r=5) {
+  const [sx,sy] = toScreen(x,y);
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(sx,sy,r,0,2*Math.PI); ctx.fill();
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.save();
+  ctx.strokeStyle = '#1e1e3e'; ctx.lineWidth = 1;
+  for(let i=-4;i<=4;i++) {
+    const [sx,] = toScreen(i,0); const [,sy] = toScreen(0,i);
+    ctx.beginPath(); ctx.moveTo(sx,0); ctx.lineTo(sx,H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,sy); ctx.lineTo(W,sy); ctx.stroke();
+  }
+  ctx.restore();
+
+  // Axes
+  drawArrow(-2.3,0,2.3,0,'#444',1);
+  drawArrow(0,-2.3,0,2.3,'#444',1);
+  label('Re', 2.1,-0.18,'#666',11);
+  label('Im', 0.08,2.1,'#666',11);
+
+  // Unit circle
+  const [ucx,ucy] = toScreen(0,0);
+  ctx.save();
+  ctx.strokeStyle = '#2a2a5e'; ctx.lineWidth = 1.5; ctx.setLineDash([5,5]);
+  ctx.beginPath(); ctx.arc(ucx,ucy,scale,0,2*Math.PI); ctx.stroke();
+  ctx.restore();
+  label('unit circle',0.72,0.88,'#3a3a7e',10);
+
+  // Special points on unit circle
+  const specials = [
+    [1,0,'1'],[-1,0,'-1'],[0,1,'i'],[0,-1,'-i'],
+    [Math.cos(rad(60)),Math.sin(rad(60)),'e^{iπ/3}'],
+    [Math.cos(rad(-60)),Math.sin(rad(-60)),'e^{-iπ/3}'],
+  ];
+  specials.forEach(([x,y,lbl]) => {
+    dot(x,y,'#3a3a6e',3);
+  });
+
+  const phiR = rad(phi);
+  const thetaR = rad(theta);
+
+  const zx = radius * Math.cos(thetaR);
+  const zy = radius * Math.sin(thetaR);
+  const wangle = thetaR + phiR;
+  const wx = radius * Math.cos(wangle);
+  const wy = radius * Math.sin(wangle);
+
+  // Arc showing rotation from z to w
+  if(phi > 0 && phi < 360) {
+    const mid = thetaR + phiR/2;
+    // draw arc
+    ctx.save();
+    ctx.strokeStyle = '#c9a0ff44'; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]);
+    ctx.beginPath();
+    ctx.arc(ucx, ucy, radius*scale, -thetaR, -(thetaR+phiR), false);
+    ctx.stroke();
+    ctx.restore();
+    // arc label φ
+    const arcR = radius + 0.18;
+    const mx = arcR * Math.cos(thetaR + phiR/2);
+    const my = arcR * Math.sin(thetaR + phiR/2);
+    label('φ', mx, my, '#c9a0ffaa', 13);
+  }
+
+  // Angle arc for θ at origin (small)
+  if(theta > 2) {
+    ctx.save();
+    ctx.strokeStyle = '#ffcc6688'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(ucx, ucy, 28, -thetaR, 0, true);
+    ctx.stroke();
+    ctx.restore();
+    const tMid = thetaR/2;
+    label('θ', 0.33*Math.cos(tMid), 0.33*Math.sin(tMid), '#ffcc66aa', 12);
+  }
+
+  // Radius line for z (dashed)
+  ctx.save();
+  ctx.strokeStyle = '#ffcc6644'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  const [sx0,sy0]=toScreen(0,0); const [szx,szy]=toScreen(zx,zy);
+  ctx.beginPath(); ctx.moveTo(sx0,sy0); ctx.lineTo(szx,szy); ctx.stroke();
+  ctx.restore();
+
+  // Radius line for w (dashed)
+  ctx.save();
+  ctx.strokeStyle = '#66ffcc44'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  const [swx,swy]=toScreen(wx,wy);
+  ctx.beginPath(); ctx.moveTo(sx0,sy0); ctx.lineTo(swx,swy); ctx.stroke();
+  ctx.restore();
+
+  // z vector
+  drawArrow(0,0,zx,zy,'#ffcc66',2.5);
+  dot(zx,zy,'#ffcc66',6);
+  label(`z  (r=${radius.toFixed(1)}, θ=${phi===0?theta:theta}°)`, zx+0.09, zy+0.12, '#ffcc66', 12);
+
+  // w = e^{iφ}·z vector
+  drawArrow(0,0,wx,wy,'#66ffcc',2.5);
+  dot(wx,wy,'#66ffcc',6);
+  label(`w = e^{iφ}·z`, wx+0.09, wy+0.12, '#66ffcc', 12);
+
+  // e^{iφ} on unit circle
+  const ex = Math.cos(phiR), ey = Math.sin(phiR);
+  dot(ex,ey,'#ff8888',5);
+  const elx = ex > 0 ? ex+0.1 : ex-0.35;
+  label(`e^{iφ}`, ex > 0.1 ? ex+0.08 : ex-0.42, ey+0.1, '#ff8888', 12);
+
+  // Angle arc for φ at origin (small)
+  if(phi > 2 && phi < 358) {
+    ctx.save();
+    ctx.strokeStyle = '#ff888888'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(ucx, ucy, 20, -phiR, 0, true);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // origin dot
+  dot(0,0,'#888',3);
+  label('0', 0.06,-0.18,'#666',11);
+
+  // Axis tick labels
+  [-2,-1,1,2].forEach(v => {
+    label(v, v+0.04, -0.22, '#555', 10);
+    label(v+'i', 0.07, v, '#555', 10);
+  });
+
+  updateMathBox(zx, zy, wx, wy, phiR, thetaR);
+}
+
+function updateMathBox(zx,zy,wx,wy,phiR,thetaR) {
+  const phiDeg = phi;
+  const thetaDeg = theta;
+  const r = radius;
+
+  const fmt = n => n.toFixed(3);
+  const box = document.getElementById('mathBox');
+  box.innerHTML =
+    `<span class="highlight">z</span>  = ${fmt(zx)} + ${fmt(zy)}i\n` +
+    `   = ${r.toFixed(2)} · e^{i·${thetaDeg}°}\n\n` +
+    `<span class="highlight3">e^{iφ}</span> = cos(${phiDeg}°) + i·sin(${phiDeg}°)\n` +
+    `   = ${fmt(Math.cos(phiR))} + ${fmt(Math.sin(phiR))}i\n\n` +
+    `<span class="highlight2">w</span>  = e^{iφ}·z\n` +
+    `   = ${r.toFixed(2)} · e^{i·${(thetaDeg+phiDeg)%360}°}\n` +
+    `   = ${fmt(wx)} + ${fmt(wy)}i\n\n` +
+    `|z| = |w| = <b>${r.toFixed(2)}</b>  (radius unchanged)\n` +
+    `∠z = ${thetaDeg}°,  ∠w = ${(thetaDeg+phiDeg)%360}°`;
+
+  document.getElementById('phiVal').textContent = `φ = ${phiDeg}° = ${(phiDeg/180).toFixed(3)}π rad`;
+  document.getElementById('thetaVal').textContent = `θ = ${thetaDeg}°`;
+  document.getElementById('radiusVal').textContent = `r = ${radius.toFixed(2)}`;
+}
+
+document.getElementById('phi').addEventListener('input', e => { phi = +e.target.value; draw(); });
+document.getElementById('theta').addEventListener('input', e => { theta = +e.target.value; draw(); });
+document.getElementById('radius').addEventListener('input', e => { radius = +e.target.value; draw(); });
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  phi=60; theta=30; radius=1.4;
+  document.getElementById('phi').value=60;
+  document.getElementById('theta').value=30;
+  document.getElementById('radius').value=1.4;
+  draw();
+});
+
+let animDir = 1;
+document.getElementById('animBtn').addEventListener('click', () => {
+  animating = !animating;
+  document.getElementById('animBtn').textContent = animating ? '⏸ Pause' : '▶ Animate';
+  document.getElementById('animBtn').classList.toggle('active', animating);
+  if(animating) animate();
+  else cancelAnimationFrame(animId);
+});
+
+function animate() {
+  phi = (phi + 0.5) % 360;
+  document.getElementById('phi').value = phi;
+  draw();
+  if(animating) animId = requestAnimationFrame(animate);
+}
+
+function setPhi(p) {
+  phi = p;
+  document.getElementById('phi').value = p;
+  draw();
+}
+
+draw();
+</script>
+</body>
+</html>
