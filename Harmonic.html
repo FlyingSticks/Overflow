@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The midpoint that outlives measure — affine · hybrid · perspective</title>
+<style>
+  :root{
+    --paper:#FAF7F1;
+    --ink:#2B2622;
+    --ink-soft:#5A524A;
+    --plum:#7A2D68;        /* projective · invariant */
+    --plum-deep:#561F49;
+    --plum-mist:#CBA9C2;   /* faint construction */
+    --measure:#8C8478;     /* metric · drifting */
+    --green:#1F9D55;
+    --red:#C9302C;
+    --blue:#2C5BA6;
+    --rule:#E3DCD0;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 64px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);line-height:1.08;
+    margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:62ch;margin:0 0 26px;}
+
+  .stage{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);
+    padding:10px 10px 6px;}
+  svg{display:block;width:100%;height:auto;}
+
+  .controls{display:flex;flex-wrap:wrap;gap:26px 40px;align-items:flex-end;margin:26px 2px 4px;}
+  .slider{flex:1 1 280px;min-width:240px;}
+  .slider label{display:block;font-family:var(--sans);font-size:12.5px;color:var(--ink);margin-bottom:9px;}
+  .slider label span{color:var(--measure);}
+  input[type=range]{width:100%;accent-color:var(--plum);height:22px;cursor:pointer;}
+  input[type=range]:focus-visible{outline:2px solid var(--plum);outline-offset:4px;border-radius:2px;}
+
+  .presets{display:flex;gap:8px;flex:0 0 auto;}
+  .presets button{font-family:var(--sans);font-size:12.5px;letter-spacing:.02em;color:var(--ink);
+    background:#fff;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;}
+  .presets button:hover{border-color:var(--plum-mist);}
+  .presets button[aria-pressed="true"]{background:var(--plum);border-color:var(--plum);color:#fff;}
+  .presets button:focus-visible{outline:2px solid var(--plum);outline-offset:3px;}
+
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+    border:1px solid var(--rule);border-radius:3px;margin:30px 0 8px;overflow:hidden;}
+  .verdict>div{background:#fff;padding:20px 22px;}
+  .verdict .tag{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;}
+  .verdict .what{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-soft);margin:3px 0 12px;}
+  .verdict .num{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:600;
+    font-size:clamp(34px,6vw,52px);line-height:1;letter-spacing:-.01em;}
+  .cell-proj .tag{color:var(--plum);}
+  .cell-proj .num{color:var(--plum-deep);}
+  .cell-metric .tag{color:var(--measure);}
+  .cell-metric .num{color:var(--measure);}
+  .verdict .foot{font-family:var(--sans);font-size:12px;color:var(--ink-soft);margin-top:9px;}
+
+  .running{font-family:var(--serif);font-size:16px;color:var(--ink);margin:18px 4px 28px;max-width:70ch;}
+  .running b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .status{font-family:var(--sans);font-size:12.5px;color:var(--ink-soft);margin:0 4px 30px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px 28px;}
+  .status div span{color:var(--plum);font-weight:600;}
+
+  .ledger{border-top:1px solid var(--rule);padding-top:22px;margin-top:8px;}
+  .ledger h2{font-family:var(--sans);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink);font-weight:700;margin:0 0 16px;}
+  .ledger dl{margin:0;display:grid;grid-template-columns:minmax(108px,auto) 1fr;gap:11px 22px;}
+  .ledger dt{font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--plum);font-weight:600;}
+  .ledger dd{margin:0;font-size:15px;color:var(--ink);max-width:74ch;}
+  .ledger dd em{font-style:italic;color:var(--ink-soft);}
+
+  footer{font-family:var(--sans);font-size:11.5px;color:var(--measure);margin-top:34px;letter-spacing:.02em;}
+
+  @media (max-width:620px){
+    .verdict{grid-template-columns:1fr;}
+    .controls{gap:22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Complete quadrangle · the diagonal point Q</p>
+  <h1>The midpoint that <em>outlives measure</em></h1>
+  <p class="lede">Q is where the diagonals cross. In a parallelogram it sits at the metric ½ between the
+    parallels. Open one pair of sides — then both — and Q slides off the metric midline, yet the
+    cross-ratio (A,&nbsp;C&nbsp;;&nbsp;Q,&nbsp;S) holds at −1 the whole way. The ½ that persists is harmonic,
+    read off the crossing alone; the ½ that walks away was only ever a ruler.</p>
+
+  <div class="stage">
+    <svg viewBox="0 0 1000 700" role="img" aria-label="Interactive diagonal-point construction sweeping from a parallelogram through a trapezoid to a perspective image">
+      <g id="scene"></g>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="slider">
+      <label for="red">Open the red pair&nbsp;&nbsp;<span>— bring R in from infinity</span></label>
+      <input type="range" id="red" min="0" max="1" step="0.001" value="0.8" aria-describedby="red-status">
+    </div>
+    <div class="slider">
+      <label for="green">Open the green pair&nbsp;&nbsp;<span>— bring P in from infinity</span></label>
+      <input type="range" id="green" min="0" max="1" step="0.001" value="0">
+    </div>
+    <div class="presets" role="group" aria-label="Canonical stations">
+      <button id="p1" type="button">Ⅰ&nbsp;Affine</button>
+      <button id="p2" type="button">Ⅱ&nbsp;Hybrid</button>
+      <button id="p3" type="button">Ⅲ&nbsp;Perspective</button>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="cell-proj">
+      <div class="tag">By the crossing of diagonals</div>
+      <div class="what">harmonic · invariant</div>
+      <div class="num" id="cr">−1.000</div>
+      <div class="foot">cross-ratio (A,&nbsp;C&nbsp;;&nbsp;Q,&nbsp;S)</div>
+    </div>
+    <div class="cell-metric">
+      <div class="tag">By the ruler</div>
+      <div class="what">metric · drifts</div>
+      <div class="num" id="frac">0.500</div>
+      <div class="foot">Q along AC&nbsp;&nbsp;(½ = the midpoint M)</div>
+    </div>
+  </div>
+
+  <p class="running" id="running"></p>
+
+  <div class="status" id="status"></div>
+
+  <div class="ledger">
+    <h2>Ledger</h2>
+    <dl>
+      <dt>Fixed</dt>
+      <dd>Vertices A and D. The whole figure is built from joins and meets only — <em>no length is ever measured.</em></dd>
+      <dt>Invariant</dt>
+      <dd>(A,&nbsp;C&nbsp;;&nbsp;Q,&nbsp;S) = −1 at every position, guaranteed by the harmonic property of the complete quadrangle — a projective theorem, indifferent to metric.</dd>
+      <dt>Moves</dt>
+      <dd>R comes in from infinity (Hybrid), then P (Perspective). The line PR descends from the line at infinity to a finite horizon. S slides in along AC exactly as Q leaves the metric midpoint M.</dd>
+      <dt>Shows</dt>
+      <dd>“midpoint by crossing diagonals” ≠ “midpoint by measure,” <em>except</em> in the affine case — where they coincide only because S is the ideal point of AC, and the harmonic conjugate of infinity is the ordinary midpoint.</dd>
+    </dl>
+  </div>
+
+  <footer>Plum marks the projective and invariant; grey marks the metric and drifting. Q is the actor.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var W=1000, H=700, SC=210, OX=143, OY=528;
+  var XMIN=-0.5, XMAX=3.9, YMIN=-0.5, YMAX=2.2;
+  var COL={plum:"#7A2D68", plumDeep:"#561F49", mist:"#CBA9C2", measure:"#8C8478",
+           green:"#1F9D55", red:"#C9302C", blue:"#2C5BA6", ink:"#2B2622", rail:"#E0D7C8"};
+
+  var scene=document.getElementById("scene");
+  var red=document.getElementById("red"), green=document.getElementById("green");
+  var crEl=document.getElementById("cr"), fracEl=document.getElementById("frac");
+  var runEl=document.getElementById("running"), statEl=document.getElementById("status");
+  var b1=document.getElementById("p1"), b2=document.getElementById("p2"), b3=document.getElementById("p3");
+
+  // ---- homogeneous helpers ----
+  function cross(a,b){return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];}
+  function isIdeal(p){return Math.abs(p[2]) < 1e-9*(Math.abs(p[0])+Math.abs(p[1])+1);}
+  function deh(p){return [p[0]/p[2], p[1]/p[2]];}
+  function sx(p){return OX+SC*p[0];}
+  function sy(p){return OY-SC*p[1];}
+  function S(p){return sx(p)+","+sy(p);}            // math pt -> "x,y" screen
+  function Sf(P){var d=deh(P);return sx(d)+","+sy(d);} // homog pt -> screen string
+
+  // ---- construction (all derived by genuine meets) ----
+  var redD=0.55, greenD=0.40;
+  function build(r,g){
+    var A=[0,0,1];
+    var B=[greenD*g, 1, 1];
+    var Cy=1.25 - redD*r;
+    var C=[1.6 - greenD*g, Cy, 1];
+    var D=[1.6, 0.25, 1];
+    var AB=cross(A,B), CD=cross(C,D), AD=cross(A,D), BC=cross(B,C), AC=cross(A,C), BD=cross(B,D);
+    var P=cross(AB,CD), Q=cross(AC,BD), R=cross(AD,BC);
+    var PR=cross(P,R), Sx=cross(AC,PR);
+    return {A:A,B:B,C:C,D:D,AB:AB,CD:CD,AD:AD,BC:BC,AC:AC,BD:BD,P:P,Q:Q,R:R,PR:PR,Sx:Sx};
+  }
+
+  // clip a homogeneous line to the math viewport, return up to 2 math points
+  function clipLine(line){
+    var a=line[0], b=line[1], c=line[2], pts=[], i, e;
+    if(Math.abs(b)>1e-12){
+      var xs=[XMIN,XMAX];
+      for(i=0;i<2;i++){var x=xs[i],y=-(a*x+c)/b; if(y>=YMIN-1e-9&&y<=YMAX+1e-9)pts.push([x,y]);}
+    }
+    if(Math.abs(a)>1e-12){
+      var ys=[YMIN,YMAX];
+      for(i=0;i<2;i++){var y2=ys[i],x2=-(b*y2+c)/a; if(x2>=XMIN-1e-9&&x2<=XMAX+1e-9)pts.push([x2,y2]);}
+    }
+    var u=[];
+    for(i=0;i<pts.length;i++){e=pts[i];
+      var dup=false,j; for(j=0;j<u.length;j++){if(Math.abs(u[j][0]-e[0])<1e-6&&Math.abs(u[j][1]-e[1])<1e-6){dup=true;break;}}
+      if(!dup)u.push(e);
+    }
+    return u.slice(0,2);
+  }
+
+  function arrowhead(x,y,ang,color,size){
+    size=size||11; var wf=0.55;
+    var ux=Math.cos(ang),uy=Math.sin(ang);
+    var bx=x-size*ux, by=y-size*uy, px=-uy*size*wf, py=ux*size*wf;
+    return '<polygon points="'+x+','+y+' '+(bx+px)+','+(by+py)+' '+(bx-px)+','+(by-py)+
+           '" fill="'+color+'"/>';
+  }
+
+  function lineEl(p1,p2,color,wid,dash,op){
+    return '<line x1="'+p1[0]+'" y1="'+p1[1]+'" x2="'+p2[0]+'" y2="'+p2[1]+
+      '" stroke="'+color+'" stroke-width="'+wid+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+
+      (op!=null?' stroke-opacity="'+op+'"':'')+' stroke-linecap="round"/>';
+  }
+  function dot(P,rad,fill,stroke){
+    var d=deh(P);
+    return '<circle cx="'+sx(d)+'" cy="'+sy(d)+'" r="'+rad+'" fill="'+fill+'"'+
+      (stroke?' stroke="'+stroke+'" stroke-width="2"':'')+'/>';
+  }
+  function label(x,y,txt,color,sz,anchor,italic){
+    return '<text x="'+x+'" y="'+y+'" fill="'+color+'" font-size="'+(sz||17)+
+      '" text-anchor="'+(anchor||"start")+'" font-family="'+(italic?'FreeSerif, Times, serif':'TeX Gyre Heros, Helvetica, Arial, sans-serif')+
+      '"'+(italic?' font-style="italic"':'')+'>'+txt+'</text>';
+  }
+
+  // draw a faint full construction line for a side (so pairs visibly converge / run parallel)
+  function constructionLine(homLine,color){
+    var c=clipLine(homLine); if(c.length<2)return "";
+    return lineEl([sx(c[0]),sy(c[0])],[sx(c[1]),sy(c[1])],color,1.4,null,0.32);
+  }
+
+  // P or R: dot when finite & on-canvas; outward arrows + label otherwise
+  function diagPoint(pt,l1,l2,axis,name){
+    var ideal=isIdeal(pt), out="";
+    var onc=false, d=null;
+    if(!ideal){d=deh(pt); onc=(sx(d)>=10&&sx(d)<=W-10&&sy(d)>=10&&sy(d)<=H-10);}
+    if(!ideal && onc){
+      out+=dot(pt,5.5,COL.plum,"#fff");
+      out+=label(sx(d)+12, sy(d)+ (axis==="up"?-9:18), name, COL.plumDeep,18,"start",true);
+      return out;
+    }
+    // arrows along both defining lines, at the in-view exit toward `axis`
+    var lines=[l1,l2], lx;
+    var labelAt=null;
+    for(lx=0;lx<2;lx++){
+      var c=clipLine(lines[lx]); if(c.length<2)continue;
+      var s0=[sx(c[0]),sy(c[0])], s1=[sx(c[1]),sy(c[1])];
+      var exit,other;
+      if(axis==="up"){ if(s0[1]<s1[1]){exit=s0;other=s1;}else{exit=s1;other=s0;} }
+      else { if(s0[0]>s1[0]){exit=s0;other=s1;}else{exit=s1;other=s0;} }
+      var ang=Math.atan2(exit[1]-other[1], exit[0]-other[0]);
+      out+=arrowhead(exit[0],exit[1],ang,COL.plum,12);
+      if(labelAt===null) labelAt=exit;
+    }
+    if(labelAt){
+      var tx=labelAt[0]+(axis==="up"?14:0), ty=labelAt[1]+(axis==="up"?6:-12);
+      if(axis!=="up"){tx=labelAt[0]-6; ty=labelAt[1]-12;}
+      out+=label(tx,ty,(ideal?"∞ ":"")+name, COL.plumDeep,17,(axis==="up"?"start":"end"),true);
+    }
+    return out;
+  }
+
+  // segment / ray for a leg of the diagonal triangle (handles ideal endpoint)
+  function leg(X,Y,color,wid,dash,op){
+    var xi=isIdeal(X), yi=isIdeal(Y);
+    if(xi&&yi) return "";
+    if(!xi&&!yi){
+      return legSeg(deh(X),deh(Y),color,wid,dash,op);
+    }
+    var fin=xi?Y:X, idl=xi?X:Y;
+    var f=deh(fin);
+    var dx=idl[0], dy=idl[1], n=Math.hypot(dx,dy)||1; dx/=n; dy/=n;
+    // point outward, away from figure centroid (~0.8,0.6)
+    if((f[0]-0.8)*dx+(f[1]-0.6)*dy < 0){dx=-dx;dy=-dy;}
+    var far=[f[0]+6*dx, f[1]+6*dy];
+    return legSeg(f,far,color,wid,dash,op);
+  }
+  function legSeg(a,b,color,wid,dash,op){
+    return lineEl([sx(a),sy(a)],[sx(b),sy(b)],color,wid,dash,op);
+  }
+
+  function fmt(P){var d=deh(P);return "("+d[0].toFixed(2)+", "+d[1].toFixed(2)+")";}
+
+  function tParam(M,A,C){ // affine param of finite M along AC (=AQ/AC)
+    var a=deh(A),c=deh(C),m=deh(M),ux=c[0]-a[0],uy=c[1]-a[1];
+    return ((m[0]-a[0])*ux+(m[1]-a[1])*uy)/(ux*ux+uy*uy);
+  }
+
+  function render(){
+    var r=+red.value, g=+green.value, k=build(r,g);
+    var A=k.A,B=k.B,C=k.C,D=k.D,P=k.P,Q=k.Q,R=k.R, parts=[];
+
+    // 1. metric midline (only meaningful while green pair is parallel) — fades out
+    var mlOp=(1-g)*0.5;
+    if(mlOp>0.02){
+      parts.push(lineEl([sx([0.8,YMIN]),sy([0.8,YMIN])],[sx([0.8,YMAX]),sy([0.8,YMAX])],
+        COL.measure,1.2,"3 5",mlOp));
+      parts.push(label(sx([0.8,0])+8, sy([0,YMAX])+16, "metric midline", COL.measure,12.5,"start",false));
+    }
+
+    // 2. faint construction lines for both pairs (show convergence / parallelism)
+    parts.push(constructionLine(k.AB,COL.green));
+    parts.push(constructionLine(k.CD,COL.green));
+    parts.push(constructionLine(k.AD,COL.red));
+    parts.push(constructionLine(k.BC,COL.red));
+
+    // 3. diagonal triangle — legs PQ, QR faint dotted; PR (the special side) dashed plum
+    parts.push(leg(P,Q,COL.mist,1.4,"2 5",0.9));
+    parts.push(leg(Q,R,COL.mist,1.4,"2 5",0.9));
+    if(!(isIdeal(P)&&isIdeal(R))){
+      var c=clipLine(k.PR);
+      if(c.length===2) parts.push(lineEl([sx(c[0]),sy(c[0])],[sx(c[1]),sy(c[1])],COL.plum,1.7,"7 6",0.85));
+    }
+
+    // 4. figure sides (bold)
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(B)),sy(deh(B))],COL.green,5,null,1)); // AB
+    parts.push(lineEl([sx(deh(C)),sy(deh(C))],[sx(deh(D)),sy(deh(D))],COL.green,5,null,1)); // CD
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(D)),sy(deh(D))],COL.red,5,null,1));   // AD
+    parts.push(lineEl([sx(deh(B)),sy(deh(B))],[sx(deh(C)),sy(deh(C))],COL.red,5,null,1));   // BC
+    // diagonals (blue)
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(C)),sy(deh(C))],COL.blue,2.6,null,1));
+    parts.push(lineEl([sx(deh(B)),sy(deh(B))],[sx(deh(D)),sy(deh(D))],COL.blue,2.6,null,1));
+
+    // 5. S — Q's harmonic partner on AC (ideal -> arrow up the diagonal)
+    if(isIdeal(k.Sx)){
+      var cc=clipLine(k.AC);
+      if(cc.length===2){
+        var s0=[sx(cc[0]),sy(cc[0])], s1=[sx(cc[1]),sy(cc[1])];
+        // exit in the +(C-A) direction (up-right)
+        var ex = (s0[1]<s1[1])?s0:s1, ot=(ex===s0)?s1:s0;
+        var ang=Math.atan2(ex[1]-ot[1],ex[0]-ot[0]);
+        parts.push(arrowhead(ex[0],ex[1],ang,COL.plum,11));
+        parts.push(label(ex[0]-8,ex[1]+4,"∞ S",COL.plumDeep,17,"end",true));
+      }
+    } else {
+      var ds=deh(k.Sx), sOn=(sx(ds)>=10&&sx(ds)<=W-10&&sy(ds)>=10&&sy(ds)<=H-10);
+      if(sOn){
+        parts.push(dot(k.Sx,4.5,COL.plum,"#fff"));
+        parts.push(label(sx(ds)+11,sy(ds)+5,"S",COL.plumDeep,17,"start",true));
+      } else {
+        var cc2=clipLine(k.AC);
+        if(cc2.length===2){
+          // exit toward S
+          var e0=[sx(cc2[0]),sy(cc2[0])],e1=[sx(cc2[1]),sy(cc2[1])];
+          var dS=[sx(ds),sy(ds)];
+          var ex2=(Math.hypot(e0[0]-dS[0],e0[1]-dS[1])<Math.hypot(e1[0]-dS[0],e1[1]-dS[1]))?e0:e1;
+          var ot2=(ex2===e0)?e1:e0;
+          parts.push(arrowhead(ex2[0],ex2[1],Math.atan2(ex2[1]-ot2[1],ex2[0]-ot2[0]),COL.plum,11));
+          parts.push(label(ex2[0]-8,ex2[1]-9,"S",COL.plumDeep,17,"end",true));
+        }
+      }
+    }
+
+    // 6. M (metric midpoint of AC) — hollow grey, the honest "½ by measure"
+    var Mpt=[ (deh(A)[0]+deh(C)[0])/2, (deh(A)[1]+deh(C)[1])/2, 1];
+    parts.push('<circle cx="'+sx(deh(Mpt))+'" cy="'+sy(deh(Mpt))+'" r="5.5" fill="#fff" stroke="'+COL.measure+'" stroke-width="2"/>');
+    parts.push(label(sx(deh(Mpt))-9, sy(deh(Mpt))+ (deh(Mpt)[1]>deh(Q)[1]? -10:20), "½", COL.measure,15,"end",true));
+
+    // 7. P, R landmarks
+    parts.push(diagPoint(P,k.AB,k.CD,"up","P"));
+    parts.push(diagPoint(R,k.AD,k.BC,"right","R"));
+
+    // 8. Q (the actor) + vertices
+    parts.push(dot(Q,6,COL.ink,"#fff"));
+    parts.push(label(sx(deh(Q))+12, sy(deh(Q))+5, "Q", COL.ink,19,"start",true));
+
+    var vlab=[[A,"A",-16,18],[B,"B",-16,-8],[C,"C",12,2],[D,"D",-4,22]];
+    for(var i=0;i<4;i++){var v=vlab[i],d=deh(v[0]);
+      parts.push('<circle cx="'+sx(d)+'" cy="'+sy(d)+'" r="3.4" fill="'+COL.ink+'"/>');
+      parts.push(label(sx(d)+v[2], sy(d)+v[3], v[1], COL.ink,18,"start",true));
+    }
+
+    scene.innerHTML = parts.join("");
+
+    // ---- readouts ----
+    var tQ=tParam(Q,A,C);
+    var CR;
+    if(isIdeal(k.Sx)){ CR=-tQ/(1-tQ); }
+    else { var tS=tParam(k.Sx,A,C); CR=(tQ*(1-tS))/(tS*(1-tQ)); }
+    if(Math.abs(CR+1)<1e-4) CR=-1;
+    crEl.textContent = (CR<0?"−":"") + Math.abs(CR).toFixed(3);
+    fracEl.textContent = tQ.toFixed(3);
+
+    var pTxt = isIdeal(P) ? "ideal — the parallels’ direction" : "finite "+fmt(P);
+    var rTxt = isIdeal(R) ? "ideal — the parallels’ direction" : "finite "+fmt(R);
+    var prTxt = (isIdeal(P)&&isIdeal(R)) ? "the line at infinity"
+              : (isIdeal(P)||isIdeal(R)) ? "a finite line through the ideal point"
+              : "a finite horizon";
+    var sTxt = isIdeal(k.Sx) ? "at infinity — the ideal point of AC" : "finite "+fmt(k.Sx);
+
+    statEl.innerHTML =
+      '<div>P&nbsp;&nbsp;<span>'+pTxt+'</span></div>'+
+      '<div>R&nbsp;&nbsp;<span>'+rTxt+'</span></div>'+
+      '<div>line&nbsp;PR&nbsp;&nbsp;<span>'+prTxt+'</span></div>'+
+      '<div>S&nbsp;&nbsp;<span>'+sTxt+'</span></div>';
+
+    var gap=Math.abs(tQ-0.5);
+    var stage = (isIdeal(P)&&isIdeal(R)) ? "Affine"
+              : (isIdeal(P)) ? "Hybrid" : "Perspective";
+    var sentence;
+    if(gap<0.004){
+      sentence = "<b>Affine.</b> Both pairs run parallel, so P and R are ideal and PR is the line at infinity. "+
+        "S is the ideal point of AC — and the harmonic conjugate of infinity is the plain midpoint, so here the crossing "+
+        "Q lands exactly on M. The two ½’s agree, this once.";
+    } else {
+      sentence = "<b>"+stage+".</b> Q now sits at "+tQ.toFixed(3)+" of AC by the ruler — pulled "+
+        (tQ>0.5?"toward the shorter side":"off-centre")+", clear of the midpoint M. "+
+        "Yet S has come in from infinity to meet it, and the crossing still reads (A,&nbsp;C&nbsp;;&nbsp;Q,&nbsp;S) = −1. "+
+        "The half that moved was measured; the half that held is harmonic.";
+    }
+    runEl.innerHTML = sentence;
+
+    setPressed(gap<0.004 ? b1 : (isIdeal(P)? b2 : b3));
+  }
+
+  function setPressed(active){
+    [b1,b2,b3].forEach(function(b){b.setAttribute("aria-pressed", b===active ? "true":"false");});
+  }
+
+  function setStation(r,g){ red.value=r; green.value=g; render(); }
+
+  red.addEventListener("input",render);
+  green.addEventListener("input",render);
+  b1.addEventListener("click",function(){setStation(0,0);});
+  b2.addEventListener("click",function(){setStation(0.8,0);});
+  b3.addEventListener("click",function(){setStation(0.85,0.85);});
+
+  render();
+})();
+</script>
+</body>
+</html>
