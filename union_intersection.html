@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Union vs. intersection of two lines — either, and both</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49;
+    --gray:#9A9288; --line:#38332E; --rule:#E3DCD0;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 60px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(26px,4.2vw,42px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:64ch;margin:0 0 22px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;}
+  svg{display:block;width:100%;height:auto;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:70ch;margin:24px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  /* SVG text */
+  .title{font-family:var(--serif);fill:var(--ink);font-size:24px;}
+  .sub{font-family:var(--sans);fill:var(--gray);font-size:12.5px;letter-spacing:.04em;}
+  .pt{font-family:var(--serif);font-style:italic;fill:var(--ink);font-size:17px;}
+  .end{font-family:var(--serif);font-style:italic;fill:var(--ink-soft);font-size:15px;}
+  .rule{font-family:var(--sans);fill:var(--plum-deep);font-size:15px;font-weight:600;}
+  .gloss{font-family:var(--serif);font-style:italic;fill:var(--gray);font-size:14px;}
+  .res{font-family:var(--sans);fill:var(--ink);font-size:15.5px;}
+  .small{font-family:var(--sans);fill:var(--gray);font-size:12.5px;}
+  .badge{font-family:var(--sans);font-size:18px;font-weight:700;}
+  .strip{font-family:var(--serif);fill:var(--ink);font-size:17px;}
+  .strip-em{font-family:var(--serif);font-style:italic;fill:var(--plum-deep);font-size:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Two lines · the meet</p>
+  <h1>Union and intersection — <em>either</em>, and <em>both</em></h1>
+  <p class="lede">The same pair of crossed lines, AC and BD, read two ways. Union lights every point on
+    either line — the whole X. Intersection keeps only the points on both — the single crossing, Q.</p>
+
+  <div class="frame">
+    <svg viewBox="0 0 1000 730" width="1000" height="730" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Two panels comparing the union and intersection of two crossed lines AC and BD">
+
+      <!-- ===================== panel cards ===================== -->
+      <rect x="65" y="64" width="410" height="572" rx="6" fill="#FFFFFF" stroke="#ECE4D7"/>
+      <rect x="585" y="64" width="410" height="572" rx="6" fill="#FFFFFF" stroke="#ECE4D7"/>
+      <rect x="65" y="650" width="930" height="66" rx="6" fill="#FAF4F8" stroke="#E9D7E4"/>
+
+      <!-- ===================== PANEL A : UNION ===================== -->
+      <text class="title" x="270" y="100" text-anchor="middle">AC&#8201;&#8201;&#8746;&#8201;&#8201;BD</text>
+      <text class="sub"   x="270" y="120" text-anchor="middle">UNION — EITHER LINE</text>
+
+      <!-- highlight: both whole lines lit (the set) -->
+      <line x1="90" y1="490" x2="450" y2="130" stroke="#7A2D68" stroke-width="15" stroke-opacity="0.24" stroke-linecap="round"/>
+      <line x1="90" y1="130" x2="450" y2="490" stroke="#7A2D68" stroke-width="15" stroke-opacity="0.24" stroke-linecap="round"/>
+      <!-- the lines -->
+      <line x1="90" y1="490" x2="450" y2="130" stroke="#38332E" stroke-width="2.6"/>
+      <line x1="90" y1="130" x2="450" y2="490" stroke="#38332E" stroke-width="2.6"/>
+      <!-- endpoint labels -->
+      <text class="end" x="78"  y="506" text-anchor="end">A</text>
+      <text class="end" x="78"  y="124" text-anchor="end">B</text>
+      <text class="end" x="462" y="124" text-anchor="start">C</text>
+      <text class="end" x="462" y="506" text-anchor="start">D</text>
+
+      <!-- sample points: all three IN the union -->
+      <!-- P1 on AC -->
+      <circle cx="349" cy="231" r="5" fill="#7A2D68"/>
+      <text class="pt"    x="335" y="236" text-anchor="end">P&#8321;</text>
+      <text class="badge" x="360" y="237" text-anchor="start" fill="#7A2D68">&#10003;</text>
+      <!-- P2 on BD -->
+      <circle cx="216" cy="256" r="5" fill="#7A2D68"/>
+      <text class="pt"    x="202" y="261" text-anchor="end">P&#8322;</text>
+      <text class="badge" x="227" y="262" text-anchor="start" fill="#7A2D68">&#10003;</text>
+      <!-- Q crossing -->
+      <circle cx="270" cy="310" r="16" fill="#7A2D68" fill-opacity="0.20"/>
+      <circle cx="270" cy="310" r="7"  fill="#7A2D68"/>
+      <text class="pt"    x="270" y="350" text-anchor="middle">Q</text>
+      <text class="badge" x="292" y="300" text-anchor="start" fill="#7A2D68">&#10003;</text>
+
+      <!-- rule + result under panel A -->
+      <text class="rule"  x="270" y="548" text-anchor="middle">x is in &#8660; x on AC&#8201;&#8201;or&#8201;&#8201;x on BD</text>
+      <text class="gloss" x="270" y="572" text-anchor="middle">either suffices — yet the set collects both whole lines</text>
+      <text class="res"   x="270" y="606" text-anchor="middle">result: the entire X &#8212; endlessly many points</text>
+
+      <!-- ===================== divider ===================== -->
+      <line x1="530" y1="92" x2="530" y2="600" stroke="#E3DCD0" stroke-width="1"/>
+
+      <!-- ===================== PANEL B : INTERSECTION ===================== -->
+      <text class="title" x="790" y="100" text-anchor="middle">AC&#8201;&#8201;&#8745;&#8201;&#8201;BD</text>
+      <text class="sub"   x="790" y="120" text-anchor="middle">INTERSECTION — BOTH LINES</text>
+
+      <!-- lines drawn faint (not lit) -->
+      <line x1="610" y1="490" x2="970" y2="130" stroke="#9A9288" stroke-width="2.1" stroke-opacity="0.7"/>
+      <line x1="610" y1="130" x2="970" y2="490" stroke="#9A9288" stroke-width="2.1" stroke-opacity="0.7"/>
+      <!-- endpoint labels -->
+      <text class="end" x="598" y="506" text-anchor="end">A</text>
+      <text class="end" x="598" y="124" text-anchor="end">B</text>
+      <text class="end" x="982" y="124" text-anchor="start">C</text>
+      <text class="end" x="982" y="506" text-anchor="start">D</text>
+
+      <!-- sample points: only Q is IN -->
+      <!-- P1 on AC, not BD -> OUT -->
+      <circle cx="869" cy="231" r="5" fill="#FAF7F1" stroke="#9A9288" stroke-width="2"/>
+      <text class="pt"    x="855" y="236" text-anchor="end">P&#8321;</text>
+      <text class="badge" x="880" y="237" text-anchor="start" fill="#9A9288">&#10007;</text>
+      <text class="small" x="869" y="214" text-anchor="middle">on AC, not BD</text>
+      <!-- P2 on BD, not AC -> OUT -->
+      <circle cx="736" cy="256" r="5" fill="#FAF7F1" stroke="#9A9288" stroke-width="2"/>
+      <text class="pt"    x="722" y="261" text-anchor="end">P&#8322;</text>
+      <text class="badge" x="747" y="262" text-anchor="start" fill="#9A9288">&#10007;</text>
+      <text class="small" x="736" y="285" text-anchor="middle">on BD, not AC</text>
+      <!-- Q on both -> the whole set -->
+      <circle cx="790" cy="310" r="17" fill="#7A2D68" fill-opacity="0.22"/>
+      <circle cx="790" cy="310" r="7.5" fill="#7A2D68"/>
+      <text class="pt"    x="790" y="350" text-anchor="middle">Q</text>
+      <text class="badge" x="812" y="300" text-anchor="start" fill="#7A2D68">&#10003;</text>
+      <text class="small" x="790" y="368" text-anchor="middle" fill="#7A2D68">on both</text>
+
+      <!-- rule + result under panel B -->
+      <text class="rule"  x="790" y="548" text-anchor="middle">x is in &#8660; x on AC&#8201;&#8201;and&#8201;&#8201;x on BD</text>
+      <text class="gloss" x="790" y="572" text-anchor="middle">both required — only the crossing passes</text>
+      <text class="res"   x="790" y="606" text-anchor="middle">result: one point &#8212; the crossing Q</text>
+
+      <!-- ===================== bottom strip ===================== -->
+      <text class="strip"    x="530" y="678" text-anchor="middle">Loose test (<tspan font-style="italic">either</tspan>) &#8594; large set: both lines.&#8194;&#8194;Strict test (<tspan font-style="italic">both</tspan>) &#8594; small set: one point.</text>
+      <text class="strip-em" x="530" y="702" text-anchor="middle">&#8220;either&#8221; names the door; &#8220;both lines&#8221; names the room.</text>
+    </svg>
+  </div>
+
+  <p class="note">The inversion is the thing to keep: the permissive rule (<b>either</b>) yields the larger
+    object, both whole lines; the strict rule (<b>both</b>) yields the smaller, a single point. Reading the
+    crossing as AC ∩ BD is exactly the projective <b>meet</b> — and being a plain static drawing, this one
+    renders with JavaScript on or off.</p>
+</div>
+</body>
+</html>

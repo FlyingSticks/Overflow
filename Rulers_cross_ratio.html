@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lay any ruler you like — the cross-ratio doesn't notice</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --gray:#8C8478; --rule:#E3DCD0;
+    --A:#2C5BA6; --C:#B85C38; --Q:#7A2D68; --S:#4F7A3A;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 60px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(26px,4.2vw,42px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:64ch;margin:0 0 22px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;}
+  svg{display:block;width:100%;height:auto;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:24px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .cap{font-family:var(--sans);fill:var(--gray);font-size:12.5px;letter-spacing:.03em;}
+  .rname{font-family:var(--sans);fill:var(--ink);font-size:13.5px;}
+  .read{font-family:var(--sans);font-size:15px;font-weight:600;}
+  .tick{font-family:var(--sans);fill:#8C8478;font-size:12px;}
+  .tick0{font-family:var(--sans);fill:var(--ink);font-size:12.5px;font-weight:700;}
+  .comp{font-family:var(--sans);fill:#6E665C;font-size:13px;}
+  .ptlab{font-family:var(--serif);font-style:italic;font-size:18px;}
+  .strip{font-family:var(--serif);fill:var(--ink);font-size:16.5px;}
+  .strip-em{font-family:var(--serif);font-style:italic;fill:var(--plum-deep);font-size:15.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Coordinates on a line · the cross-ratio</p>
+  <h1>Lay any ruler you like — <em>it doesn't notice</em></h1>
+  <p class="lede">Four points sit at fixed places on one line. Read them with a plain tape, then a shifted
+    and rescaled one, then a warped one. The four readings change completely — but the cross-ratio
+    (A,&nbsp;C&nbsp;;&nbsp;Q,&nbsp;S) comes out −1 every time.</p>
+
+  <div class="frame">
+    <svg viewBox="0 0 1000 730" width="1000" height="730" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="One line with four fixed points, read by three different rulers, each giving cross-ratio minus one">
+
+      <!-- ============ formula header (letters colored to match the points) ============ -->
+      <text x="500" y="40" text-anchor="middle" font-family="TeX Gyre Heros, Helvetica, Arial, sans-serif" font-size="17">
+        <tspan fill="#2B2622">cross-ratio&#8194;(&#8201;</tspan><tspan fill="#2C5BA6">A</tspan><tspan fill="#2B2622">,&#8201;</tspan><tspan fill="#B85C38">C</tspan><tspan fill="#2B2622">&#8201;;&#8201;</tspan><tspan fill="#7A2D68">Q</tspan><tspan fill="#2B2622">,&#8201;</tspan><tspan fill="#4F7A3A">S</tspan><tspan fill="#2B2622">&#8201;)&#8194;=&#8194;(</tspan><tspan fill="#2C5BA6">A</tspan><tspan fill="#2B2622">&#8722;</tspan><tspan fill="#7A2D68">Q</tspan><tspan fill="#2B2622">)(</tspan><tspan fill="#B85C38">C</tspan><tspan fill="#2B2622">&#8722;</tspan><tspan fill="#4F7A3A">S</tspan><tspan fill="#2B2622">)&#8201;&#8260;&#8201;(</tspan><tspan fill="#2C5BA6">A</tspan><tspan fill="#2B2622">&#8722;</tspan><tspan fill="#4F7A3A">S</tspan><tspan fill="#2B2622">)(</tspan><tspan fill="#B85C38">C</tspan><tspan fill="#2B2622">&#8722;</tspan><tspan fill="#7A2D68">Q</tspan><tspan fill="#2B2622">)</tspan>
+      </text>
+
+      <!-- ============ colored guide lines (one per point, tying the columns) ============ -->
+      <line x1="120" y1="96" x2="120" y2="600" stroke="#4F7A3A" stroke-width="1" stroke-dasharray="2 6" stroke-opacity="0.22"/>
+      <line x1="500" y1="96" x2="500" y2="600" stroke="#2C5BA6" stroke-width="1" stroke-dasharray="2 6" stroke-opacity="0.22"/>
+      <line x1="627" y1="96" x2="627" y2="600" stroke="#7A2D68" stroke-width="1" stroke-dasharray="2 6" stroke-opacity="0.22"/>
+      <line x1="880" y1="96" x2="880" y2="600" stroke="#B85C38" stroke-width="1" stroke-dasharray="2 6" stroke-opacity="0.22"/>
+
+      <!-- ============ master line: the four fixed points ============ -->
+      <line x1="100" y1="92" x2="900" y2="92" stroke="#38332E" stroke-width="2.4"/>
+      <polygon points="98,92 110,87 110,97" fill="#38332E"/>
+      <polygon points="902,92 890,87 890,97" fill="#38332E"/>
+      <circle cx="120" cy="92" r="5" fill="#4F7A3A"/>
+      <circle cx="500" cy="92" r="5" fill="#2C5BA6"/>
+      <circle cx="627" cy="92" r="5" fill="#7A2D68"/>
+      <circle cx="880" cy="92" r="5" fill="#B85C38"/>
+      <text class="ptlab" x="120" y="74" text-anchor="middle" fill="#4F7A3A">S</text>
+      <text class="ptlab" x="500" y="74" text-anchor="middle" fill="#2C5BA6">A</text>
+      <text class="ptlab" x="627" y="74" text-anchor="middle" fill="#7A2D68">Q</text>
+      <text class="ptlab" x="880" y="74" text-anchor="middle" fill="#B85C38">C</text>
+      <text class="cap" x="895" y="116" text-anchor="end">one line &#183; four fixed points</text>
+
+      <!-- ====================================================================== -->
+      <!-- RULER 1 : plain tape, zero at A -->
+      <text class="rname" x="100" y="176" text-anchor="start">Ruler 1 &#8212; a plain tape, zero at A</text>
+      <!-- readings (colored) -->
+      <text class="read" x="120" y="200" text-anchor="middle" fill="#4F7A3A">&#8722;6</text>
+      <text class="read" x="500" y="200" text-anchor="middle" fill="#2C5BA6">0</text>
+      <text class="read" x="627" y="200" text-anchor="middle" fill="#7A2D68">2</text>
+      <text class="read" x="880" y="200" text-anchor="middle" fill="#B85C38">6</text>
+      <!-- tape + ticks -->
+      <line x1="100" y1="216" x2="900" y2="216" stroke="#9A9288" stroke-width="2"/>
+      <line x1="120" y1="216" x2="120" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="247" y1="216" x2="247" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="373" y1="216" x2="373" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="500" y1="216" x2="500" y2="228" stroke="#38332E" stroke-width="1.6"/>
+      <line x1="627" y1="216" x2="627" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="753" y1="216" x2="753" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="880" y1="216" x2="880" y2="223" stroke="#B9B1A4" stroke-width="1.2"/>
+      <text class="tick" x="120" y="240" text-anchor="middle">&#8722;6</text>
+      <text class="tick" x="247" y="240" text-anchor="middle">&#8722;4</text>
+      <text class="tick" x="373" y="240" text-anchor="middle">&#8722;2</text>
+      <text class="tick0" x="500" y="241" text-anchor="middle">0</text>
+      <text class="tick" x="627" y="240" text-anchor="middle">2</text>
+      <text class="tick" x="753" y="240" text-anchor="middle">4</text>
+      <text class="tick" x="880" y="240" text-anchor="middle">6</text>
+      <!-- reading dots -->
+      <circle cx="120" cy="216" r="4" fill="#4F7A3A"/>
+      <circle cx="500" cy="216" r="4" fill="#2C5BA6"/>
+      <circle cx="627" cy="216" r="4" fill="#7A2D68"/>
+      <circle cx="880" cy="216" r="4" fill="#B85C38"/>
+      <!-- computation -->
+      <text class="comp" x="500" y="266" text-anchor="middle">(0 &#8722; 2)(6 + 6) &#247; (0 + 6)(6 &#8722; 2) = &#8722;24 &#247; 24 = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+
+      <!-- ====================================================================== -->
+      <!-- RULER 2 : shifted + rescaled (reading = 3*position + 1) -->
+      <text class="rname" x="100" y="336" text-anchor="start">Ruler 2 &#8212; shifted and tripled  (reading = 3&#183;position + 1)</text>
+      <text class="read" x="120" y="360" text-anchor="middle" fill="#4F7A3A">&#8722;17</text>
+      <text class="read" x="500" y="360" text-anchor="middle" fill="#2C5BA6">1</text>
+      <text class="read" x="627" y="360" text-anchor="middle" fill="#7A2D68">7</text>
+      <text class="read" x="880" y="360" text-anchor="middle" fill="#B85C38">19</text>
+      <line x1="100" y1="376" x2="900" y2="376" stroke="#9A9288" stroke-width="2"/>
+      <line x1="162" y1="376" x2="162" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="268" y1="376" x2="268" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="373" y1="376" x2="373" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="479" y1="376" x2="479" y2="388" stroke="#38332E" stroke-width="1.6"/>
+      <line x1="584" y1="376" x2="584" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="690" y1="376" x2="690" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="796" y1="376" x2="796" y2="383" stroke="#B9B1A4" stroke-width="1.2"/>
+      <text class="tick" x="162" y="400" text-anchor="middle">&#8722;15</text>
+      <text class="tick" x="268" y="400" text-anchor="middle">&#8722;10</text>
+      <text class="tick" x="373" y="400" text-anchor="middle">&#8722;5</text>
+      <text class="tick0" x="479" y="401" text-anchor="middle">0</text>
+      <text class="tick" x="584" y="400" text-anchor="middle">5</text>
+      <text class="tick" x="690" y="400" text-anchor="middle">10</text>
+      <text class="tick" x="796" y="400" text-anchor="middle">15</text>
+      <circle cx="120" cy="376" r="4" fill="#4F7A3A"/>
+      <circle cx="500" cy="376" r="4" fill="#2C5BA6"/>
+      <circle cx="627" cy="376" r="4" fill="#7A2D68"/>
+      <circle cx="880" cy="376" r="4" fill="#B85C38"/>
+      <text class="comp" x="500" y="426" text-anchor="middle">(1 &#8722; 7)(19 + 17) &#247; (1 + 17)(19 &#8722; 7) = &#8722;216 &#247; 216 = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+
+      <!-- ====================================================================== -->
+      <!-- RULER 3 : warped tape (reading = (position+2)/(position+10)) -->
+      <text class="rname" x="100" y="496" text-anchor="start">Ruler 3 &#8212; a warped tape  (reading = (position + 2) &#8260; (position + 10))</text>
+      <text class="read" x="120" y="520" text-anchor="middle" fill="#4F7A3A">&#8722;1</text>
+      <text class="read" x="500" y="520" text-anchor="middle" fill="#2C5BA6">0.2</text>
+      <text class="read" x="627" y="520" text-anchor="middle" fill="#7A2D68">1&#8260;3</text>
+      <text class="read" x="880" y="520" text-anchor="middle" fill="#B85C38">0.5</text>
+      <line x1="100" y1="536" x2="900" y2="536" stroke="#9A9288" stroke-width="2"/>
+      <!-- ticks crowd on the left, spread on the right: a non-uniform scale -->
+      <line x1="120" y1="536" x2="120" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="156" y1="536" x2="156" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="204" y1="536" x2="204" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="272" y1="536" x2="272" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="373" y1="536" x2="373" y2="548" stroke="#38332E" stroke-width="1.6"/>
+      <line x1="542" y1="536" x2="542" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <line x1="880" y1="536" x2="880" y2="543" stroke="#B9B1A4" stroke-width="1.2"/>
+      <text class="tick" x="120" y="560" text-anchor="middle">&#8722;1</text>
+      <text class="tick0" x="373" y="561" text-anchor="middle">0</text>
+      <text class="tick" x="880" y="560" text-anchor="middle">0.5</text>
+      <circle cx="120" cy="536" r="4" fill="#4F7A3A"/>
+      <circle cx="500" cy="536" r="4" fill="#2C5BA6"/>
+      <circle cx="627" cy="536" r="4" fill="#7A2D68"/>
+      <circle cx="880" cy="536" r="4" fill="#B85C38"/>
+      <text class="comp" x="500" y="586" text-anchor="middle">(0.2 &#8722; 1&#8260;3)(0.5 + 1) &#247; (0.2 + 1)(0.5 &#8722; 1&#8260;3) = &#8722;0.2 &#247; 0.2 = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+
+      <!-- ============ strip ============ -->
+      <rect x="65" y="626" width="870" height="80" rx="6" fill="#FAF4F8" stroke="#E9D7E4"/>
+      <text class="strip"    x="500" y="658" text-anchor="middle">Three tapes, three completely different sets of readings &#8212; and the same &#8722;1 each time.</text>
+      <text class="strip-em" x="500" y="686" text-anchor="middle">the warped third tape is how a perspective view re-spaces the line &#8212; which is why the cross-ratio is the one reading it leaves alone.</text>
+    </svg>
+  </div>
+
+  <p class="note">Same four points throughout — only the tape changes. The vertical guides carry each point
+    down to its reading on every ruler, and the line beneath each tape works the value out. The cross-ratio
+    is what survives every re-reading, <b>including the projective one a perspective view performs</b>.</p>
+</div>
+</body>
+</html>
