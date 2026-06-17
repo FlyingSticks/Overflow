@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Elliptic Plane — RP2</title>
+<style>
+  :root{
+    --paper:#F5F0F6;
+    --stage:#ECE3EF;
+    --ink:#281A2C;
+    --muted:#8A7C8E;
+    --plum:#59264F;
+    --plum-soft:rgba(89,38,79,.14);
+    --plum-hair:rgba(89,38,79,.22);
+    --teal:#1C6E68;
+    --amber:#A8772A;
+    --magenta:#C0357E;
+    --serif:'FreeSerif','Spectral',Georgia,'Times New Roman',serif;
+    --sans:'TeX Gyre Heros','Helvetica Neue','Inter',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--serif);line-height:1.55;
+    -webkit-font-smoothing:antialiased;padding:34px 20px 64px;
+  }
+  .wrap{max-width:980px;margin:0 auto;}
+
+  header{margin-bottom:30px;}
+  .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,6vw,46px);line-height:1.04;margin:0 0 12px;color:var(--plum);letter-spacing:.005em;}
+  h1 .rp{font-style:italic;}
+  .dek{font-size:clamp(16px,2.4vw,18.5px);max-width:60ch;margin:0;color:var(--ink);}
+  .dek em{color:var(--plum);font-style:italic;}
+
+  .fig{margin-top:30px;border:1px solid var(--plum-soft);border-radius:16px;
+    background:linear-gradient(180deg,#FBF8FC,var(--paper));
+    box-shadow:0 1px 0 rgba(89,38,79,.04),0 18px 40px -34px rgba(40,26,44,.5);overflow:hidden;}
+  .fig-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:18px 22px 0;}
+  .fignum{font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:var(--plum);border-radius:20px;padding:4px 10px;line-height:1;}
+  .fig-head h2{font-family:var(--serif);font-weight:400;font-size:21px;margin:0;color:var(--ink);}
+  .fig-body{display:grid;grid-template-columns:1.35fr .95fr;gap:6px 26px;padding:14px 22px 24px;align-items:center;}
+  .stage{background:var(--stage);border-radius:13px;padding:10px;display:flex;justify-content:center;}
+  .stage svg{width:100%;height:auto;display:block;touch-action:none;}
+  .stage svg:focus{outline:2px solid var(--magenta);outline-offset:3px;border-radius:8px;}
+
+  /* SVG fonts via CSS so custom properties resolve */
+  #ball text,#disk text{font-family:var(--sans);}
+  #ball text.serif,#disk text.serif{font-family:var(--serif);font-style:italic;}
+
+  .side{padding:4px 2px;}
+  .live-cap{font-size:16px;min-height:3.4em;margin:0 0 16px;color:var(--ink);}
+  .live-cap b{color:var(--plum);font-weight:400;font-style:italic;}
+  .live-cap .mg{color:var(--magenta);font-style:italic;}
+
+  .chips{display:flex;flex-direction:column;gap:9px;}
+  .chip{font-family:var(--sans);font-size:13.5px;text-align:left;border:1px solid var(--plum-hair);background:transparent;color:var(--plum);border-radius:11px;padding:9px 13px;cursor:pointer;display:flex;align-items:center;gap:11px;transition:background .15s,color .15s,border-color .15s;}
+  .chip .dot{width:11px;height:11px;border-radius:50%;border:1.5px solid currentColor;flex:none;background:transparent;transition:background .15s;}
+  .chip[aria-pressed="true"]{background:var(--plum);color:#fff;border-color:var(--plum);}
+  .chip[aria-pressed="true"] .dot{background:#fff;border-color:#fff;}
+  .chip:focus-visible{outline:2px solid var(--magenta);outline-offset:2px;}
+  .hint{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin:13px 0 0;letter-spacing:.01em;}
+
+  .fig2controls{display:flex;align-items:center;gap:14px;margin:2px 0 16px;}
+  .playbtn{font-family:var(--sans);font-size:13px;color:var(--plum);border:1px solid var(--plum-hair);background:transparent;border-radius:10px;padding:7px 14px;cursor:pointer;}
+  .playbtn:focus-visible{outline:2px solid var(--magenta);outline-offset:2px;}
+
+  .prose{font-size:15.5px;color:var(--ink);}
+  .prose p{margin:0 0 11px;}
+  .prose em{color:var(--plum);font-style:italic;}
+  .prose .mg{color:var(--magenta);font-style:italic;}
+
+  .foot{margin-top:34px;padding-top:22px;border-top:1px solid var(--plum-soft);font-size:15.5px;color:var(--ink);max-width:74ch;}
+  .foot .lead{font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px;}
+  .foot em{color:var(--plum);font-style:italic;}
+  .foot .mg{color:var(--magenta);font-style:italic;}
+
+  @media (max-width:720px){
+    .fig-body{grid-template-columns:1fr;gap:18px;}
+    .stage svg{max-width:380px;margin:0 auto;}
+    .side{max-width:520px;margin:0 auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Projective geometry &middot; a working figure</p>
+    <h1>The Elliptic Plane <span class="rp">&#8477;P&sup2;</span></h1>
+    <p class="dek">The sphere with opposite points fused into one. Locally it <em>is</em> the sphere &mdash; same curvature, same little triangles. Everything that distinguishes it is global, and it all follows from a single fold.</p>
+  </header>
+
+  <!-- FIGURE 1 -->
+  <section class="fig" aria-label="Interactive sphere">
+    <div class="fig-head"><span class="fignum">Fig 1</span><h2>On the sphere &mdash; drag to rotate</h2></div>
+    <div class="fig-body">
+      <div class="stage">
+        <svg id="ball" viewBox="0 0 360 360" role="img"
+             aria-label="A rotatable sphere. A point and its antipode mark one point of the elliptic plane; two great circles meet in an antipodal pair." tabindex="0">
+          <defs>
+            <radialGradient id="sphereShade" cx="38%" cy="32%" r="75%">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="55%" stop-color="#F3ECF4"/>
+              <stop offset="100%" stop-color="#E2D4E5"/>
+            </radialGradient>
+          </defs>
+          <circle id="silhouette" cx="180" cy="180" r="140" fill="url(#sphereShade)" stroke="rgba(89,38,79,.22)" stroke-width="1"/>
+          <path id="eqFront" fill="none" stroke="#59264F" stroke-opacity=".16" stroke-width="1"/>
+          <path id="eqBack"  fill="none" stroke="#59264F" stroke-opacity=".07" stroke-width="1" stroke-dasharray="3 4"/>
+
+          <path id="aBack"  fill="none" stroke="#59264F" stroke-opacity=".30" stroke-width="2" stroke-dasharray="4 5"/>
+          <path id="aFront" fill="none" stroke="#59264F" stroke-width="2.4"/>
+          <text id="aLabel" font-size="14" fill="#59264F">a</text>
+
+          <path id="bBack"  fill="none" stroke="#1C6E68" stroke-opacity=".30" stroke-width="2" stroke-dasharray="4 5"/>
+          <path id="bFront" fill="none" stroke="#1C6E68" stroke-width="2.4"/>
+          <text id="bLabel" font-size="14" fill="#1C6E68">b</text>
+
+          <line id="diam"  stroke="#C0357E" stroke-width="1.6" stroke-opacity=".55"/>
+          <line id="xdiam" stroke="#C0357E" stroke-width="1.4" stroke-opacity=".4" stroke-dasharray="3 4"/>
+
+          <circle id="ptBack"  r="6"   fill="#ECE3EF" stroke="#C0357E" stroke-width="2" stroke-opacity=".7"/>
+          <circle id="ptFront" r="6.5" fill="#C0357E" stroke="#fff" stroke-width="2"/>
+          <text id="pLabel"  class="serif" font-size="16" fill="#C0357E">P</text>
+          <text id="paLabel" class="serif" font-size="16" fill="#C0357E">P&prime;</text>
+
+          <circle id="xBack"  r="5.5" fill="#ECE3EF" stroke="#C0357E" stroke-width="2" stroke-opacity=".7"/>
+          <circle id="xFront" r="6.5" fill="#C0357E" stroke="#fff" stroke-width="2"/>
+          <text id="xLabel"  class="serif" font-size="15" fill="#C0357E">X</text>
+          <text id="xaLabel" class="serif" font-size="15" fill="#C0357E">X&prime;</text>
+        </svg>
+      </div>
+
+      <div class="side">
+        <p class="live-cap" id="liveCap"></p>
+        <div class="chips" role="group" aria-label="Build the picture">
+          <button class="chip" id="chipPt"  aria-pressed="true"><span class="dot"></span>A point is a diameter</button>
+          <button class="chip" id="chipA"   aria-pressed="false"><span class="dot"></span>A line is a great circle</button>
+          <button class="chip" id="chipTwo" aria-pressed="false"><span class="dot"></span>Two lines meet once</button>
+        </div>
+        <p class="hint">Drag the sphere, or focus it and use the arrow keys.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIGURE 2 -->
+  <section class="fig" aria-label="The disk model">
+    <div class="fig-head"><span class="fignum">Fig 2</span><h2>The flat picture &mdash; the disk model</h2></div>
+    <div class="fig-body">
+      <div class="stage">
+        <svg id="disk" viewBox="0 0 340 320" role="img"
+             aria-label="A disk whose opposite edge points are identified. A line runs edge to edge and closes into a loop; two lines cross at one point.">
+          <defs>
+            <radialGradient id="diskShade" cx="42%" cy="36%" r="72%">
+              <stop offset="0%" stop-color="#FBF8FC"/>
+              <stop offset="100%" stop-color="#E7DCEA"/>
+            </radialGradient>
+          </defs>
+          <circle id="diskFill" cx="160" cy="158" r="112" fill="url(#diskShade)" stroke="#59264F" stroke-width="2"/>
+          <g id="glueLayer"></g>
+          <path id="lineB2" fill="none" stroke="#1C6E68" stroke-width="2.4"/>
+          <line id="lineA2" stroke="#59264F" stroke-width="2.4"/>
+          <circle id="meet" r="6" fill="#C0357E" stroke="#fff" stroke-width="2"/>
+          <text id="meetLabel" font-size="12.5" fill="#C0357E">one point</text>
+          <circle id="ghost" r="5" fill="#59264F" opacity="0"/>
+          <circle id="traveler" r="6" fill="#59264F" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="side">
+        <div class="fig2controls">
+          <button class="playbtn" id="playBtn" aria-pressed="true">Pause trace</button>
+        </div>
+        <div class="prose">
+          <p>The elliptic plane is a disk whose <em>opposite edge-points are the same point</em> (matched letters). The gluing carries a flip, which is why the surface is one-sided.</p>
+          <p>A <span class="mg">line</span> runs edge to edge and closes into a loop &mdash; leave one side and you reappear at the point directly across (watch the dot). Two lines still cross at <span class="mg">exactly one point</span>.</p>
+          <p>And a line never cuts the disk in two: step across the glued edge and the halves are joined.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">
+    <span class="lead">The bookkeeping of one fold</span>
+    Because the fold is two-to-one, the quantities halve: a full circle's 2&pi; becomes a line's <em>&pi;</em>; the total area 4&pi; becomes <em>2&pi;</em>; the Euler characteristic 2 becomes <em>1</em>. And delete a single line from the elliptic plane &mdash; what is left is the <span class="mg">affine plane</span>, the picture plane we began with, now completed.
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function norm(v){var m=Math.hypot(v[0],v[1],v[2]);return [v[0]/m,v[1]/m,v[2]/m];}
+  function cross(a,b){return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];}
+  function neg(v){return [-v[0],-v[1],-v[2]];}
+  function basis(n){
+    var t = Math.abs(n[0])<0.9 ? [1,0,0] : [0,1,0];
+    var u = norm(cross(n,t));
+    var v = cross(n,u);
+    return [u,v];
+  }
+
+  var R=140, CX=180, CY=180, N=120;
+  var nA = norm([0.15,1.0,0.25]);
+  var nB = norm([1.0,0.2,-0.35]);
+  var bA = basis(nA), bB = basis(nB);
+  var bEq = basis([0,1,0]);
+  var P  = norm([0.55,0.45,0.70]);
+  var D  = norm(cross(nA,nB));
+  var yaw=-0.5, pitch=-0.35;
+
+  function rot(v){
+    var x=v[0],y=v[1],z=v[2];
+    var cy=Math.cos(yaw), sy=Math.sin(yaw);
+    var x1 = x*cy + z*sy, z1 = -x*sy + z*cy, y1 = y;
+    var cp=Math.cos(pitch), sp=Math.sin(pitch);
+    var y2 = y1*cp - z1*sp, z2 = y1*sp + z1*cp;
+    return {x:CX + R*x1, y:CY - R*y2, z:z2};
+  }
+
+  function circlePaths(u,v){
+    var fd="", bd="", best=null, prev=null;
+    for(var k=0;k<=N;k++){
+      var t=2*Math.PI*k/N, ct=Math.cos(t), st=Math.sin(t);
+      var w=[u[0]*ct+v[0]*st, u[1]*ct+v[1]*st, u[2]*ct+v[2]*st];
+      var p=rot(w);
+      if(best===null || p.z>best.z) best={x:p.x,y:p.y,z:p.z};
+      if(prev){
+        var mid=(prev.z+p.z)/2;
+        var seg="M"+prev.x.toFixed(1)+" "+prev.y.toFixed(1)+"L"+p.x.toFixed(1)+" "+p.y.toFixed(1);
+        if(mid>=0) fd+=seg; else bd+=seg;
+      }
+      prev=p;
+    }
+    return {front:fd, back:bd, label:best};
+  }
+
+  function $(id){return document.getElementById(id);}
+  var els={
+    eqF:$("eqFront"), eqB:$("eqBack"),
+    aF:$("aFront"), aB:$("aBack"), aL:$("aLabel"),
+    bF:$("bFront"), bB:$("bBack"), bL:$("bLabel"),
+    diam:$("diam"), xdiam:$("xdiam"),
+    ptF:$("ptFront"), ptB:$("ptBack"), pL:$("pLabel"), paL:$("paLabel"),
+    xF:$("xFront"), xB:$("xBack"), xL:$("xLabel"), xaL:$("xaLabel"),
+    cap:$("liveCap")
+  };
+  var show={pt:true, a:false, two:false};
+  function setVis(el,on){ el.style.display = on ? "" : "none"; }
+  function place(t,p,dx,dy){ t.setAttribute("x",(p.x+dx).toFixed(1)); t.setAttribute("y",(p.y+dy).toFixed(1)); }
+
+  function markerPair(frontEl,backEl,labA,labB,objVec,nameA,nameB){
+    var a=rot(objVec), b=rot(neg(objVec)), aFront = a.z>=b.z;
+    var fp = aFront?a:b, bp = aFront?b:a;
+    frontEl.setAttribute("cx",fp.x.toFixed(1)); frontEl.setAttribute("cy",fp.y.toFixed(1));
+    backEl.setAttribute("cx",bp.x.toFixed(1));  backEl.setAttribute("cy",bp.y.toFixed(1));
+    place(labA, fp, 9,-9);  labA.textContent = aFront?nameA:nameB;
+    place(labB, bp, 9, 16); labB.textContent = aFront?nameB:nameA;
+    return {a:a,b:b};
+  }
+
+  function redraw(){
+    var eq=circlePaths(bEq[0],bEq[1]);
+    els.eqF.setAttribute("d",eq.front); els.eqB.setAttribute("d",eq.back);
+
+    setVis(els.ptF,show.pt); setVis(els.ptB,show.pt); setVis(els.pL,show.pt);
+    setVis(els.paL,show.pt); setVis(els.diam,show.pt);
+    if(show.pt){
+      var pr=markerPair(els.ptF,els.ptB,els.pL,els.paL,P,"P","P\u2032");
+      els.diam.setAttribute("x1",pr.a.x.toFixed(1)); els.diam.setAttribute("y1",pr.a.y.toFixed(1));
+      els.diam.setAttribute("x2",pr.b.x.toFixed(1)); els.diam.setAttribute("y2",pr.b.y.toFixed(1));
+    }
+
+    var drawA = show.a || show.two;
+    setVis(els.aF,drawA); setVis(els.aB,drawA); setVis(els.aL,drawA);
+    if(drawA){
+      var ca=circlePaths(bA[0],bA[1]);
+      els.aF.setAttribute("d",ca.front); els.aB.setAttribute("d",ca.back);
+      place(els.aL,ca.label,7,-7);
+    }
+
+    setVis(els.bF,show.two); setVis(els.bB,show.two); setVis(els.bL,show.two);
+    setVis(els.xF,show.two); setVis(els.xB,show.two); setVis(els.xL,show.two);
+    setVis(els.xaL,show.two); setVis(els.xdiam,show.two);
+    if(show.two){
+      var cb=circlePaths(bB[0],bB[1]);
+      els.bF.setAttribute("d",cb.front); els.bB.setAttribute("d",cb.back);
+      place(els.bL,cb.label,7,-7);
+      var xr=markerPair(els.xF,els.xB,els.xL,els.xaL,D,"X","X\u2032");
+      els.xdiam.setAttribute("x1",xr.a.x.toFixed(1)); els.xdiam.setAttribute("y1",xr.a.y.toFixed(1));
+      els.xdiam.setAttribute("x2",xr.b.x.toFixed(1)); els.xdiam.setAttribute("y2",xr.b.y.toFixed(1));
+    }
+    updateCap();
+  }
+
+  function updateCap(){
+    var html;
+    if(show.two){
+      html = "Two great circles cross in an antipodal pair <span class='mg'>{X, X\u2032}</span> &mdash; and that pair is a <b>single point</b> of the elliptic plane. So any two lines meet in exactly one point.";
+    } else if(show.a){
+      html = "A <b>line</b> is a great circle. Opposite points along it are fused, so a line is a closed loop of <b>half</b> the circle's length.";
+    } else {
+      html = "A <b>point</b> of the elliptic plane is an antipodal pair <span class='mg'>{P, P\u2032}</span> &mdash; equivalently, a diameter through the centre.";
+    }
+    els.cap.innerHTML = html;
+  }
+
+  function bindChip(id,key){
+    var c=$(id);
+    c.addEventListener("click",function(){
+      show[key]=!show[key];
+      c.setAttribute("aria-pressed", show[key]?"true":"false");
+      redraw();
+    });
+  }
+  bindChip("chipPt","pt"); bindChip("chipA","a"); bindChip("chipTwo","two");
+
+  var ball=$("ball"), dragging=false, last=null;
+  ball.addEventListener("pointerdown",function(e){ dragging=true; last={x:e.clientX,y:e.clientY}; ball.setPointerCapture(e.pointerId); });
+  ball.addEventListener("pointermove",function(e){
+    if(!dragging) return;
+    yaw += (e.clientX-last.x)*0.01;
+    pitch += (e.clientY-last.y)*0.01;
+    pitch = Math.max(-1.3,Math.min(1.3,pitch));
+    last={x:e.clientX,y:e.clientY}; redraw();
+  });
+  function endDrag(){dragging=false;}
+  ball.addEventListener("pointerup",endDrag);
+  ball.addEventListener("pointercancel",endDrag);
+  ball.addEventListener("keydown",function(e){
+    var step=0.14, used=true;
+    if(e.key==="ArrowLeft") yaw-=step;
+    else if(e.key==="ArrowRight") yaw+=step;
+    else if(e.key==="ArrowUp") pitch=Math.max(-1.3,pitch-step);
+    else if(e.key==="ArrowDown") pitch=Math.min(1.3,pitch+step);
+    else used=false;
+    if(used){e.preventDefault();redraw();}
+  });
+
+  function idle(){ if(!dragging && !reduce){ yaw+=0.0032; redraw(); } requestAnimationFrame(idle); }
+  redraw(); requestAnimationFrame(idle);
+
+  /* ---------- Figure 2: disk model ---------- */
+  var DCX=160, DCY=158, RD=112, SVGNS="http://www.w3.org/2000/svg";
+  function bpt(deg){var r=deg*Math.PI/180;return {x:DCX+RD*Math.cos(r), y:DCY-RD*Math.sin(r)};}
+  function mk(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+  var glue=[
+    {a:0,   col:"#59264F", name:"a"},
+    {a:72,  col:"#1C6E68", name:"b"},
+    {a:134, col:"#A8772A", name:"c"}
+  ];
+  var glayer=$("glueLayer");
+  glue.forEach(function(g){
+    [bpt(g.a), bpt(g.a+180)].forEach(function(p){
+      glayer.appendChild(mk("circle",{cx:p.x,cy:p.y,r:5,fill:g.col}));
+      var lx=DCX+(p.x-DCX)*1.13, ly=DCY+(p.y-DCY)*1.13;
+      var t=mk("text",{x:lx,y:ly+4,fill:g.col,"font-size":"13","text-anchor":"middle"});
+      t.textContent=g.name; glayer.appendChild(t);
+    });
+  });
+
+  var A1=bpt(0), A2=bpt(180);
+  var lineA2=$("lineA2");
+  lineA2.setAttribute("x1",A1.x); lineA2.setAttribute("y1",A1.y);
+  lineA2.setAttribute("x2",A2.x); lineA2.setAttribute("y2",A2.y);
+
+  var B1=bpt(58), B2=bpt(238), BC={x:DCX+RD*0.78,y:DCY+RD*0.04};
+  $("lineB2").setAttribute("d","M"+B1.x+" "+B1.y+" Q "+BC.x+" "+BC.y+" "+B2.x+" "+B2.y);
+
+  function bez(t){var mt=1-t;return {x:mt*mt*B1.x+2*mt*t*BC.x+t*t*B2.x, y:mt*mt*B1.y+2*mt*t*BC.y+t*t*B2.y};}
+  var meetPt={x:DCX,y:DCY}, prev=bez(0);
+  for(var i=1;i<=200;i++){
+    var t=i/200, cur=bez(t);
+    if((prev.y-DCY)*(cur.y-DCY)<=0){
+      var f=(DCY-prev.y)/((cur.y-prev.y)||1e-6);
+      meetPt={x:prev.x+f*(cur.x-prev.x), y:DCY}; break;
+    }
+    prev=cur;
+  }
+  $("meet").setAttribute("cx",meetPt.x); $("meet").setAttribute("cy",meetPt.y);
+  $("meetLabel").setAttribute("x",meetPt.x+10); $("meetLabel").setAttribute("y",meetPt.y-9);
+
+  var traveler=$("traveler"), ghost=$("ghost");
+  var playing=!reduce, u=0, lastT=null;
+  function frame(ts){
+    if(playing){
+      if(lastT==null) lastT=ts;
+      var dt=(ts-lastT)/1000; lastT=ts;
+      u += dt*0.16; if(u>1) u-=1;
+      traveler.setAttribute("cx",A1.x+(A2.x-A1.x)*u);
+      traveler.setAttribute("cy",A1.y+(A2.y-A1.y)*u);
+      var edge=Math.min(u,1-u), g=1-u;
+      ghost.setAttribute("cx",A1.x+(A2.x-A1.x)*g);
+      ghost.setAttribute("cy",A1.y+(A2.y-A1.y)*g);
+      ghost.setAttribute("opacity", edge<0.10 ? (1-edge/0.10)*0.6 : 0);
+    } else { lastT=null; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  var playBtn=$("playBtn");
+  playBtn.addEventListener("click",function(){
+    playing=!playing;
+    playBtn.textContent = playing?"Pause trace":"Play trace";
+    playBtn.setAttribute("aria-pressed", playing?"true":"false");
+  });
+  if(!playing){ playBtn.textContent="Play trace"; playBtn.setAttribute("aria-pressed","false"); }
+})();
+</script>
+</body>
+</html>
