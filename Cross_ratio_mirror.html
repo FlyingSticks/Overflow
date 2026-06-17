@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The cross-ratio on a line — with the harmonic mirror</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --teal:#256E6E; --gray:#8C8478; --rule:#E3DCD0;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 60px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(26px,4.2vw,42px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:66ch;margin:0 0 22px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;}
+  svg{display:block;width:100%;height:auto;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:24px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .arl{font-family:var(--sans);font-size:14px;font-weight:600;}
+  .ptL{font-family:var(--serif);font-style:italic;fill:var(--ink);font-size:19px;}
+  .crd{font-family:var(--sans);fill:#8C8478;font-size:13px;}
+  .tag{font-family:var(--sans);fill:#8C8478;font-size:12.5px;letter-spacing:.03em;}
+  .vd{font-family:var(--sans);font-size:14.5px;}
+  .vdbig{font-family:var(--sans);font-size:18px;}
+  .small{font-family:var(--sans);fill:#8C8478;font-size:12.5px;}
+  .inT{font-family:var(--sans);fill:var(--ink);font-size:12.5px;letter-spacing:.04em;}
+  .hdr{font-family:var(--sans);fill:var(--plum);font-size:12px;font-weight:700;letter-spacing:.2em;}
+  .swing{font-family:var(--serif);font-style:italic;fill:var(--plum-deep);font-size:14.5px;}
+  .br{font-family:var(--sans);fill:var(--ink);font-size:13px;}
+  .punch{font-family:var(--serif);fill:var(--ink);font-size:15px;}
+  .punchbig{font-family:var(--serif);fill:var(--ink);font-size:17.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">The cross-ratio · with its harmonic mirror</p>
+  <h1>The cross-ratio, on a line — <em>and the mirror in it</em></h1>
+  <p class="lede">Above: the four signed steps, paired crosswise, working out to −1. Below: the same picture
+    read as a mirror — Q's cut swung around to S, the same 1 : 2 from the inside and from the outside.</p>
+
+  <div class="frame">
+    <svg viewBox="0 0 1000 670" width="1000" height="670" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="The cross-ratio drawn on a line with its four signed steps and crossover, and beneath it the harmonic mirror showing Q and S cutting the span in the same ratio from inside and outside">
+
+      <!-- ===== numerator steps (plum), above the line ===== -->
+      <text class="arl" x="520" y="58" text-anchor="middle" fill="#7A2D68">C &#8722; S = +12</text>
+      <line x1="140" y1="72" x2="900" y2="72" stroke="#7A2D68" stroke-width="2.2"/>
+      <polygon points="900,72 889,67 889,77" fill="#7A2D68"/>
+      <text class="arl" x="583" y="96" text-anchor="middle" fill="#7A2D68">A &#8722; Q = &#8722;2</text>
+      <line x1="647" y1="110" x2="520" y2="110" stroke="#7A2D68" stroke-width="2.2"/>
+      <polygon points="520,110 531,105 531,115" fill="#7A2D68"/>
+
+      <!-- ===== span + line ===== -->
+      <rect x="520" y="143" width="380" height="24" fill="#F3E9F1" stroke="none"/>
+      <text class="tag" x="710" y="137" text-anchor="middle">the A&#8211;C span</text>
+      <line x1="120" y1="155" x2="920" y2="155" stroke="#38332E" stroke-width="2.2"/>
+      <polygon points="120,155 132,150 132,160" fill="#38332E"/>
+      <polygon points="920,155 908,150 908,160" fill="#38332E"/>
+      <line x1="520" y1="141" x2="520" y2="169" stroke="#38332E" stroke-width="2"/>
+      <line x1="900" y1="141" x2="900" y2="169" stroke="#38332E" stroke-width="2"/>
+      <circle cx="140" cy="155" r="5" fill="#38332E"/>
+      <circle cx="520" cy="155" r="5.5" fill="#38332E"/>
+      <circle cx="647" cy="155" r="5" fill="#38332E"/>
+      <circle cx="900" cy="155" r="5.5" fill="#38332E"/>
+      <text class="ptL" x="140" y="140" text-anchor="middle">S</text>
+      <text class="ptL" x="520" y="136" text-anchor="middle">A</text>
+      <text class="ptL" x="647" y="140" text-anchor="middle">Q</text>
+      <text class="ptL" x="900" y="136" text-anchor="middle">C</text>
+      <text class="crd" x="140" y="180" text-anchor="middle">&#8722;6</text>
+      <text class="crd" x="520" y="180" text-anchor="middle">0</text>
+      <text class="crd" x="647" y="180" text-anchor="middle">2</text>
+      <text class="crd" x="900" y="180" text-anchor="middle">6</text>
+
+      <!-- ===== denominator steps (teal), below ===== -->
+      <line x1="140" y1="202" x2="520" y2="202" stroke="#256E6E" stroke-width="2.2"/>
+      <polygon points="520,202 509,197 509,207" fill="#256E6E"/>
+      <text class="arl" x="330" y="220" text-anchor="middle" fill="#256E6E">A &#8722; S = +6</text>
+      <line x1="647" y1="202" x2="900" y2="202" stroke="#256E6E" stroke-width="2.2"/>
+      <polygon points="900,202 889,197 889,207" fill="#256E6E"/>
+      <text class="arl" x="773" y="220" text-anchor="middle" fill="#256E6E">C &#8722; Q = +4</text>
+
+      <!-- ===== verdict (left) ===== -->
+      <text class="vd"  x="120" y="282" text-anchor="start" fill="#7A2D68">numerator&#8195;(A&#8722;Q)(C&#8722;S) = (&#8722;2)(+12) = &#8722;24</text>
+      <text class="vd"  x="120" y="310" text-anchor="start" fill="#256E6E">denominator&#8195;(A&#8722;S)(C&#8722;Q) = (+6)(+4) = +24</text>
+      <text class="vdbig" x="120" y="346" text-anchor="start" fill="#2B2622">cross-ratio = &#8722;24 &#8260; +24 = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+      <text class="small" x="120" y="372" text-anchor="start">the single leftward step, A &#8722; Q, is the whole minus sign.</text>
+
+      <!-- ===== crossover inset (right) ===== -->
+      <text class="inT" x="832" y="274" text-anchor="middle">the cross-over</text>
+      <line x1="762" y1="295" x2="902" y2="295" stroke="#7A2D68" stroke-width="2"/>
+      <line x1="762" y1="362" x2="902" y2="362" stroke="#7A2D68" stroke-width="2"/>
+      <line x1="762" y1="295" x2="902" y2="362" stroke="#256E6E" stroke-width="2"/>
+      <line x1="762" y1="362" x2="902" y2="295" stroke="#256E6E" stroke-width="2"/>
+      <circle cx="762" cy="295" r="4" fill="#38332E"/>
+      <circle cx="762" cy="362" r="4" fill="#38332E"/>
+      <circle cx="902" cy="295" r="4" fill="#38332E"/>
+      <circle cx="902" cy="362" r="4" fill="#38332E"/>
+      <text class="ptL" x="750" y="300" text-anchor="end">A</text>
+      <text class="ptL" x="750" y="368" text-anchor="end">C</text>
+      <text class="ptL" x="914" y="300" text-anchor="start">Q</text>
+      <text class="ptL" x="914" y="368" text-anchor="start">S</text>
+      <text class="small" x="832" y="390" text-anchor="middle" fill="#7A2D68">straight pairs = numerator</text>
+      <text class="small" x="832" y="406" text-anchor="middle" fill="#256E6E">crossed pairs = denominator</text>
+
+      <!-- =================== THE HARMONIC MIRROR =================== -->
+      <line x1="65" y1="438" x2="950" y2="438" stroke="#E3DCD0" stroke-width="1"/>
+      <text class="hdr" x="500" y="462" text-anchor="middle">THE HARMONIC MIRROR</text>
+
+      <!-- swing arc: Q swung around to S -->
+      <path d="M647,533 Q405,445 140,533" fill="none" stroke="#7A2D68" stroke-width="2"
+            stroke-dasharray="1 0"/>
+      <polygon points="140,533 151,524 154,536" fill="#7A2D68"/>
+      <text class="swing" x="400" y="480" text-anchor="middle">S is Q&#8217;s cut, swung to the outside</text>
+
+      <!-- second line -->
+      <rect x="520" y="535" width="380" height="22" fill="#F3E9F1" stroke="none"/>
+      <line x1="120" y1="546" x2="920" y2="546" stroke="#38332E" stroke-width="1.9"/>
+      <line x1="520" y1="533" x2="520" y2="559" stroke="#38332E" stroke-width="2"/>
+      <line x1="900" y1="533" x2="900" y2="559" stroke="#38332E" stroke-width="2"/>
+      <circle cx="140" cy="546" r="5" fill="#38332E"/>
+      <circle cx="520" cy="546" r="5.5" fill="#38332E"/>
+      <circle cx="647" cy="546" r="5" fill="#38332E"/>
+      <circle cx="900" cy="546" r="5.5" fill="#38332E"/>
+      <text class="ptL" x="140" y="531" text-anchor="middle">S</text>
+      <text class="ptL" x="520" y="527" text-anchor="middle">A</text>
+      <text class="ptL" x="647" y="531" text-anchor="middle">Q</text>
+      <text class="ptL" x="900" y="527" text-anchor="middle">C</text>
+
+      <!-- Q's cut shown as 1 : 2 brackets under the span -->
+      <path d="M520,566 L520,560 L647,560 L647,566" fill="none" stroke="#8C8478" stroke-width="1.2"/>
+      <text class="br" x="583" y="580" text-anchor="middle">1</text>
+      <path d="M647,566 L647,560 L900,560 L900,566" fill="none" stroke="#8C8478" stroke-width="1.2"/>
+      <text class="br" x="773" y="580" text-anchor="middle">2</text>
+
+      <!-- the two cuts, equal and opposite -->
+      <text class="punch" x="500" y="606" text-anchor="middle">Q cuts 1 : 2 from the inside &#8594; <tspan fill="#7A2D68" font-weight="700">+&#189;</tspan>&#8195;&#8195;&#8195;S cuts 1 : 2 from the outside &#8594; <tspan fill="#7A2D68" font-weight="700">&#8722;&#189;</tspan></text>
+      <text class="punchbig" x="500" y="638" text-anchor="middle">same size, opposite sign &#8212; cross-ratio = (+&#189;) &#8260; (&#8722;&#189;) = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+    </svg>
+  </div>
+
+  <p class="note">The lower line is the same four points, read as a mirror. Q's cut and S's cut are the same
+    shape — 1 : 2 — but Q takes it from inside the span and S from outside, so one reads <b>+½</b> and the
+    other <b>−½</b>. Equal size, opposite sign; their ratio is the −1 you found up top. Swing Q's cut around
+    to the far side and it lands on S — that swing is the harmonic mirror.</p>
+</div>
+</body>
+</html>

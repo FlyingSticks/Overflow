@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The cross-ratio, on a line</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --teal:#256E6E; --gray:#8C8478; --rule:#E3DCD0;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 60px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(26px,4.2vw,42px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:66ch;margin:0 0 22px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;}
+  svg{display:block;width:100%;height:auto;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:24px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .arl{font-family:var(--sans);font-size:14px;font-weight:600;}
+  .ptL{font-family:var(--serif);font-style:italic;fill:var(--ink);font-size:19px;}
+  .crd{font-family:var(--sans);fill:#8C8478;font-size:13px;}
+  .tag{font-family:var(--sans);fill:#8C8478;font-size:12.5px;letter-spacing:.03em;}
+  .vd{font-family:var(--sans);font-size:14.5px;}
+  .vdbig{font-family:var(--sans);font-size:18px;}
+  .small{font-family:var(--sans);fill:#8C8478;font-size:12.5px;}
+  .cap{font-family:var(--serif);fill:var(--ink);font-size:16.5px;}
+  .cap-em{font-family:var(--serif);font-style:italic;fill:var(--plum-deep);font-size:16px;}
+  .inT{font-family:var(--sans);fill:var(--ink);font-size:12.5px;letter-spacing:.04em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">The cross-ratio · read as a picture</p>
+  <h1>The cross-ratio, <em>on a line</em></h1>
+  <p class="lede">Four signed steps along one line. Two of them multiply on top, two on the bottom — paired
+    crosswise. The whole thing compares how Q and S split the span between the anchors A and C.</p>
+
+  <div class="frame">
+    <svg viewBox="0 0 1000 520" width="1000" height="520" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="A number line showing the four signed steps of the cross-ratio, the crossover pairing, and Q inside the A to C span with S outside it">
+
+      <!-- ===== numerator steps (plum), above the line ===== -->
+      <text class="arl" x="520" y="68" text-anchor="middle" fill="#7A2D68">C &#8722; S = +12</text>
+      <line x1="140" y1="82" x2="900" y2="82" stroke="#7A2D68" stroke-width="2.2"/>
+      <polygon points="900,82 889,77 889,87" fill="#7A2D68"/>
+
+      <text class="arl" x="583" y="106" text-anchor="middle" fill="#7A2D68">A &#8722; Q = &#8722;2</text>
+      <line x1="647" y1="120" x2="520" y2="120" stroke="#7A2D68" stroke-width="2.2"/>
+      <polygon points="520,120 531,115 531,125" fill="#7A2D68"/>
+
+      <!-- ===== the span being split (shaded) + the line ===== -->
+      <rect x="520" y="153" width="380" height="24" fill="#F3E9F1" stroke="none"/>
+      <text class="tag" x="710" y="147" text-anchor="middle">the A&#8211;C span</text>
+      <line x1="120" y1="165" x2="920" y2="165" stroke="#38332E" stroke-width="2.2"/>
+      <polygon points="120,165 132,160 132,170" fill="#38332E"/>
+      <polygon points="920,165 908,160 908,170" fill="#38332E"/>
+      <!-- posts at the anchors -->
+      <line x1="520" y1="151" x2="520" y2="179" stroke="#38332E" stroke-width="2"/>
+      <line x1="900" y1="151" x2="900" y2="179" stroke="#38332E" stroke-width="2"/>
+      <!-- points -->
+      <circle cx="140" cy="165" r="5" fill="#38332E"/>
+      <circle cx="520" cy="165" r="5.5" fill="#38332E"/>
+      <circle cx="647" cy="165" r="5" fill="#38332E"/>
+      <circle cx="900" cy="165" r="5.5" fill="#38332E"/>
+      <!-- letters above -->
+      <text class="ptL" x="140" y="150" text-anchor="middle">S</text>
+      <text class="ptL" x="520" y="146" text-anchor="middle">A</text>
+      <text class="ptL" x="647" y="150" text-anchor="middle">Q</text>
+      <text class="ptL" x="900" y="146" text-anchor="middle">C</text>
+      <!-- coords below -->
+      <text class="crd" x="140" y="190" text-anchor="middle">&#8722;6</text>
+      <text class="crd" x="520" y="190" text-anchor="middle">0</text>
+      <text class="crd" x="647" y="190" text-anchor="middle">2</text>
+      <text class="crd" x="900" y="190" text-anchor="middle">6</text>
+
+      <!-- ===== denominator steps (teal), below the line ===== -->
+      <line x1="140" y1="212" x2="520" y2="212" stroke="#256E6E" stroke-width="2.2"/>
+      <polygon points="520,212 509,207 509,217" fill="#256E6E"/>
+      <text class="arl" x="330" y="230" text-anchor="middle" fill="#256E6E">A &#8722; S = +6</text>
+
+      <line x1="647" y1="212" x2="900" y2="212" stroke="#256E6E" stroke-width="2.2"/>
+      <polygon points="900,212 889,207 889,217" fill="#256E6E"/>
+      <text class="arl" x="773" y="230" text-anchor="middle" fill="#256E6E">C &#8722; Q = +4</text>
+
+      <!-- ===== verdict (left) ===== -->
+      <text class="vd"  x="120" y="292" text-anchor="start" fill="#7A2D68">numerator&#8195;(A&#8722;Q)(C&#8722;S) = (&#8722;2)(+12) = &#8722;24</text>
+      <text class="vd"  x="120" y="320" text-anchor="start" fill="#256E6E">denominator&#8195;(A&#8722;S)(C&#8722;Q) = (+6)(+4) = +24</text>
+      <text class="vdbig" x="120" y="356" text-anchor="start" fill="#2B2622">cross-ratio = &#8722;24 &#8260; +24 = <tspan fill="#7A2D68" font-weight="700">&#8722;1</tspan></text>
+      <text class="small" x="120" y="382" text-anchor="start">the single leftward step, A &#8722; Q, is the whole minus sign.</text>
+
+      <!-- ===== crossover inset (right) ===== -->
+      <text class="inT" x="832" y="284" text-anchor="middle">the cross-over</text>
+      <!-- numerator pairs: straight (plum) -->
+      <line x1="762" y1="305" x2="902" y2="305" stroke="#7A2D68" stroke-width="2"/>
+      <line x1="762" y1="372" x2="902" y2="372" stroke="#7A2D68" stroke-width="2"/>
+      <!-- denominator pairs: crossed (teal) -->
+      <line x1="762" y1="305" x2="902" y2="372" stroke="#256E6E" stroke-width="2"/>
+      <line x1="762" y1="372" x2="902" y2="305" stroke="#256E6E" stroke-width="2"/>
+      <circle cx="762" cy="305" r="4" fill="#38332E"/>
+      <circle cx="762" cy="372" r="4" fill="#38332E"/>
+      <circle cx="902" cy="305" r="4" fill="#38332E"/>
+      <circle cx="902" cy="372" r="4" fill="#38332E"/>
+      <text class="ptL" x="750" y="310" text-anchor="end">A</text>
+      <text class="ptL" x="750" y="378" text-anchor="end">C</text>
+      <text class="ptL" x="914" y="310" text-anchor="start">Q</text>
+      <text class="ptL" x="914" y="378" text-anchor="start">S</text>
+      <text class="small" x="832" y="400" text-anchor="middle" fill="#7A2D68">straight pairs = numerator</text>
+      <text class="small" x="832" y="416" text-anchor="middle" fill="#256E6E">crossed pairs = denominator</text>
+
+      <!-- ===== caption ===== -->
+      <text class="cap"    x="500" y="462" text-anchor="middle">Q sits inside the span and splits it 1 : 2;&#8195;S sits outside and splits it 1 : 2 the other way.</text>
+      <text class="cap-em" x="500" y="490" text-anchor="middle">Equal share, opposite side &#8212; mirror partners &#8212; so the cross-ratio reads &#8722;1.</text>
+    </svg>
+  </div>
+
+  <p class="note">Every piece is a signed step — length and direction. Plum is the numerator's pair, teal the
+    denominator's, and the pairing runs crosswise (the little X). The one step that points left, A − Q, is
+    what makes the answer negative — and that minus is exactly the picture of <b>Q inside the span and S
+    outside it</b>.</p>
+</div>
+</body>
+</html>
