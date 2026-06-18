@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One number, four views — the harmonic −1</title>
+<style>
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --plum-mist:#CBA9C2;
+    --teal:#2E6E73; --measure:#8C8478; --rule:#E3DCD0;
+    --serif:"FreeSerif","TeX Gyre Termes","Times New Roman",Times,serif;
+    --sans:"TeX Gyre Heros","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.55;-webkit-font-smoothing:antialiased;padding:40px 20px 72px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .masthead{border-bottom:1px solid var(--rule);padding-bottom:30px;margin-bottom:14px;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--plum);font-weight:700;margin:0 0 16px;}
+  h1{font-weight:400;font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 14px;letter-spacing:-.015em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(16px,2vw,20px);color:var(--ink-soft);max-width:64ch;margin:0;}
+  .lede b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+  .movement{padding:40px 0 6px;border-bottom:1px solid var(--rule);}
+  .movement:last-of-type{border-bottom:0;}
+  .step{font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--measure);font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:13px;}
+  .step .n{font-variant-numeric:tabular-nums;color:var(--plum);border:1px solid var(--plum-mist);border-radius:2px;padding:3px 7px;font-size:11px;}
+  h2{font-weight:400;font-style:italic;font-size:clamp(22px,3.2vw,32px);line-height:1.12;margin:0 0 14px;color:var(--plum-deep);letter-spacing:-.01em;}
+  .walk{font-size:clamp(15px,1.8vw,18px);color:var(--ink);max-width:72ch;margin:0 0 22px;}
+  .fig{background:transparent;}
+  .embed{display:block;width:100%;border:0;background:transparent;overflow:hidden;}
+  .coda{padding:38px 0 0;}
+  .coda .walk{color:var(--ink);max-width:72ch;}
+  .coda b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+  footer{font-family:var(--sans);font-size:11.5px;color:var(--measure);margin-top:30px;letter-spacing:.02em;border-top:1px solid var(--rule);padding-top:20px;}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">The Anharmonic Interface · the harmonic −1</p>
+    <h1>One number, <em>four views</em></h1>
+    <p class="lede">The cross-ratio is the single quantity projection cannot disturb. Among the values it can take, one is privileged: <b>−1</b>, the harmonic. What follows is one argument in four passes — first what the cross-ratio measures, then the harmonic pair as a reflection, then why that reflection is exact, and last the −1 read straight off the formula. Every panel is live; drag the points.</p>
+  </header>
+
+  <section class="movement">
+    <p class="step"><span class="n">01</span>First — what it measures</p>
+    <h2>The midpoint that outlives measure</h2>
+    <p class="walk">Start with a parallelogram: its diagonals cross where the ruler calls the midpoint. Open one pair of sides, then the other, tilting the figure toward a perspective view. The crossing Q slides off the metric midline — the grey ½ walks away — yet the cross-ratio (A, C ; Q, S) never leaves −1. That is the whole motivation. The metric midpoint is an artifact of the ruler; the harmonic −1 is what “the middle” means once measurement is set aside.</p>
+    <div class="fig">
+      <iframe class="embed" title="The midpoint that outlives measure" height="740" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;The midpoint that outlives measure — affine · hybrid · perspective&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --paper:#FAF7F1;
+    --ink:#2B2622;
+    --ink-soft:#5A524A;
+    --plum:#7A2D68;        /* projective · invariant */
+    --plum-deep:#561F49;
+    --plum-mist:#CBA9C2;   /* faint construction */
+    --measure:#8C8478;     /* metric · drifting */
+    --green:#1F9D55;
+    --red:#C9302C;
+    --blue:#2C5BA6;
+    --rule:#E3DCD0;
+    --serif:&quot;FreeSerif&quot;,&quot;TeX Gyre Termes&quot;,&quot;Times New Roman&quot;,Times,serif;
+    --sans:&quot;TeX Gyre Heros&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:14px 16px 20px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,46px);line-height:1.08;
+    margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:62ch;margin:0 0 26px;}
+
+  .stage{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);
+    padding:10px 10px 6px;}
+  svg{display:block;width:100%;height:auto;}
+
+  .controls{display:flex;flex-wrap:wrap;gap:26px 40px;align-items:flex-end;margin:26px 2px 4px;}
+  .slider{flex:1 1 280px;min-width:240px;}
+  .slider label{display:block;font-family:var(--sans);font-size:12.5px;color:var(--ink);margin-bottom:9px;}
+  .slider label span{color:var(--measure);}
+  input[type=range]{width:100%;accent-color:var(--plum);height:22px;cursor:pointer;}
+  input[type=range]:focus-visible{outline:2px solid var(--plum);outline-offset:4px;border-radius:2px;}
+
+  .presets{display:flex;gap:8px;flex:0 0 auto;}
+  .presets button{font-family:var(--sans);font-size:12.5px;letter-spacing:.02em;color:var(--ink);
+    background:#fff;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;}
+  .presets button:hover{border-color:var(--plum-mist);}
+  .presets button[aria-pressed=&quot;true&quot;]{background:var(--plum);border-color:var(--plum);color:#fff;}
+  .presets button:focus-visible{outline:2px solid var(--plum);outline-offset:3px;}
+
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+    border:1px solid var(--rule);border-radius:3px;margin:30px 0 8px;overflow:hidden;}
+  .verdict&gt;div{background:#fff;padding:20px 22px;}
+  .verdict .tag{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;}
+  .verdict .what{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-soft);margin:3px 0 12px;}
+  .verdict .num{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:600;
+    font-size:clamp(34px,6vw,52px);line-height:1;letter-spacing:-.01em;}
+  .cell-proj .tag{color:var(--plum);}
+  .cell-proj .num{color:var(--plum-deep);}
+  .cell-metric .tag{color:var(--measure);}
+  .cell-metric .num{color:var(--measure);}
+  .verdict .foot{font-family:var(--sans);font-size:12px;color:var(--ink-soft);margin-top:9px;}
+
+  .running{font-family:var(--serif);font-size:16px;color:var(--ink);margin:18px 4px 28px;max-width:70ch;}
+  .running b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .status{font-family:var(--sans);font-size:12.5px;color:var(--ink-soft);margin:0 4px 30px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px 28px;}
+  .status div span{color:var(--plum);font-weight:600;}
+
+  .ledger{border-top:1px solid var(--rule);padding-top:22px;margin-top:8px;}
+  .ledger h2{font-family:var(--sans);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink);font-weight:700;margin:0 0 16px;}
+  .ledger dl{margin:0;display:grid;grid-template-columns:minmax(108px,auto) 1fr;gap:11px 22px;}
+  .ledger dt{font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--plum);font-weight:600;}
+  .ledger dd{margin:0;font-size:15px;color:var(--ink);max-width:74ch;}
+  .ledger dd em{font-style:italic;color:var(--ink-soft);}
+
+  footer{font-family:var(--sans);font-size:11.5px;color:var(--measure);margin-top:34px;letter-spacing:.02em;}
+
+  @media (max-width:620px){
+    .verdict{grid-template-columns:1fr;}
+    .controls{gap:22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+
+  &lt;div class=&quot;stage&quot;&gt;
+    &lt;svg viewBox=&quot;0 0 1000 700&quot; role=&quot;img&quot; aria-label=&quot;Interactive diagonal-point construction sweeping from a parallelogram through a trapezoid to a perspective image&quot;&gt;
+      &lt;g id=&quot;scene&quot;&gt;&lt;/g&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;div class=&quot;slider&quot;&gt;
+      &lt;label for=&quot;red&quot;&gt;Open the red pair&amp;nbsp;&amp;nbsp;&lt;span&gt;— bring R in from infinity&lt;/span&gt;&lt;/label&gt;
+      &lt;input type=&quot;range&quot; id=&quot;red&quot; min=&quot;0&quot; max=&quot;1&quot; step=&quot;0.001&quot; value=&quot;0.8&quot; aria-describedby=&quot;red-status&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;slider&quot;&gt;
+      &lt;label for=&quot;green&quot;&gt;Open the green pair&amp;nbsp;&amp;nbsp;&lt;span&gt;— bring P in from infinity&lt;/span&gt;&lt;/label&gt;
+      &lt;input type=&quot;range&quot; id=&quot;green&quot; min=&quot;0&quot; max=&quot;1&quot; step=&quot;0.001&quot; value=&quot;0&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;presets&quot; role=&quot;group&quot; aria-label=&quot;Canonical stations&quot;&gt;
+      &lt;button id=&quot;p1&quot; type=&quot;button&quot;&gt;Ⅰ&amp;nbsp;Affine&lt;/button&gt;
+      &lt;button id=&quot;p2&quot; type=&quot;button&quot;&gt;Ⅱ&amp;nbsp;Hybrid&lt;/button&gt;
+      &lt;button id=&quot;p3&quot; type=&quot;button&quot;&gt;Ⅲ&amp;nbsp;Perspective&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;verdict&quot;&gt;
+    &lt;div class=&quot;cell-proj&quot;&gt;
+      &lt;div class=&quot;tag&quot;&gt;By the crossing of diagonals&lt;/div&gt;
+      &lt;div class=&quot;what&quot;&gt;harmonic · invariant&lt;/div&gt;
+      &lt;div class=&quot;num&quot; id=&quot;cr&quot;&gt;−1.000&lt;/div&gt;
+      &lt;div class=&quot;foot&quot;&gt;cross-ratio (A,&amp;nbsp;C&amp;nbsp;;&amp;nbsp;Q,&amp;nbsp;S)&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;cell-metric&quot;&gt;
+      &lt;div class=&quot;tag&quot;&gt;By the ruler&lt;/div&gt;
+      &lt;div class=&quot;what&quot;&gt;metric · drifts&lt;/div&gt;
+      &lt;div class=&quot;num&quot; id=&quot;frac&quot;&gt;0.500&lt;/div&gt;
+      &lt;div class=&quot;foot&quot;&gt;Q along AC&amp;nbsp;&amp;nbsp;(½ = the midpoint M)&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;p class=&quot;running&quot; id=&quot;running&quot;&gt;&lt;/p&gt;
+
+  &lt;div class=&quot;status&quot; id=&quot;status&quot;&gt;&lt;/div&gt;
+
+  
+&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  &quot;use strict&quot;;
+  var W=1000, H=700, SC=210, OX=143, OY=528;
+  var XMIN=-0.5, XMAX=3.9, YMIN=-0.5, YMAX=2.2;
+  var COL={plum:&quot;#7A2D68&quot;, plumDeep:&quot;#561F49&quot;, mist:&quot;#CBA9C2&quot;, measure:&quot;#8C8478&quot;,
+           green:&quot;#1F9D55&quot;, red:&quot;#C9302C&quot;, blue:&quot;#2C5BA6&quot;, ink:&quot;#2B2622&quot;, rail:&quot;#E0D7C8&quot;};
+
+  var scene=document.getElementById(&quot;scene&quot;);
+  var red=document.getElementById(&quot;red&quot;), green=document.getElementById(&quot;green&quot;);
+  var crEl=document.getElementById(&quot;cr&quot;), fracEl=document.getElementById(&quot;frac&quot;);
+  var runEl=document.getElementById(&quot;running&quot;), statEl=document.getElementById(&quot;status&quot;);
+  var b1=document.getElementById(&quot;p1&quot;), b2=document.getElementById(&quot;p2&quot;), b3=document.getElementById(&quot;p3&quot;);
+
+  // ---- homogeneous helpers ----
+  function cross(a,b){return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];}
+  function isIdeal(p){return Math.abs(p[2]) &lt; 1e-9*(Math.abs(p[0])+Math.abs(p[1])+1);}
+  function deh(p){return [p[0]/p[2], p[1]/p[2]];}
+  function sx(p){return OX+SC*p[0];}
+  function sy(p){return OY-SC*p[1];}
+  function S(p){return sx(p)+&quot;,&quot;+sy(p);}            // math pt -&gt; &quot;x,y&quot; screen
+  function Sf(P){var d=deh(P);return sx(d)+&quot;,&quot;+sy(d);} // homog pt -&gt; screen string
+
+  // ---- construction (all derived by genuine meets) ----
+  var redD=0.55, greenD=0.40;
+  function build(r,g){
+    var A=[0,0,1];
+    var B=[greenD*g, 1, 1];
+    var Cy=1.25 - redD*r;
+    var C=[1.6 - greenD*g, Cy, 1];
+    var D=[1.6, 0.25, 1];
+    var AB=cross(A,B), CD=cross(C,D), AD=cross(A,D), BC=cross(B,C), AC=cross(A,C), BD=cross(B,D);
+    var P=cross(AB,CD), Q=cross(AC,BD), R=cross(AD,BC);
+    var PR=cross(P,R), Sx=cross(AC,PR);
+    return {A:A,B:B,C:C,D:D,AB:AB,CD:CD,AD:AD,BC:BC,AC:AC,BD:BD,P:P,Q:Q,R:R,PR:PR,Sx:Sx};
+  }
+
+  // clip a homogeneous line to the math viewport, return up to 2 math points
+  function clipLine(line){
+    var a=line[0], b=line[1], c=line[2], pts=[], i, e;
+    if(Math.abs(b)&gt;1e-12){
+      var xs=[XMIN,XMAX];
+      for(i=0;i&lt;2;i++){var x=xs[i],y=-(a*x+c)/b; if(y&gt;=YMIN-1e-9&amp;&amp;y&lt;=YMAX+1e-9)pts.push([x,y]);}
+    }
+    if(Math.abs(a)&gt;1e-12){
+      var ys=[YMIN,YMAX];
+      for(i=0;i&lt;2;i++){var y2=ys[i],x2=-(b*y2+c)/a; if(x2&gt;=XMIN-1e-9&amp;&amp;x2&lt;=XMAX+1e-9)pts.push([x2,y2]);}
+    }
+    var u=[];
+    for(i=0;i&lt;pts.length;i++){e=pts[i];
+      var dup=false,j; for(j=0;j&lt;u.length;j++){if(Math.abs(u[j][0]-e[0])&lt;1e-6&amp;&amp;Math.abs(u[j][1]-e[1])&lt;1e-6){dup=true;break;}}
+      if(!dup)u.push(e);
+    }
+    return u.slice(0,2);
+  }
+
+  function arrowhead(x,y,ang,color,size){
+    size=size||11; var wf=0.55;
+    var ux=Math.cos(ang),uy=Math.sin(ang);
+    var bx=x-size*ux, by=y-size*uy, px=-uy*size*wf, py=ux*size*wf;
+    return &#x27;&lt;polygon points=&quot;&#x27;+x+&#x27;,&#x27;+y+&#x27; &#x27;+(bx+px)+&#x27;,&#x27;+(by+py)+&#x27; &#x27;+(bx-px)+&#x27;,&#x27;+(by-py)+
+           &#x27;&quot; fill=&quot;&#x27;+color+&#x27;&quot;/&gt;&#x27;;
+  }
+
+  function lineEl(p1,p2,color,wid,dash,op){
+    return &#x27;&lt;line x1=&quot;&#x27;+p1[0]+&#x27;&quot; y1=&quot;&#x27;+p1[1]+&#x27;&quot; x2=&quot;&#x27;+p2[0]+&#x27;&quot; y2=&quot;&#x27;+p2[1]+
+      &#x27;&quot; stroke=&quot;&#x27;+color+&#x27;&quot; stroke-width=&quot;&#x27;+wid+&#x27;&quot;&#x27;+(dash?&#x27; stroke-dasharray=&quot;&#x27;+dash+&#x27;&quot;&#x27;:&#x27;&#x27;)+
+      (op!=null?&#x27; stroke-opacity=&quot;&#x27;+op+&#x27;&quot;&#x27;:&#x27;&#x27;)+&#x27; stroke-linecap=&quot;round&quot;/&gt;&#x27;;
+  }
+  function dot(P,rad,fill,stroke){
+    var d=deh(P);
+    return &#x27;&lt;circle cx=&quot;&#x27;+sx(d)+&#x27;&quot; cy=&quot;&#x27;+sy(d)+&#x27;&quot; r=&quot;&#x27;+rad+&#x27;&quot; fill=&quot;&#x27;+fill+&#x27;&quot;&#x27;+
+      (stroke?&#x27; stroke=&quot;&#x27;+stroke+&#x27;&quot; stroke-width=&quot;2&quot;&#x27;:&#x27;&#x27;)+&#x27;/&gt;&#x27;;
+  }
+  function label(x,y,txt,color,sz,anchor,italic){
+    return &#x27;&lt;text x=&quot;&#x27;+x+&#x27;&quot; y=&quot;&#x27;+y+&#x27;&quot; fill=&quot;&#x27;+color+&#x27;&quot; font-size=&quot;&#x27;+(sz||17)+
+      &#x27;&quot; text-anchor=&quot;&#x27;+(anchor||&quot;start&quot;)+&#x27;&quot; font-family=&quot;&#x27;+(italic?&#x27;FreeSerif, Times, serif&#x27;:&#x27;TeX Gyre Heros, Helvetica, Arial, sans-serif&#x27;)+
+      &#x27;&quot;&#x27;+(italic?&#x27; font-style=&quot;italic&quot;&#x27;:&#x27;&#x27;)+&#x27;&gt;&#x27;+txt+&#x27;&lt;/text&gt;&#x27;;
+  }
+
+  // draw a faint full construction line for a side (so pairs visibly converge / run parallel)
+  function constructionLine(homLine,color){
+    var c=clipLine(homLine); if(c.length&lt;2)return &quot;&quot;;
+    return lineEl([sx(c[0]),sy(c[0])],[sx(c[1]),sy(c[1])],color,1.4,null,0.32);
+  }
+
+  // P or R: dot when finite &amp; on-canvas; outward arrows + label otherwise
+  function diagPoint(pt,l1,l2,axis,name){
+    var ideal=isIdeal(pt), out=&quot;&quot;;
+    var onc=false, d=null;
+    if(!ideal){d=deh(pt); onc=(sx(d)&gt;=10&amp;&amp;sx(d)&lt;=W-10&amp;&amp;sy(d)&gt;=10&amp;&amp;sy(d)&lt;=H-10);}
+    if(!ideal &amp;&amp; onc){
+      out+=dot(pt,5.5,COL.plum,&quot;#fff&quot;);
+      out+=label(sx(d)+12, sy(d)+ (axis===&quot;up&quot;?-9:18), name, COL.plumDeep,18,&quot;start&quot;,true);
+      return out;
+    }
+    // arrows along both defining lines, at the in-view exit toward `axis`
+    var lines=[l1,l2], lx;
+    var labelAt=null;
+    for(lx=0;lx&lt;2;lx++){
+      var c=clipLine(lines[lx]); if(c.length&lt;2)continue;
+      var s0=[sx(c[0]),sy(c[0])], s1=[sx(c[1]),sy(c[1])];
+      var exit,other;
+      if(axis===&quot;up&quot;){ if(s0[1]&lt;s1[1]){exit=s0;other=s1;}else{exit=s1;other=s0;} }
+      else { if(s0[0]&gt;s1[0]){exit=s0;other=s1;}else{exit=s1;other=s0;} }
+      var ang=Math.atan2(exit[1]-other[1], exit[0]-other[0]);
+      out+=arrowhead(exit[0],exit[1],ang,COL.plum,12);
+      if(labelAt===null) labelAt=exit;
+    }
+    if(labelAt){
+      var tx=labelAt[0]+(axis===&quot;up&quot;?14:0), ty=labelAt[1]+(axis===&quot;up&quot;?6:-12);
+      if(axis!==&quot;up&quot;){tx=labelAt[0]-6; ty=labelAt[1]-12;}
+      out+=label(tx,ty,(ideal?&quot;∞ &quot;:&quot;&quot;)+name, COL.plumDeep,17,(axis===&quot;up&quot;?&quot;start&quot;:&quot;end&quot;),true);
+    }
+    return out;
+  }
+
+  // segment / ray for a leg of the diagonal triangle (handles ideal endpoint)
+  function leg(X,Y,color,wid,dash,op){
+    var xi=isIdeal(X), yi=isIdeal(Y);
+    if(xi&amp;&amp;yi) return &quot;&quot;;
+    if(!xi&amp;&amp;!yi){
+      return legSeg(deh(X),deh(Y),color,wid,dash,op);
+    }
+    var fin=xi?Y:X, idl=xi?X:Y;
+    var f=deh(fin);
+    var dx=idl[0], dy=idl[1], n=Math.hypot(dx,dy)||1; dx/=n; dy/=n;
+    // point outward, away from figure centroid (~0.8,0.6)
+    if((f[0]-0.8)*dx+(f[1]-0.6)*dy &lt; 0){dx=-dx;dy=-dy;}
+    var far=[f[0]+6*dx, f[1]+6*dy];
+    return legSeg(f,far,color,wid,dash,op);
+  }
+  function legSeg(a,b,color,wid,dash,op){
+    return lineEl([sx(a),sy(a)],[sx(b),sy(b)],color,wid,dash,op);
+  }
+
+  function fmt(P){var d=deh(P);return &quot;(&quot;+d[0].toFixed(2)+&quot;, &quot;+d[1].toFixed(2)+&quot;)&quot;;}
+
+  function tParam(M,A,C){ // affine param of finite M along AC (=AQ/AC)
+    var a=deh(A),c=deh(C),m=deh(M),ux=c[0]-a[0],uy=c[1]-a[1];
+    return ((m[0]-a[0])*ux+(m[1]-a[1])*uy)/(ux*ux+uy*uy);
+  }
+
+  function render(){
+    var r=+red.value, g=+green.value, k=build(r,g);
+    var A=k.A,B=k.B,C=k.C,D=k.D,P=k.P,Q=k.Q,R=k.R, parts=[];
+
+    // 1. metric midline (only meaningful while green pair is parallel) — fades out
+    var mlOp=(1-g)*0.5;
+    if(mlOp&gt;0.02){
+      parts.push(lineEl([sx([0.8,YMIN]),sy([0.8,YMIN])],[sx([0.8,YMAX]),sy([0.8,YMAX])],
+        COL.measure,1.2,&quot;3 5&quot;,mlOp));
+      parts.push(label(sx([0.8,0])+8, sy([0,YMAX])+16, &quot;metric midline&quot;, COL.measure,12.5,&quot;start&quot;,false));
+    }
+
+    // 2. faint construction lines for both pairs (show convergence / parallelism)
+    parts.push(constructionLine(k.AB,COL.green));
+    parts.push(constructionLine(k.CD,COL.green));
+    parts.push(constructionLine(k.AD,COL.red));
+    parts.push(constructionLine(k.BC,COL.red));
+
+    // 3. diagonal triangle — legs PQ, QR faint dotted; PR (the special side) dashed plum
+    parts.push(leg(P,Q,COL.mist,1.4,&quot;2 5&quot;,0.9));
+    parts.push(leg(Q,R,COL.mist,1.4,&quot;2 5&quot;,0.9));
+    if(!(isIdeal(P)&amp;&amp;isIdeal(R))){
+      var c=clipLine(k.PR);
+      if(c.length===2) parts.push(lineEl([sx(c[0]),sy(c[0])],[sx(c[1]),sy(c[1])],COL.plum,1.7,&quot;7 6&quot;,0.85));
+    }
+
+    // 4. figure sides (bold)
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(B)),sy(deh(B))],COL.green,5,null,1)); // AB
+    parts.push(lineEl([sx(deh(C)),sy(deh(C))],[sx(deh(D)),sy(deh(D))],COL.green,5,null,1)); // CD
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(D)),sy(deh(D))],COL.red,5,null,1));   // AD
+    parts.push(lineEl([sx(deh(B)),sy(deh(B))],[sx(deh(C)),sy(deh(C))],COL.red,5,null,1));   // BC
+    // diagonals (blue)
+    parts.push(lineEl([sx(deh(A)),sy(deh(A))],[sx(deh(C)),sy(deh(C))],COL.blue,2.6,null,1));
+    parts.push(lineEl([sx(deh(B)),sy(deh(B))],[sx(deh(D)),sy(deh(D))],COL.blue,2.6,null,1));
+
+    // 5. S — Q&#x27;s harmonic partner on AC (ideal -&gt; arrow up the diagonal)
+    if(isIdeal(k.Sx)){
+      var cc=clipLine(k.AC);
+      if(cc.length===2){
+        var s0=[sx(cc[0]),sy(cc[0])], s1=[sx(cc[1]),sy(cc[1])];
+        // exit in the +(C-A) direction (up-right)
+        var ex = (s0[1]&lt;s1[1])?s0:s1, ot=(ex===s0)?s1:s0;
+        var ang=Math.atan2(ex[1]-ot[1],ex[0]-ot[0]);
+        parts.push(arrowhead(ex[0],ex[1],ang,COL.plum,11));
+        parts.push(label(ex[0]-8,ex[1]+4,&quot;∞ S&quot;,COL.plumDeep,17,&quot;end&quot;,true));
+      }
+    } else {
+      var ds=deh(k.Sx), sOn=(sx(ds)&gt;=10&amp;&amp;sx(ds)&lt;=W-10&amp;&amp;sy(ds)&gt;=10&amp;&amp;sy(ds)&lt;=H-10);
+      if(sOn){
+        parts.push(dot(k.Sx,4.5,COL.plum,&quot;#fff&quot;));
+        parts.push(label(sx(ds)+11,sy(ds)+5,&quot;S&quot;,COL.plumDeep,17,&quot;start&quot;,true));
+      } else {
+        var cc2=clipLine(k.AC);
+        if(cc2.length===2){
+          // exit toward S
+          var e0=[sx(cc2[0]),sy(cc2[0])],e1=[sx(cc2[1]),sy(cc2[1])];
+          var dS=[sx(ds),sy(ds)];
+          var ex2=(Math.hypot(e0[0]-dS[0],e0[1]-dS[1])&lt;Math.hypot(e1[0]-dS[0],e1[1]-dS[1]))?e0:e1;
+          var ot2=(ex2===e0)?e1:e0;
+          parts.push(arrowhead(ex2[0],ex2[1],Math.atan2(ex2[1]-ot2[1],ex2[0]-ot2[0]),COL.plum,11));
+          parts.push(label(ex2[0]-8,ex2[1]-9,&quot;S&quot;,COL.plumDeep,17,&quot;end&quot;,true));
+        }
+      }
+    }
+
+    // 6. M (metric midpoint of AC) — hollow grey, the honest &quot;½ by measure&quot;
+    var Mpt=[ (deh(A)[0]+deh(C)[0])/2, (deh(A)[1]+deh(C)[1])/2, 1];
+    parts.push(&#x27;&lt;circle cx=&quot;&#x27;+sx(deh(Mpt))+&#x27;&quot; cy=&quot;&#x27;+sy(deh(Mpt))+&#x27;&quot; r=&quot;5.5&quot; fill=&quot;#fff&quot; stroke=&quot;&#x27;+COL.measure+&#x27;&quot; stroke-width=&quot;2&quot;/&gt;&#x27;);
+    parts.push(label(sx(deh(Mpt))-9, sy(deh(Mpt))+ (deh(Mpt)[1]&gt;deh(Q)[1]? -10:20), &quot;½&quot;, COL.measure,15,&quot;end&quot;,true));
+
+    // 7. P, R landmarks
+    parts.push(diagPoint(P,k.AB,k.CD,&quot;up&quot;,&quot;P&quot;));
+    parts.push(diagPoint(R,k.AD,k.BC,&quot;right&quot;,&quot;R&quot;));
+
+    // 8. Q (the actor) + vertices
+    parts.push(dot(Q,6,COL.ink,&quot;#fff&quot;));
+    parts.push(label(sx(deh(Q))+12, sy(deh(Q))+5, &quot;Q&quot;, COL.ink,19,&quot;start&quot;,true));
+
+    var vlab=[[A,&quot;A&quot;,-16,18],[B,&quot;B&quot;,-16,-8],[C,&quot;C&quot;,12,2],[D,&quot;D&quot;,-4,22]];
+    for(var i=0;i&lt;4;i++){var v=vlab[i],d=deh(v[0]);
+      parts.push(&#x27;&lt;circle cx=&quot;&#x27;+sx(d)+&#x27;&quot; cy=&quot;&#x27;+sy(d)+&#x27;&quot; r=&quot;3.4&quot; fill=&quot;&#x27;+COL.ink+&#x27;&quot;/&gt;&#x27;);
+      parts.push(label(sx(d)+v[2], sy(d)+v[3], v[1], COL.ink,18,&quot;start&quot;,true));
+    }
+
+    scene.innerHTML = parts.join(&quot;&quot;);
+
+    // ---- readouts ----
+    var tQ=tParam(Q,A,C);
+    var CR;
+    if(isIdeal(k.Sx)){ CR=-tQ/(1-tQ); }
+    else { var tS=tParam(k.Sx,A,C); CR=(tQ*(1-tS))/(tS*(1-tQ)); }
+    if(Math.abs(CR+1)&lt;1e-4) CR=-1;
+    crEl.textContent = (CR&lt;0?&quot;−&quot;:&quot;&quot;) + Math.abs(CR).toFixed(3);
+    fracEl.textContent = tQ.toFixed(3);
+
+    var pTxt = isIdeal(P) ? &quot;ideal — the parallels’ direction&quot; : &quot;finite &quot;+fmt(P);
+    var rTxt = isIdeal(R) ? &quot;ideal — the parallels’ direction&quot; : &quot;finite &quot;+fmt(R);
+    var prTxt = (isIdeal(P)&amp;&amp;isIdeal(R)) ? &quot;the line at infinity&quot;
+              : (isIdeal(P)||isIdeal(R)) ? &quot;a finite line through the ideal point&quot;
+              : &quot;a finite horizon&quot;;
+    var sTxt = isIdeal(k.Sx) ? &quot;at infinity — the ideal point of AC&quot; : &quot;finite &quot;+fmt(k.Sx);
+
+    statEl.innerHTML =
+      &#x27;&lt;div&gt;P&amp;nbsp;&amp;nbsp;&lt;span&gt;&#x27;+pTxt+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;+
+      &#x27;&lt;div&gt;R&amp;nbsp;&amp;nbsp;&lt;span&gt;&#x27;+rTxt+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;+
+      &#x27;&lt;div&gt;line&amp;nbsp;PR&amp;nbsp;&amp;nbsp;&lt;span&gt;&#x27;+prTxt+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;+
+      &#x27;&lt;div&gt;S&amp;nbsp;&amp;nbsp;&lt;span&gt;&#x27;+sTxt+&#x27;&lt;/span&gt;&lt;/div&gt;&#x27;;
+
+    var gap=Math.abs(tQ-0.5);
+    var stage = (isIdeal(P)&amp;&amp;isIdeal(R)) ? &quot;Affine&quot;
+              : (isIdeal(P)) ? &quot;Hybrid&quot; : &quot;Perspective&quot;;
+    var sentence;
+    if(gap&lt;0.004){
+      sentence = &quot;&lt;b&gt;Affine.&lt;/b&gt; Both pairs run parallel, so P and R are ideal and PR is the line at infinity. &quot;+
+        &quot;S is the ideal point of AC — and the harmonic conjugate of infinity is the plain midpoint, so here the crossing &quot;+
+        &quot;Q lands exactly on M. The two ½’s agree, this once.&quot;;
+    } else {
+      sentence = &quot;&lt;b&gt;&quot;+stage+&quot;.&lt;/b&gt; Q now sits at &quot;+tQ.toFixed(3)+&quot; of AC by the ruler — pulled &quot;+
+        (tQ&gt;0.5?&quot;toward the shorter side&quot;:&quot;off-centre&quot;)+&quot;, clear of the midpoint M. &quot;+
+        &quot;Yet S has come in from infinity to meet it, and the crossing still reads (A,&amp;nbsp;C&amp;nbsp;;&amp;nbsp;Q,&amp;nbsp;S) = −1. &quot;+
+        &quot;The half that moved was measured; the half that held is harmonic.&quot;;
+    }
+    runEl.innerHTML = sentence;
+
+    setPressed(gap&lt;0.004 ? b1 : (isIdeal(P)? b2 : b3));
+  }
+
+  function setPressed(active){
+    [b1,b2,b3].forEach(function(b){b.setAttribute(&quot;aria-pressed&quot;, b===active ? &quot;true&quot;:&quot;false&quot;);});
+  }
+
+  function setStation(r,g){ red.value=r; green.value=g; render(); }
+
+  red.addEventListener(&quot;input&quot;,render);
+  green.addEventListener(&quot;input&quot;,render);
+  b1.addEventListener(&quot;click&quot;,function(){setStation(0,0);});
+  b2.addEventListener(&quot;click&quot;,function(){setStation(0.8,0);});
+  b3.addEventListener(&quot;click&quot;,function(){setStation(0.85,0.85);});
+
+  render();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+    </div>
+  </section>
+  <section class="movement">
+    <p class="step"><span class="n">02</span>Then — the pair as a reflection</p>
+    <h2>Q and S as reciprocal images</h2>
+    <p class="walk">Strip away the perspective scaffolding and keep just the line. Put the base pair A and C on a circle centred at their midpoint M. The inside point Q and the outside point S that read as harmonic are reflections of each other in that circle: their distances multiply to R². The same −1 you just watched survive is, on the bare line, this reciprocal pairing — Q a third of a radius in, S three radii out.</p>
+    <div class="fig">
+      <iframe class="embed" title="Q and S as reciprocal images" height="560" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;The harmonic relation as a reflection&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --gray:#8C8478; --rule:#E3DCD0;
+    --serif:&quot;FreeSerif&quot;,&quot;TeX Gyre Termes&quot;,&quot;Times New Roman&quot;,Times,serif;
+    --sans:&quot;TeX Gyre Heros&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:32px 20px 60px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(26px,4.2vw,42px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:66ch;margin:0 0 22px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;}
+  svg{display:block;width:100%;height:auto;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:24px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+
+  .domeL{font-family:var(--sans);fill:var(--gray);font-size:12.5px;letter-spacing:.04em;}
+  .ptL{font-family:var(--serif);font-style:italic;fill:var(--ink);font-size:19px;}
+  .tag{font-family:var(--sans);fill:var(--gray);font-size:12px;letter-spacing:.02em;}
+  .rad{font-family:var(--sans);fill:var(--gray);font-size:14px;font-style:italic;}
+  .br{font-family:var(--sans);fill:var(--ink-soft);font-size:13px;}
+  .rel{font-family:var(--serif);fill:var(--plum-deep);font-size:16px;}
+  .pay{font-family:var(--serif);fill:var(--ink);font-size:15.5px;}
+  .inf{font-family:var(--serif);fill:var(--gray);font-size:15px;font-style:italic;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+
+  &lt;div class=&quot;frame&quot;&gt;
+    &lt;svg viewBox=&quot;0 0 1000 470&quot; width=&quot;1000&quot; height=&quot;470&quot; preserveAspectRatio=&quot;xMidYMid meet&quot;
+         role=&quot;img&quot; aria-label=&quot;The harmonic relation drawn as a reflection in a circle centered on the midpoint, with the anchors as fixed points and Q inside reflecting to S outside&quot;&gt;
+
+      &lt;!-- the mirror-circle (upper dome) --&gt;
+      &lt;text class=&quot;domeL&quot; x=&quot;688&quot; y=&quot;100&quot; text-anchor=&quot;middle&quot;&gt;the mirror-circle through A and C&lt;/text&gt;
+      &lt;path d=&quot;M 556 252 A 132 132 0 0 1 820 252&quot; fill=&quot;none&quot; stroke=&quot;#7A2D68&quot; stroke-width=&quot;2.4&quot;/&gt;
+      &lt;!-- radius to apex --&gt;
+      &lt;line x1=&quot;688&quot; y1=&quot;252&quot; x2=&quot;688&quot; y2=&quot;120&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.2&quot; stroke-dasharray=&quot;4 4&quot;/&gt;
+      &lt;text class=&quot;rad&quot; x=&quot;701&quot; y=&quot;182&quot; text-anchor=&quot;start&quot;&gt;R&lt;/text&gt;
+
+      &lt;!-- the line --&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;252&quot; x2=&quot;930&quot; y2=&quot;252&quot; stroke=&quot;#38332E&quot; stroke-width=&quot;2.2&quot;/&gt;
+      &lt;polygon points=&quot;70,252 82,247 82,257&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;polygon points=&quot;930,252 918,247 918,257&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text class=&quot;inf&quot; x=&quot;92&quot; y=&quot;240&quot; text-anchor=&quot;start&quot;&gt;&amp;#8734;&lt;/text&gt;
+
+      &lt;!-- fixed-point rings on the anchors --&gt;
+      &lt;circle cx=&quot;556&quot; cy=&quot;252&quot; r=&quot;10&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.5&quot;/&gt;
+      &lt;circle cx=&quot;820&quot; cy=&quot;252&quot; r=&quot;10&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.5&quot;/&gt;
+
+      &lt;!-- points --&gt;
+      &lt;circle cx=&quot;688&quot; cy=&quot;252&quot; r=&quot;5&quot;   fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;556&quot; cy=&quot;252&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;820&quot; cy=&quot;252&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;644&quot; cy=&quot;252&quot; r=&quot;5&quot;   fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;292&quot; cy=&quot;252&quot; r=&quot;5&quot;   fill=&quot;#38332E&quot;/&gt;
+
+      &lt;!-- letters --&gt;
+      &lt;text class=&quot;ptL&quot; x=&quot;688&quot; y=&quot;240&quot; text-anchor=&quot;middle&quot;&gt;M&lt;/text&gt;
+      &lt;text class=&quot;ptL&quot; x=&quot;556&quot; y=&quot;278&quot; text-anchor=&quot;middle&quot;&gt;A&lt;/text&gt;
+      &lt;text class=&quot;ptL&quot; x=&quot;820&quot; y=&quot;278&quot; text-anchor=&quot;middle&quot;&gt;C&lt;/text&gt;
+      &lt;text class=&quot;ptL&quot; x=&quot;644&quot; y=&quot;240&quot; text-anchor=&quot;middle&quot;&gt;Q&lt;/text&gt;
+      &lt;text class=&quot;ptL&quot; x=&quot;292&quot; y=&quot;240&quot; text-anchor=&quot;middle&quot;&gt;S&lt;/text&gt;
+
+      &lt;!-- tags --&gt;
+      &lt;text class=&quot;tag&quot; x=&quot;556&quot; y=&quot;294&quot; text-anchor=&quot;middle&quot;&gt;fixed&lt;/text&gt;
+      &lt;text class=&quot;tag&quot; x=&quot;820&quot; y=&quot;294&quot; text-anchor=&quot;middle&quot;&gt;fixed&lt;/text&gt;
+      &lt;text class=&quot;tag&quot; x=&quot;644&quot; y=&quot;294&quot; text-anchor=&quot;middle&quot; fill=&quot;#7A2D68&quot;&gt;inside&lt;/text&gt;
+      &lt;text class=&quot;tag&quot; x=&quot;292&quot; y=&quot;294&quot; text-anchor=&quot;middle&quot; fill=&quot;#7A2D68&quot;&gt;outside&lt;/text&gt;
+
+      &lt;!-- MQ bracket --&gt;
+      &lt;path d=&quot;M 688 312 L 688 318 L 644 318 L 644 312&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.2&quot;/&gt;
+      &lt;text class=&quot;br&quot; x=&quot;666&quot; y=&quot;333&quot; text-anchor=&quot;middle&quot;&gt;MQ = R&amp;#8260;3 = 1&lt;/text&gt;
+
+      &lt;!-- MS bracket --&gt;
+      &lt;path d=&quot;M 688 344 L 688 350 L 292 350 L 292 344&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.2&quot;/&gt;
+      &lt;text class=&quot;br&quot; x=&quot;490&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot;&gt;MS = 3R = 9&lt;/text&gt;
+
+      &lt;!-- the relation --&gt;
+      &lt;text class=&quot;rel&quot; x=&quot;500&quot; y=&quot;398&quot; text-anchor=&quot;middle&quot;&gt;Q and S are reflections in the circle:&amp;#8195;MQ &amp;#215; MS = R&amp;#178; = 9&lt;/text&gt;
+
+      &lt;!-- the dynamic --&gt;
+      &lt;text class=&quot;pay&quot; x=&quot;500&quot; y=&quot;428&quot; text-anchor=&quot;middle&quot;&gt;Slide Q toward the centre and S flies off to &lt;tspan font-style=&quot;italic&quot; fill=&quot;#561F49&quot;&gt;infinity&lt;/tspan&gt;;&lt;/text&gt;
+      &lt;text class=&quot;pay&quot; x=&quot;500&quot; y=&quot;450&quot; text-anchor=&quot;middle&quot;&gt;slide Q out to an anchor and S comes in to meet it &amp;#8212; &lt;tspan font-style=&quot;italic&quot; fill=&quot;#561F49&quot;&gt;A and C hold fixed&lt;/tspan&gt;.&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+
+  
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+    </div>
+  </section>
+  <section class="movement">
+    <p class="step"><span class="n">03</span>Why — the product is exact</p>
+    <h2>MT² = MQ · MS</h2>
+    <p class="walk">The reflection asserts MQ·MS = R² exactly; here is the reason. Straight up from Q meets the circle at T; the tangent there, perpendicular to the radius, swings down to fix S. The triangle M–T–S is right-angled at T, and TQ is the altitude to its hypotenuse, so the leg squared equals the product of the two pieces it cuts. Since that leg is the radius, the product is R². Drag Q and the two right triangles stay similar while the product holds.</p>
+    <div class="fig">
+      <iframe class="embed" title="MT² = MQ · MS" height="690" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;The tangent construction — why MQ · MS = R²&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --teal:#2E6E73; --teal-deep:#1F4F53;
+    --gray:#8C8478; --rule:#E3DCD0;
+    --serif:&quot;FreeSerif&quot;,&quot;TeX Gyre Termes&quot;,&quot;Times New Roman&quot;,Times,serif;
+    --sans:&quot;TeX Gyre Heros&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:14px 16px 20px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(25px,4vw,40px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:70ch;margin:0 0 20px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;touch-action:none;}
+  svg{display:block;width:100%;height:auto;cursor:ew-resize;touch-action:none;}
+  #svg text{font-family:var(--serif);}
+  #svg text.s{font-family:var(--sans);}
+
+  .controls{margin:18px 2px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .controls label{font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;
+    background:linear-gradient(90deg,var(--plum),#C9A9C2);outline:none;flex:1;min-width:220px;max-width:520px;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--plum-deep);border:3px solid #fff;box-shadow:0 1px 4px rgba(86,31,73,.5);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--plum-deep);
+    border:3px solid #fff;cursor:pointer;}
+  .ends{font-family:var(--sans);font-size:11px;color:var(--gray);letter-spacing:.03em;}
+
+  .readouts{display:flex;gap:10px;flex-wrap:wrap;margin:18px 2px 0;}
+  .card{flex:1 1 150px;background:#fff;border:1px solid var(--rule);border-radius:3px;padding:10px 14px;}
+  .card .k{font-family:var(--sans);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gray);margin-bottom:3px;}
+  .card .v{font-family:var(--serif);font-size:24px;line-height:1;}
+  .card .v small{font-size:13px;color:var(--ink-soft);}
+  .vary .v{color:var(--ink-soft);}
+  .hold{border-color:#E8D6E4;background:#FCF7FB;}
+  .hold .v{color:var(--plum-deep);}
+  .hold.tealhold{border-color:#D6E6E6;background:#F5FAFA;}
+  .hold.tealhold .v{color:var(--teal-deep);}
+
+  .status{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin:14px 2px 0;min-height:1.2em;}
+  .status b{color:var(--plum-deep);font-weight:600;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:74ch;margin:18px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+
+  &lt;div class=&quot;frame&quot; id=&quot;frame&quot;&gt;
+    &lt;svg id=&quot;svg&quot; viewBox=&quot;0 0 1000 450&quot; width=&quot;1000&quot; height=&quot;450&quot; preserveAspectRatio=&quot;xMidYMid meet&quot;
+         role=&quot;img&quot; aria-label=&quot;Interactive tangent construction: drag Q inside the circle; T rides the rim above it and the tangent meets the line at S, with two similar right triangles and the product MQ times MS held at R squared&quot;&gt;
+
+      &lt;!-- the inversion circle --&gt;
+      &lt;circle cx=&quot;560&quot; cy=&quot;275&quot; r=&quot;150&quot; fill=&quot;none&quot; stroke=&quot;#7A2D68&quot; stroke-width=&quot;2&quot;/&gt;
+
+      &lt;!-- the line (diameter, extended) --&gt;
+      &lt;line x1=&quot;40&quot; y1=&quot;275&quot; x2=&quot;980&quot; y2=&quot;275&quot; stroke=&quot;#38332E&quot; stroke-width=&quot;2.2&quot;/&gt;
+      &lt;polygon points=&quot;40,275 52,270 52,280&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;polygon points=&quot;980,275 968,270 968,280&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text x=&quot;60&quot; y=&quot;263&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;15&quot; fill=&quot;#8C8478&quot;&gt;&amp;#8734;&lt;/text&gt;
+      &lt;text x=&quot;956&quot; y=&quot;263&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;15&quot; fill=&quot;#8C8478&quot; text-anchor=&quot;end&quot;&gt;&amp;#8734;&lt;/text&gt;
+
+      &lt;!-- similar-triangle fills (dynamic) --&gt;
+      &lt;polygon id=&quot;triTQS&quot; points=&quot;&quot; fill=&quot;#2E6E73&quot; fill-opacity=&quot;0.12&quot;/&gt;
+      &lt;polygon id=&quot;triMQT&quot; points=&quot;&quot; fill=&quot;#7A2D68&quot; fill-opacity=&quot;0.16&quot;/&gt;
+
+      &lt;!-- construction lines (dynamic) --&gt;
+      &lt;line id=&quot;tangent&quot;  x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;0&quot; y2=&quot;0&quot; stroke=&quot;#38332E&quot; stroke-width=&quot;2&quot;/&gt;
+      &lt;line id=&quot;altitude&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;0&quot; y2=&quot;0&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.4&quot; stroke-dasharray=&quot;4 4&quot;/&gt;
+      &lt;line id=&quot;radius&quot;   x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;0&quot; y2=&quot;0&quot; stroke=&quot;#7A2D68&quot; stroke-width=&quot;2.6&quot;/&gt;
+      &lt;text id=&quot;labR&quot; font-family=&quot;var(--sans)&quot; font-style=&quot;italic&quot; font-size=&quot;14&quot; fill=&quot;#7A2D68&quot;&gt;R&lt;/text&gt;
+
+      &lt;!-- right-angle marks (dynamic) --&gt;
+      &lt;polyline id=&quot;raT&quot; points=&quot;&quot; fill=&quot;none&quot; stroke=&quot;#38332E&quot; stroke-width=&quot;1.5&quot;/&gt;
+      &lt;polyline id=&quot;raQ&quot; points=&quot;&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.3&quot;/&gt;
+
+      &lt;!-- S-to-infinity group (dynamic, shown when S leaves the frame) --&gt;
+      &lt;g id=&quot;sInf&quot; style=&quot;display:none&quot;&gt;
+        &lt;polygon id=&quot;sArrow&quot; points=&quot;&quot; fill=&quot;#5A524A&quot;/&gt;
+        &lt;text id=&quot;sInfText&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;16&quot; fill=&quot;#5A524A&quot;&gt;S &amp;#8594; &amp;#8734;&lt;/text&gt;
+      &lt;/g&gt;
+
+      &lt;!-- anchors (static): on the circle, the fixed points --&gt;
+      &lt;circle cx=&quot;410&quot; cy=&quot;275&quot; r=&quot;10&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.5&quot;/&gt;
+      &lt;circle cx=&quot;710&quot; cy=&quot;275&quot; r=&quot;10&quot; fill=&quot;none&quot; stroke=&quot;#8C8478&quot; stroke-width=&quot;1.5&quot;/&gt;
+      &lt;circle cx=&quot;410&quot; cy=&quot;275&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;710&quot; cy=&quot;275&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text x=&quot;410&quot; y=&quot;262&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#2B2622&quot; text-anchor=&quot;middle&quot;&gt;A&lt;/text&gt;
+      &lt;text x=&quot;710&quot; y=&quot;262&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#2B2622&quot; text-anchor=&quot;middle&quot;&gt;C&lt;/text&gt;
+      &lt;text x=&quot;410&quot; y=&quot;305&quot; font-family=&quot;var(--sans)&quot; font-size=&quot;11.5&quot; fill=&quot;#8C8478&quot; text-anchor=&quot;middle&quot;&gt;fixed&lt;/text&gt;
+      &lt;text x=&quot;710&quot; y=&quot;305&quot; font-family=&quot;var(--sans)&quot; font-size=&quot;11.5&quot; fill=&quot;#8C8478&quot; text-anchor=&quot;middle&quot;&gt;fixed&lt;/text&gt;
+
+      &lt;!-- centre M (static) --&gt;
+      &lt;circle cx=&quot;560&quot; cy=&quot;275&quot; r=&quot;5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text x=&quot;560&quot; y=&quot;262&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#2B2622&quot; text-anchor=&quot;middle&quot;&gt;M&lt;/text&gt;
+
+      &lt;!-- dynamic points --&gt;
+      &lt;circle id=&quot;dotS&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle id=&quot;dotQ&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle id=&quot;dotT&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;5.5&quot; fill=&quot;#7A2D68&quot;/&gt;
+
+      &lt;text id=&quot;labS&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#2B2622&quot; text-anchor=&quot;middle&quot;&gt;S&lt;/text&gt;
+      &lt;text id=&quot;labQ&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#2B2622&quot; text-anchor=&quot;middle&quot;&gt;Q&lt;/text&gt;
+      &lt;text id=&quot;labT&quot; font-family=&quot;var(--serif)&quot; font-style=&quot;italic&quot; font-size=&quot;19&quot; fill=&quot;#561F49&quot; text-anchor=&quot;middle&quot;&gt;T&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;label for=&quot;q&quot;&gt;Q&amp;#8202;:&lt;/label&gt;
+    &lt;span class=&quot;ends&quot;&gt;near anchor&lt;/span&gt;
+    &lt;input type=&quot;range&quot; id=&quot;q&quot; min=&quot;-2.85&quot; max=&quot;-0.18&quot; step=&quot;0.01&quot; value=&quot;-1&quot;&gt;
+    &lt;span class=&quot;ends&quot;&gt;near centre&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;readouts&quot;&gt;
+    &lt;div class=&quot;card vary&quot;&gt;&lt;div class=&quot;k&quot;&gt;MQ &amp;nbsp;(inside)&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;&lt;span id=&quot;roMQ&quot;&gt;1.00&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;card vary&quot;&gt;&lt;div class=&quot;k&quot;&gt;MS &amp;nbsp;(outside)&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;&lt;span id=&quot;roMS&quot;&gt;9.00&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;card hold&quot;&gt;&lt;div class=&quot;k&quot;&gt;MQ &amp;#215; MS&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;&lt;span id=&quot;roProd&quot;&gt;9.00&lt;/span&gt; &lt;small&gt;= R&amp;#178;&lt;/small&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;card hold tealhold&quot;&gt;&lt;div class=&quot;k&quot;&gt;( A , C ; Q , S )&lt;/div&gt;&lt;div class=&quot;v&quot;&gt;&lt;span id=&quot;roCR&quot;&gt;&amp;#8722;1.000&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;p class=&quot;status&quot; id=&quot;status&quot;&gt;&lt;/p&gt;
+
+  
+&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  &quot;use strict&quot;;
+  var cx=560, cy=275, scale=50, R=3, Am=-3, Cm=3;
+  var QMIN=-2.85, QMAX=-0.18, LEFT=42, RIGHT=958;
+
+  var svg=document.getElementById(&#x27;svg&#x27;);
+  var slider=document.getElementById(&#x27;q&#x27;);
+  var triMQT=document.getElementById(&#x27;triMQT&#x27;), triTQS=document.getElementById(&#x27;triTQS&#x27;);
+  var radius=document.getElementById(&#x27;radius&#x27;), altitude=document.getElementById(&#x27;altitude&#x27;), tangent=document.getElementById(&#x27;tangent&#x27;);
+  var labR=document.getElementById(&#x27;labR&#x27;);
+  var raT=document.getElementById(&#x27;raT&#x27;), raQ=document.getElementById(&#x27;raQ&#x27;);
+  var dotQ=document.getElementById(&#x27;dotQ&#x27;), dotT=document.getElementById(&#x27;dotT&#x27;), dotS=document.getElementById(&#x27;dotS&#x27;);
+  var labQ=document.getElementById(&#x27;labQ&#x27;), labT=document.getElementById(&#x27;labT&#x27;), labS=document.getElementById(&#x27;labS&#x27;);
+  var sInf=document.getElementById(&#x27;sInf&#x27;), sArrow=document.getElementById(&#x27;sArrow&#x27;), sInfText=document.getElementById(&#x27;sInfText&#x27;);
+  var roMQ=document.getElementById(&#x27;roMQ&#x27;), roMS=document.getElementById(&#x27;roMS&#x27;), roProd=document.getElementById(&#x27;roProd&#x27;), roCR=document.getElementById(&#x27;roCR&#x27;);
+  var statusEl=document.getElementById(&#x27;status&#x27;);
+
+  function set(el,a,v){ el.setAttribute(a, v); }
+
+  function render(q){
+    if(q&gt;QMAX) q=QMAX; if(q&lt;QMIN) q=QMIN;
+    var Qx=cx+q*scale, Qy=cy;
+    var h=Math.sqrt(R*R-q*q);
+    var Tx=cx+q*scale, Ty=cy-h*scale;
+    var s=R*R/q;
+    var Sx=cx+s*scale, Sy=cy;
+    var MQ=Math.abs(q), MS=Math.abs(s), prod=MQ*MS;
+    var cr=((Am-q)*(Cm-s))/((Am-s)*(Cm-q));
+    var onscreen=(Sx&gt;=LEFT &amp;&amp; Sx&lt;=RIGHT);
+
+    // small triangle M-Q-T (always)
+    set(triMQT,&#x27;points&#x27;, cx+&#x27;,&#x27;+cy+&#x27; &#x27;+Qx+&#x27;,&#x27;+Qy+&#x27; &#x27;+Tx+&#x27;,&#x27;+Ty.toFixed(1));
+
+    // radius M-T, perpendicular/altitude T-Q (always)
+    set(radius,&#x27;x1&#x27;,cx); set(radius,&#x27;y1&#x27;,cy); set(radius,&#x27;x2&#x27;,Tx); set(radius,&#x27;y2&#x27;,Ty.toFixed(1));
+    set(altitude,&#x27;x1&#x27;,Qx); set(altitude,&#x27;y1&#x27;,Qy); set(altitude,&#x27;x2&#x27;,Tx); set(altitude,&#x27;y2&#x27;,Ty.toFixed(1));
+    set(labR, &#x27;x&#x27;, ((cx+Tx)/2 + 8).toFixed(1)); set(labR,&#x27;y&#x27;, ((cy+Ty)/2 - 6).toFixed(1));
+
+    // points + labels for Q, T (always)
+    set(dotQ,&#x27;cx&#x27;,Qx); set(dotQ,&#x27;cy&#x27;,Qy);
+    set(dotT,&#x27;cx&#x27;,Tx); set(dotT,&#x27;cy&#x27;,Ty.toFixed(1));
+    set(labQ,&#x27;x&#x27;,Qx); set(labQ,&#x27;y&#x27;,Qy+24);
+    set(labT,&#x27;x&#x27;,Tx); set(labT,&#x27;y&#x27;,(Ty-12).toFixed(1));
+
+    // right-angle mark at Q (between Q-&gt;M, rightward, and Q-&gt;T, up)
+    var d=12;
+    set(raQ,&#x27;points&#x27;, (Qx+d)+&#x27;,&#x27;+Qy+&#x27; &#x27;+(Qx+d)+&#x27;,&#x27;+(Qy-d)+&#x27; &#x27;+Qx+&#x27;,&#x27;+(Qy-d));
+
+    // right-angle mark at T (between T-&gt;M and T-&gt;S unit dirs)
+    var ux=cx-Tx, uy=cy-Ty, ul=Math.hypot(ux,uy); ux/=ul; uy/=ul;
+    var vx=Sx-Tx, vy=Sy-Ty, vl=Math.hypot(vx,vy); vx/=vl; vy/=vl;
+    set(raT,&#x27;points&#x27;,
+      (Tx+ux*d).toFixed(1)+&#x27;,&#x27;+(Ty+uy*d).toFixed(1)+&#x27; &#x27;+
+      (Tx+(ux+vx)*d).toFixed(1)+&#x27;,&#x27;+(Ty+(uy+vy)*d).toFixed(1)+&#x27; &#x27;+
+      (Tx+vx*d).toFixed(1)+&#x27;,&#x27;+(Ty+vy*d).toFixed(1));
+
+    if(onscreen){
+      triTQS.style.display=&#x27;&#x27;;
+      set(triTQS,&#x27;points&#x27;, Tx+&#x27;,&#x27;+Ty.toFixed(1)+&#x27; &#x27;+Qx+&#x27;,&#x27;+Qy+&#x27; &#x27;+Sx.toFixed(1)+&#x27;,&#x27;+Sy);
+      set(tangent,&#x27;x1&#x27;,Tx); set(tangent,&#x27;y1&#x27;,Ty.toFixed(1)); set(tangent,&#x27;x2&#x27;,Sx.toFixed(1)); set(tangent,&#x27;y2&#x27;,Sy);
+      dotS.style.display=&#x27;&#x27;; set(dotS,&#x27;cx&#x27;,Sx.toFixed(1)); set(dotS,&#x27;cy&#x27;,Sy);
+      labS.style.display=&#x27;&#x27;; set(labS,&#x27;x&#x27;,Sx.toFixed(1)); set(labS,&#x27;y&#x27;,Sy+24);
+      sInf.style.display=&#x27;none&#x27;;
+      statusEl.innerHTML=&#x27;S sits &lt;b&gt;outside&lt;/b&gt; the circle; the tangent at T points right back through it.&#x27;;
+    } else {
+      triTQS.style.display=&#x27;none&#x27;;
+      dotS.style.display=&#x27;none&#x27;; labS.style.display=&#x27;none&#x27;;
+      var edgeX=(s&lt;0)?LEFT:RIGHT;
+      var t=(edgeX-Tx)/(Sx-Tx);
+      var ey=Ty + t*(Sy-Ty);
+      set(tangent,&#x27;x1&#x27;,Tx); set(tangent,&#x27;y1&#x27;,Ty.toFixed(1)); set(tangent,&#x27;x2&#x27;,edgeX); set(tangent,&#x27;y2&#x27;,ey.toFixed(1));
+      sInf.style.display=&#x27;&#x27;;
+      var dir=(s&lt;0)?-1:1;
+      set(sArrow,&#x27;points&#x27;, edgeX+&#x27;,&#x27;+ey.toFixed(1)+&#x27; &#x27;+(edgeX-dir*14)+&#x27;,&#x27;+(ey-7).toFixed(1)+&#x27; &#x27;+(edgeX-dir*14)+&#x27;,&#x27;+(ey+7).toFixed(1));
+      set(sInfText,&#x27;x&#x27;, (s&lt;0)?(edgeX+10):(edgeX-10));
+      set(sInfText,&#x27;y&#x27;, (ey-12).toFixed(1));
+      set(sInfText,&#x27;text-anchor&#x27;, (s&lt;0)?&#x27;start&#x27;:&#x27;end&#x27;);
+      statusEl.innerHTML=&#x27;Q is near the centre, so the tangent has flattened and &lt;b&gt;S has shot past the frame&lt;/b&gt; &amp;mdash; on its way to infinity.&#x27;;
+    }
+
+    roMQ.textContent=MQ.toFixed(2);
+    roMS.textContent=onscreen?MS.toFixed(2):MS.toFixed(1);
+    roProd.textContent=prod.toFixed(2);
+    roCR.textContent=cr.toFixed(3).replace(&#x27;-&#x27;,&#x27;\u2212&#x27;);
+  }
+
+  // slider
+  slider.addEventListener(&#x27;input&#x27;, function(){ render(parseFloat(slider.value)); });
+
+  // drag anywhere on the figure to position Q
+  var dragging=false;
+  function clientToQ(clientX){
+    var rect=svg.getBoundingClientRect();
+    var xv=(clientX-rect.left)/rect.width*1000;
+    var q=(xv-cx)/scale;
+    if(q&gt;QMAX) q=QMAX; if(q&lt;QMIN) q=QMIN;
+    return q;
+  }
+  function place(e){
+    var q=clientToQ(e.clientX);
+    slider.value=q;
+    render(q);
+  }
+  svg.addEventListener(&#x27;pointerdown&#x27;, function(e){ dragging=true; try{svg.setPointerCapture(e.pointerId);}catch(_){} place(e); e.preventDefault(); });
+  svg.addEventListener(&#x27;pointermove&#x27;, function(e){ if(dragging){ place(e); e.preventDefault(); } });
+  svg.addEventListener(&#x27;pointerup&#x27;,   function(){ dragging=false; });
+  svg.addEventListener(&#x27;pointercancel&#x27;, function(){ dragging=false; });
+
+  render(parseFloat(slider.value));
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+    </div>
+  </section>
+  <section class="movement">
+    <p class="step"><span class="n">04</span>And last — in the formula itself</p>
+    <h2>The −1, step by step</h2>
+    <p class="walk">Finally, read the harmonic pair through the cross-ratio's own arithmetic: four signed differences, a numerator (A−Q)(C−S) over a denominator (A−S)(C−Q). Three of the four steps point right; one, A−Q, points left — and that single change of direction is the entire minus sign. Drag Q, and S follows as its conjugate: the four lengths shift constantly, never equal, while the two products stay matched in size and opposite in sign. That is −1, spelled out.</p>
+    <div class="fig">
+      <iframe class="embed" title="The −1, step by step" height="720" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;The cross-ratio, step by step — live&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --paper:#FAF7F1; --ink:#2B2622; --ink-soft:#5A524A;
+    --plum:#7A2D68; --plum-deep:#561F49; --teal:#2E6E73; --teal-deep:#1F4F53;
+    --gray:#8C8478; --rule:#E3DCD0;
+    --serif:&quot;FreeSerif&quot;,&quot;TeX Gyre Termes&quot;,&quot;Times New Roman&quot;,Times,serif;
+    --sans:&quot;TeX Gyre Heros&quot;,&quot;Helvetica Neue&quot;,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--serif);line-height:1.5;-webkit-font-smoothing:antialiased;padding:14px 16px 20px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .eyebrow{font-family:var(--sans);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--plum);font-weight:700;margin:0 0 14px;}
+  h1{font-weight:400;font-size:clamp(25px,4vw,40px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em;}
+  h1 em{font-style:italic;color:var(--plum-deep);}
+  .lede{font-size:clamp(15px,1.8vw,18px);color:var(--ink-soft);max-width:70ch;margin:0 0 20px;}
+  .frame{background:#fff;border:1px solid var(--rule);border-radius:3px;
+    box-shadow:0 1px 0 rgba(43,38,34,.03), 0 18px 40px -34px rgba(86,31,73,.5);padding:8px;touch-action:none;}
+  svg{display:block;width:100%;height:auto;cursor:ew-resize;touch-action:none;}
+  #svg text{font-family:var(--serif);}
+
+  .controls{margin:18px 2px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .controls label{font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;
+    background:linear-gradient(90deg,var(--plum),#C9A9C2);outline:none;flex:1;min-width:220px;max-width:520px;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--plum-deep);border:3px solid #fff;box-shadow:0 1px 4px rgba(86,31,73,.5);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--plum-deep);border:3px solid #fff;cursor:pointer;}
+  .ends{font-family:var(--sans);font-size:11px;color:var(--gray);letter-spacing:.03em;}
+
+  .eqwrap{margin:20px 2px 0;background:#fff;border:1px solid var(--rule);border-radius:3px;padding:16px 18px;overflow-x:auto;}
+  .eq{font-family:var(--serif);font-size:clamp(15px,2vw,21px);display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--ink);}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;line-height:1.15;}
+  .frac .top{padding:0 9px 2px;}
+  .frac .bot{padding:2px 9px 0;border-top:1.6px solid var(--ink);}
+  .np{color:var(--plum-deep);}
+  .dn{color:var(--teal-deep);}
+  .res{font-weight:600;font-size:1.12em;}
+  .lead{color:var(--ink-soft);}
+
+  .status{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin:14px 2px 0;min-height:1.2em;}
+  .status b{color:var(--plum-deep);font-weight:600;}
+  .note{font-size:15px;color:var(--ink-soft);max-width:74ch;margin:18px 2px 0;}
+  .note b{font-weight:400;font-style:italic;color:var(--plum-deep);}
+  .key{font-family:var(--sans);font-size:12px;color:var(--ink-soft);margin:16px 2px 0;display:flex;gap:20px;flex-wrap:wrap;}
+  .key i{font-style:normal;display:inline-flex;align-items:center;gap:7px;}
+  .sw{width:22px;height:0;border-top:3px solid;display:inline-block;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+
+  &lt;div class=&quot;frame&quot; id=&quot;frame&quot;&gt;
+    &lt;svg id=&quot;svg&quot; viewBox=&quot;0 0 1000 410&quot; width=&quot;1000&quot; height=&quot;410&quot; preserveAspectRatio=&quot;xMidYMid meet&quot;
+         role=&quot;img&quot; aria-label=&quot;Interactive number line with points S, A, Q, C. Drag Q; S moves as its harmonic conjugate. Four signed-step arrows (two plum above for the numerator, two teal below for the denominator) update, and the cross-ratio stays at minus one.&quot;&gt;
+      &lt;defs&gt;
+        &lt;marker id=&quot;hPlum&quot; markerUnits=&quot;userSpaceOnUse&quot; markerWidth=&quot;12&quot; markerHeight=&quot;12&quot; refX=&quot;8.5&quot; refY=&quot;3.2&quot; orient=&quot;auto&quot;&gt;
+          &lt;path d=&quot;M0,0 L9,3.2 L0,6.4 Z&quot; fill=&quot;#7A2D68&quot;/&gt;
+        &lt;/marker&gt;
+        &lt;marker id=&quot;hTeal&quot; markerUnits=&quot;userSpaceOnUse&quot; markerWidth=&quot;12&quot; markerHeight=&quot;12&quot; refX=&quot;8.5&quot; refY=&quot;3.2&quot; orient=&quot;auto&quot;&gt;
+          &lt;path d=&quot;M0,0 L9,3.2 L0,6.4 Z&quot; fill=&quot;#2E6E73&quot;/&gt;
+        &lt;/marker&gt;
+      &lt;/defs&gt;
+
+      &lt;!-- shaded base pair A..C --&gt;
+      &lt;rect x=&quot;600&quot; y=&quot;247&quot; width=&quot;300&quot; height=&quot;16&quot; fill=&quot;#7A2D68&quot; fill-opacity=&quot;0.06&quot;/&gt;
+
+      &lt;!-- the line --&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;255&quot; x2=&quot;940&quot; y2=&quot;255&quot; stroke=&quot;#38332E&quot; stroke-width=&quot;2.2&quot;/&gt;
+      &lt;polygon points=&quot;70,255 82,250 82,260&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;polygon points=&quot;940,255 928,250 928,260&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text x=&quot;60&quot; y=&quot;243&quot; font-style=&quot;italic&quot; font-size=&quot;15&quot; fill=&quot;#8C8478&quot;&gt;&amp;#8734;&lt;/text&gt;
+      &lt;text x=&quot;950&quot; y=&quot;243&quot; font-style=&quot;italic&quot; font-size=&quot;15&quot; fill=&quot;#8C8478&quot; text-anchor=&quot;end&quot;&gt;&amp;#8734;&lt;/text&gt;
+
+      &lt;!-- NUMERATOR arrows (plum, above) --&gt;
+      &lt;line id=&quot;numArrow2&quot; x1=&quot;300&quot; y1=&quot;185&quot; x2=&quot;900&quot; y2=&quot;185&quot; stroke=&quot;#7A2D68&quot; stroke-width=&quot;2.4&quot; marker-end=&quot;url(#hPlum)&quot;/&gt;
+      &lt;line id=&quot;numArrow1&quot; x1=&quot;700&quot; y1=&quot;215&quot; x2=&quot;600&quot; y2=&quot;215&quot; stroke=&quot;#7A2D68&quot; stroke-width=&quot;2.4&quot; marker-end=&quot;url(#hPlum)&quot;/&gt;
+      &lt;text id=&quot;lblN2&quot; x=&quot;600&quot; y=&quot;177&quot; text-anchor=&quot;middle&quot; font-size=&quot;14.5&quot; fill=&quot;#561F49&quot;&gt;C&amp;#8722;S&lt;/text&gt;
+      &lt;text id=&quot;lblN1&quot; x=&quot;650&quot; y=&quot;207&quot; text-anchor=&quot;middle&quot; font-size=&quot;14.5&quot; fill=&quot;#561F49&quot;&gt;A&amp;#8722;Q&lt;/text&gt;
+
+      &lt;!-- DENOMINATOR arrows (teal, below) --&gt;
+      &lt;line id=&quot;denArrow1&quot; x1=&quot;700&quot; y1=&quot;295&quot; x2=&quot;900&quot; y2=&quot;295&quot; stroke=&quot;#2E6E73&quot; stroke-width=&quot;2.4&quot; marker-end=&quot;url(#hTeal)&quot;/&gt;
+      &lt;line id=&quot;denArrow2&quot; x1=&quot;300&quot; y1=&quot;325&quot; x2=&quot;600&quot; y2=&quot;325&quot; stroke=&quot;#2E6E73&quot; stroke-width=&quot;2.4&quot; marker-end=&quot;url(#hTeal)&quot;/&gt;
+      &lt;text id=&quot;lblD1&quot; x=&quot;800&quot; y=&quot;311&quot; text-anchor=&quot;middle&quot; font-size=&quot;14.5&quot; fill=&quot;#1F4F53&quot;&gt;C&amp;#8722;Q&lt;/text&gt;
+      &lt;text id=&quot;lblD2&quot; x=&quot;450&quot; y=&quot;341&quot; text-anchor=&quot;middle&quot; font-size=&quot;14.5&quot; fill=&quot;#1F4F53&quot;&gt;A&amp;#8722;S&lt;/text&gt;
+
+      &lt;!-- points (static A, C) --&gt;
+      &lt;circle cx=&quot;600&quot; cy=&quot;255&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle cx=&quot;900&quot; cy=&quot;255&quot; r=&quot;5.5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;text x=&quot;600&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; font-style=&quot;italic&quot; font-size=&quot;18&quot; fill=&quot;#2B2622&quot;&gt;A&lt;/text&gt;
+      &lt;text x=&quot;900&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; font-style=&quot;italic&quot; font-size=&quot;18&quot; fill=&quot;#2B2622&quot;&gt;C&lt;/text&gt;
+
+      &lt;!-- points (dynamic Q, S) --&gt;
+      &lt;circle id=&quot;dotS&quot; cx=&quot;300&quot; cy=&quot;255&quot; r=&quot;5&quot; fill=&quot;#38332E&quot;/&gt;
+      &lt;circle id=&quot;dotQ&quot; cx=&quot;700&quot; cy=&quot;255&quot; r=&quot;6.5&quot; fill=&quot;none&quot; stroke=&quot;#561F49&quot; stroke-width=&quot;2.4&quot;/&gt;
+      &lt;circle id=&quot;dotQc&quot; cx=&quot;700&quot; cy=&quot;255&quot; r=&quot;3&quot; fill=&quot;#561F49&quot;/&gt;
+      &lt;text id=&quot;labS&quot; x=&quot;300&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; font-style=&quot;italic&quot; font-size=&quot;18&quot; fill=&quot;#2B2622&quot;&gt;S&lt;/text&gt;
+      &lt;text id=&quot;labQ&quot; x=&quot;700&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; font-style=&quot;italic&quot; font-size=&quot;18&quot; fill=&quot;#561F49&quot;&gt;Q&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;key&quot;&gt;
+    &lt;i&gt;&lt;span class=&quot;sw&quot; style=&quot;border-color:#7A2D68&quot;&gt;&lt;/span&gt;numerator steps&amp;#8202;: (A&amp;#8722;Q)(C&amp;#8722;S)&lt;/i&gt;
+    &lt;i&gt;&lt;span class=&quot;sw&quot; style=&quot;border-color:#2E6E73&quot;&gt;&lt;/span&gt;denominator steps&amp;#8202;: (A&amp;#8722;S)(C&amp;#8722;Q)&lt;/i&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;label for=&quot;q&quot;&gt;Q&amp;#8202;:&lt;/label&gt;
+    &lt;span class=&quot;ends&quot;&gt;toward A&lt;/span&gt;
+    &lt;input type=&quot;range&quot; id=&quot;q&quot; min=&quot;0.8&quot; max=&quot;2.3&quot; step=&quot;0.01&quot; value=&quot;2.0&quot;&gt;
+    &lt;span class=&quot;ends&quot;&gt;toward centre&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;eqwrap&quot;&gt;
+    &lt;div class=&quot;eq&quot;&gt;
+      &lt;span class=&quot;lead&quot;&gt;(&amp;#8201;A&amp;#8201;,&amp;#8201;C&amp;#8201;;&amp;#8201;Q&amp;#8201;,&amp;#8201;S&amp;#8201;)&lt;/span&gt;
+      &lt;span&gt;=&lt;/span&gt;
+      &lt;span class=&quot;frac&quot;&gt;&lt;span class=&quot;top np&quot;&gt;(A&amp;#8722;Q)(C&amp;#8722;S)&lt;/span&gt;&lt;span class=&quot;bot dn&quot;&gt;(A&amp;#8722;S)(C&amp;#8722;Q)&lt;/span&gt;&lt;/span&gt;
+      &lt;span&gt;=&lt;/span&gt;
+      &lt;span class=&quot;frac&quot;&gt;&lt;span class=&quot;top np&quot;&gt;(&lt;span id=&quot;eN1&quot;&gt;&amp;#8722;2.00&lt;/span&gt;)(&lt;span id=&quot;eN2&quot;&gt;12.00&lt;/span&gt;)&lt;/span&gt;&lt;span class=&quot;bot dn&quot;&gt;(&lt;span id=&quot;eD1&quot;&gt;6.00&lt;/span&gt;)(&lt;span id=&quot;eD2&quot;&gt;4.00&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;
+      &lt;span&gt;=&lt;/span&gt;
+      &lt;span class=&quot;frac&quot;&gt;&lt;span class=&quot;top np&quot; id=&quot;eNum&quot;&gt;&amp;#8722;24.00&lt;/span&gt;&lt;span class=&quot;bot dn&quot; id=&quot;eDen&quot;&gt;24.00&lt;/span&gt;&lt;/span&gt;
+      &lt;span&gt;=&lt;/span&gt;
+      &lt;span class=&quot;res&quot; id=&quot;eCR&quot;&gt;&amp;#8722;1.000&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;p class=&quot;status&quot; id=&quot;status&quot;&gt;&lt;/p&gt;
+
+  
+&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  &quot;use strict&quot;;
+  var A=0, C=6, ox=600, scale=50, cy=255;
+  var QMIN=0.8, QMAX=2.3;
+
+  var svg=document.getElementById(&#x27;svg&#x27;), slider=document.getElementById(&#x27;q&#x27;);
+  var numArrow1=document.getElementById(&#x27;numArrow1&#x27;), numArrow2=document.getElementById(&#x27;numArrow2&#x27;);
+  var denArrow1=document.getElementById(&#x27;denArrow1&#x27;), denArrow2=document.getElementById(&#x27;denArrow2&#x27;);
+  var lblN1=document.getElementById(&#x27;lblN1&#x27;), lblN2=document.getElementById(&#x27;lblN2&#x27;);
+  var lblD1=document.getElementById(&#x27;lblD1&#x27;), lblD2=document.getElementById(&#x27;lblD2&#x27;);
+  var dotS=document.getElementById(&#x27;dotS&#x27;), dotQ=document.getElementById(&#x27;dotQ&#x27;), dotQc=document.getElementById(&#x27;dotQc&#x27;);
+  var labS=document.getElementById(&#x27;labS&#x27;), labQ=document.getElementById(&#x27;labQ&#x27;);
+  var eN1=document.getElementById(&#x27;eN1&#x27;), eN2=document.getElementById(&#x27;eN2&#x27;), eD1=document.getElementById(&#x27;eD1&#x27;), eD2=document.getElementById(&#x27;eD2&#x27;);
+  var eNum=document.getElementById(&#x27;eNum&#x27;), eDen=document.getElementById(&#x27;eDen&#x27;), eCR=document.getElementById(&#x27;eCR&#x27;);
+  var statusEl=document.getElementById(&#x27;status&#x27;);
+
+  function set(el,a,v){ el.setAttribute(a,v); }
+  function sx(t){ return ox + t*scale; }
+  function fmt(x){ return (x&lt;0?&#x27;\u2212&#x27;:&#x27;&#x27;) + Math.abs(x).toFixed(2); }   // signed, with proper minus
+  function fmt3(x){ return (x&lt;0?&#x27;\u2212&#x27;:&#x27;&#x27;) + Math.abs(x).toFixed(3); }
+
+  function render(Q){
+    if(Q&gt;QMAX) Q=QMAX; if(Q&lt;QMIN) Q=QMIN;
+    var S=(Q*(A+C)-2*A*C)/(2*Q-(A+C));
+    var n1=A-Q, n2=C-S, d1=A-S, d2=C-Q;
+    var num=n1*n2, den=d1*d2, cr=num/den;
+    var xQ=sx(Q), xS=sx(S), xA=sx(A), xC=sx(C);
+
+    // numerator arrows (head points to first-named point)
+    set(numArrow1,&#x27;x1&#x27;,xQ); set(numArrow1,&#x27;x2&#x27;,xA);                 // A-Q  -&gt; head at A (left)
+    set(numArrow2,&#x27;x1&#x27;,xS); set(numArrow2,&#x27;x2&#x27;,xC);                 // C-S  -&gt; head at C (right)
+    set(lblN1,&#x27;x&#x27;,((xQ+xA)/2).toFixed(1));
+    set(lblN2,&#x27;x&#x27;,((xS+xC)/2).toFixed(1));
+    lblN1.textContent=&#x27;A\u2212Q = &#x27;+fmt(n1);
+    lblN2.textContent=&#x27;C\u2212S = &#x27;+fmt(n2);
+
+    // denominator arrows
+    set(denArrow1,&#x27;x1&#x27;,xQ); set(denArrow1,&#x27;x2&#x27;,xC);                 // C-Q  -&gt; head at C (right)
+    set(denArrow2,&#x27;x1&#x27;,xS); set(denArrow2,&#x27;x2&#x27;,xA);                 // A-S  -&gt; head at A (right, S&lt;A)
+    set(lblD1,&#x27;x&#x27;,((xQ+xC)/2).toFixed(1));
+    set(lblD2,&#x27;x&#x27;,((xS+xA)/2).toFixed(1));
+    lblD1.textContent=&#x27;C\u2212Q = &#x27;+fmt(d2);
+    lblD2.textContent=&#x27;A\u2212S = &#x27;+fmt(d1);
+
+    // moving points
+    set(dotS,&#x27;cx&#x27;,xS.toFixed(1));
+    set(dotQ,&#x27;cx&#x27;,xQ.toFixed(1)); set(dotQc,&#x27;cx&#x27;,xQ.toFixed(1));
+    set(labS,&#x27;x&#x27;,xS.toFixed(1));  set(labQ,&#x27;x&#x27;,xQ.toFixed(1));
+
+    // live equation
+    eN1.textContent=fmt(n1); eN2.textContent=fmt(n2);
+    eD1.textContent=fmt(d1); eD2.textContent=fmt(d2);
+    eNum.textContent=fmt(num); eDen.textContent=fmt(den);
+    eCR.textContent=fmt3(cr);
+
+    statusEl.innerHTML=&#x27;Q at &#x27;+fmt(Q)+&#x27;, S at &#x27;+fmt(S)+
+      &#x27;. Products: &lt;b&gt;&#x27;+fmt(num)+&#x27;&lt;/b&gt; over &lt;b&gt;&#x27;+fmt(den)+&#x27;&lt;/b&gt; &amp;mdash; equal in size, opposite in sign.&#x27;;
+  }
+
+  slider.addEventListener(&#x27;input&#x27;, function(){ render(parseFloat(slider.value)); });
+
+  // drag Q on the figure
+  var dragging=false;
+  function clientToQ(clientX){
+    var rect=svg.getBoundingClientRect();
+    var xv=(clientX-rect.left)/rect.width*1000;
+    var Q=(xv-ox)/scale;
+    if(Q&gt;QMAX) Q=QMAX; if(Q&lt;QMIN) Q=QMIN;
+    return Q;
+  }
+  function place(e){ var Q=clientToQ(e.clientX); slider.value=Q; render(Q); }
+  svg.addEventListener(&#x27;pointerdown&#x27;, function(e){ dragging=true; try{svg.setPointerCapture(e.pointerId);}catch(_){} place(e); e.preventDefault(); });
+  svg.addEventListener(&#x27;pointermove&#x27;, function(e){ if(dragging){ place(e); e.preventDefault(); } });
+  svg.addEventListener(&#x27;pointerup&#x27;,   function(){ dragging=false; });
+  svg.addEventListener(&#x27;pointercancel&#x27;, function(){ dragging=false; });
+
+  render(parseFloat(slider.value));
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+    </div>
+  </section>
+
+  <section class="coda">
+    <p class="step"><span class="n">·</span>One fact</p>
+    <p class="walk">Four passes, one fact. The invariant that outlived the ruler, the reflection in the circle, the geometric mean under the tangent, and the signed steps of the formula are not four results but one — four ways of saying that A, C, Q, S stand in <b>harmonic position</b>. The −1 is the seam where measure ends and projective structure begins.</p>
+    <footer>Plum marks the invariant and harmonic throughout · grey marks the metric that drifts · teal carries the second half of each ratio. Each panel is a self-contained figure; drag Q in any of them.</footer>
+  </section>
+</div>
+<script>
+(function(){
+  "use strict";
+  var t;
+  function sizeFrames(){
+    var fs=document.querySelectorAll('iframe.embed');
+    for(var i=0;i<fs.length;i++){
+      var f=fs[i];
+      try{
+        var doc=f.contentDocument||(f.contentWindow&&f.contentWindow.document);
+        if(doc&&doc.documentElement){
+          var h=Math.max(doc.documentElement.scrollHeight, doc.body?doc.body.scrollHeight:0);
+          if(h>40) f.style.height=h+'px';
+        }
+      }catch(e){}
+    }
+  }
+  window.__sizeFrames=sizeFrames;
+  var fs=document.querySelectorAll('iframe.embed');
+  for(var i=0;i<fs.length;i++){ fs[i].addEventListener('load', function(){ sizeFrames(); setTimeout(sizeFrames,120); }); }
+  window.addEventListener('load', function(){ sizeFrames(); setTimeout(sizeFrames,250); setTimeout(sizeFrames,800); });
+  window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(sizeFrames,150); });
+  setTimeout(sizeFrames, 60);
+})();
+
+</script>
+</body>
+</html>
