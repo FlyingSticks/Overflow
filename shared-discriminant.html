@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Shared Discriminant</title>
+<style>
+  :root{
+    --bg:#faf6ef; --paper:#fffdf9; --ink:#43203f; --accent:#6a2c91;
+    --crim:#c0322b; --gold:#b08948; --rule:#d8cfc2; --muted:#8a6e86; --teal:#1f7a70;
+    --serif:'FreeSerif',Georgia,'Times New Roman',serif;
+    --sans:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:var(--serif); line-height:1.5;
+        -webkit-text-size-adjust:100%; padding:28px 20px 52px;}
+  .wrap{max-width:860px; margin:0 auto;}
+  .eyebrow{ font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.14em;
+            color:var(--muted); text-transform:uppercase; margin:0 0 8px;}
+  h1{ font-family:var(--sans); font-weight:700; color:var(--ink);
+      font-size:clamp(23px,4.6vw,34px); line-height:1.1; margin:0 0 6px;}
+  .sub{ font-style:italic; color:var(--accent); font-size:clamp(14px,2.3vw,17px); margin:0 0 14px;}
+  .toprule{height:2px; background:var(--accent); border:0; margin:0 0 16px; opacity:.85;}
+  .howto{ font-size:14px; margin:0 0 16px; max-width:66ch;}
+
+  .spine{ background:var(--paper); border:1px solid var(--rule); border-radius:10px;
+          padding:12px 14px; margin:0 0 14px; text-align:center;}
+  .eq{ font-family:var(--serif); font-size:20px; letter-spacing:.01em;}
+  .eq .tau{ color:var(--accent); font-weight:700;}
+  .verdict{ font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:6px;}
+  .verdict b{ font-weight:700;}
+  .verdict .type{ font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+
+  .panels{ display:flex; flex-wrap:wrap; gap:12px;}
+  .panel{ flex:1 1 320px; background:var(--paper); border:1px solid var(--rule); border-radius:12px; padding:10px 10px 6px;}
+  .panel h2{ font-family:var(--sans); font-weight:700; font-size:13.5px; margin:2px 2px 2px; color:var(--ink);}
+  .panel .cap{ font-family:var(--sans); font-size:11.5px; color:var(--muted); margin:0 2px 6px;}
+  svg.fig{ width:100%; height:auto; display:block;}
+
+  .controls{ display:flex; flex-wrap:wrap; align-items:center; gap:9px 12px; margin:16px 0 0;
+             padding:12px 14px; background:var(--paper); border:1px solid var(--rule); border-radius:10px;}
+  .controls .row{ display:flex; align-items:center; gap:10px; width:100%;}
+  .slab{ font-family:var(--sans); font-size:12px; color:var(--muted); white-space:nowrap;}
+  input[type=range]{ flex:1; accent-color:var(--accent);}
+  .btn{ font-family:var(--sans); font-weight:600; font-size:12.5px; color:var(--ink);
+        background:transparent; border:1px solid var(--rule); border-radius:7px; padding:7px 11px; cursor:pointer;}
+  .btn:active{ transform:translateY(1px);}
+
+  .foot{ margin:24px 0 0; border-top:1px solid var(--rule); padding-top:18px;}
+  .foot p{ font-size:14px; margin:0 0 9px; max-width:74ch;}
+  .foot em{font-style:italic;} .foot b{color:var(--accent); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Anharmonic Interface · interactive note</p>
+  <h1>The Shared Discriminant</h1>
+  <p class="sub">One quadratic, counted against a line — read once as a conic, once as a Möbius map.</p>
+  <hr class="toprule">
+  <p class="howto"><em>Drag the dial.</em> A single number τ drives both pictures through the same discriminant Δ = τ²−4. On the left it is a conic and Δ counts its real points at infinity — its asymptotic directions. On the right it is a Möbius map and the same Δ counts its fixed points on the real line. Negative gives the bounded, rotating, two-points-off-the-line case: <em>elliptic</em> in both.</p>
+
+  <div class="spine">
+    <div class="eq">z² &minus; <span class="tau" id="eqTau">0.00</span> z + 1 = 0</div>
+    <div class="verdict">
+      Δ = τ²&minus;4 = <b id="vDisc">&minus;4.00</b> <span id="vSign">&lt; 0</span>
+      &nbsp;·&nbsp; real roots on the line: <b id="vRoots">0</b>
+      &nbsp;·&nbsp; <span class="type" id="vType">elliptic</span>
+    </div>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>As a conic</h2>
+      <p class="cap">type from B²&minus;4AC — its real points at infinity (asymptotic directions)</p>
+      <svg id="figC" class="fig" viewBox="0 0 340 300" role="img" aria-label="A conic whose type is set by the dial, with its asymptotic directions."></svg>
+    </div>
+    <div class="panel">
+      <h2>As a Möbius map</h2>
+      <p class="cap">type from τ²&minus;4 — its fixed points on the real line, with the invariant flow</p>
+      <svg id="figM" class="fig" viewBox="0 0 340 300" role="img" aria-label="A Möbius map whose fixed points and flow are set by the dial."></svg>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <span class="slab">τ = <span id="tauOut">0.00</span></span>
+      <input type="range" id="tau" min="-3" max="3" step="0.01" value="0">
+    </div>
+    <button class="btn" data-t="0">circle · τ = 0</button>
+    <button class="btn" data-t="1.3">ellipse · elliptic</button>
+    <button class="btn" data-t="2">parabola · parabolic</button>
+    <button class="btn" data-t="2.6">hyperbola · hyperbolic</button>
+  </div>
+
+  <div class="foot">
+    <p><b>What the dial does.</b> The quadratic z² − τz + 1 has discriminant Δ = τ²−4 — the same number that classifies a conic by B²−4AC and a Möbius map by its trace. Both pictures read that one number the same way: count the real roots, 0, 1, or 2, and see them as crossings of a line. The conic crosses the line at infinity; the map crosses the real line.</p>
+    <p><b>Left.</b> The conic is the section y² = (τ²/4 − 1)x² + τx + 1 — a circle at τ = 0, opening into an ellipse, a parabola at τ = ±2, then a hyperbola. Its asymptotic directions are the real roots of the leading form: none for the ellipse (bounded, no real points at infinity), one doubled direction for the parabola (tangent at infinity), two for the hyperbola.</p>
+    <p><b>Right.</b> The fixed points are the roots of z² − τz + 1, so their product is 1: a conjugate pair on the unit circle when Δ &lt; 0 (off the real line — a rotation), colliding at z = ±1 when Δ = 0 (one doubled point — a shear), splitting to a reciprocal pair on the real line when Δ &gt; 0 (a source and a sink). The light arcs are the invariant flow.</p>
+    <p><b>What it says.</b> Elliptic, parabolic, hyperbolic are not three borrowed names — they are one classification, a quadratic's real roots counted against a line, appearing in two arenas because both descend from a 2×2 matrix's eigenvalues: complex, repeated, or real. Ledger: the discriminant correspondence is theorem-grade, verified here. The older reading of the fixed points as <em>foci</em> stays a rhyme — focus-like, not foci.</p>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var SANS="'TeX Gyre Heros',Arial,sans-serif";
+  var S=40, OX=170, OY=150, XR=4.2, YR=3.6;            // math -> screen
+  function sx(x){ return OX + S*x; }
+  function sy(y){ return OY - S*y; }
+  var figC=document.getElementById("figC"), figM=document.getElementById("figM");
+
+  function el(t,a){ var e=document.createElementNS(NS,t); for(var k in a){ if(a.hasOwnProperty(k)) e.setAttribute(k,a[k]); } return e; }
+  function clear(g){ while(g.firstChild) g.removeChild(g.firstChild); }
+  function txt(g,x,y,size,col,anchor,weight,s){ var t=el("text",{x:x,y:y,"font-family":SANS,"font-size":size,fill:col,"text-anchor":anchor||"start","font-weight":weight||400}); t.textContent=s; g.appendChild(t); return t; }
+  function axes(g){
+    g.appendChild(el("line",{x1:sx(-XR),y1:sy(0),x2:sx(XR),y2:sy(0),stroke:"#43203f","stroke-width":1,opacity:0.18}));
+    g.appendChild(el("line",{x1:sx(0),y1:sy(-YR),x2:sx(0),y2:sy(YR),stroke:"#43203f","stroke-width":1,opacity:0.10}));
+  }
+
+  // colours by type
+  function typeOf(d){ return d<-1e-9?"elliptic":(Math.abs(d)<1e-9?"parabolic":"hyperbolic"); }
+  function colOf(ty){ return ty==="elliptic"?"#6a2c91":ty==="parabolic"?"#1f7a70":"#c0322b"; }
+
+  // ---------- conic panel ----------
+  function drawConic(t){
+    clear(figC);
+    var a=t*t/4-1, d=t*t-4, ty=typeOf(d), col=colOf(ty);
+    axes(figC);
+    // the curve y^2 = a x^2 + t x + 1, both branches, broken where negative
+    function branch(sign){
+      var pts=[];
+      for(var x=-XR; x<=XR+1e-9; x+=0.025){
+        var rhs=a*x*x+t*x+1;
+        if(rhs>=0){ pts.push([sx(x),sy(sign*Math.sqrt(rhs))]); }
+        else { if(pts.length>1) flush(pts); pts=[]; }
+      }
+      if(pts.length>1) flush(pts);
+    }
+    function flush(pts){
+      var s=pts.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" ");
+      figC.appendChild(el("polyline",{points:s,fill:"none",stroke:"#43203f","stroke-width":2,opacity:0.85,"stroke-linecap":"round","stroke-linejoin":"round","clip-path":"url(#clipC)"}));
+    }
+    branch(1); branch(-1);
+    // asymptotic directions = real roots of the leading form
+    if(d>1e-9){                                  // hyperbola: two asymptotes through the centre
+      var xc=-t/(2*a), m=Math.sqrt(a);
+      [m,-m].forEach(function(slope){
+        figC.appendChild(el("line",{x1:sx(xc-XR),y1:sy(-slope*XR),x2:sx(xc+XR),y2:sy(slope*XR),
+          stroke:col,"stroke-width":1.4,opacity:0.7,"stroke-dasharray":"5 4","clip-path":"url(#clipC)"}));
+      });
+    } else if(Math.abs(d)<1e-9){                 // parabola: one doubled direction (axis y=0)
+      figC.appendChild(el("line",{x1:sx(-XR),y1:sy(0),x2:sx(XR),y2:sy(0),stroke:col,"stroke-width":1.6,opacity:0.7,"stroke-dasharray":"5 4"}));
+    }
+    var n=d<-1e-9?0:(Math.abs(d)<1e-9?1:2);
+    txt(figC, 12, 22, 12.5, col, "start", 700, "points at infinity: "+n);
+  }
+
+  // ---------- mobius panel ----------
+  function drawMob(t){
+    clear(figM);
+    var d=t*t-4, ty=typeOf(d), col=colOf(ty);
+    // unit circle (reference), then axes, with the real line emphasised in gold
+    figM.appendChild(el("circle",{cx:sx(0),cy:sy(0),r:S,fill:"none",stroke:"#43203f","stroke-width":1,opacity:0.12}));
+    figM.appendChild(el("line",{x1:sx(0),y1:sy(-YR),x2:sx(0),y2:sy(YR),stroke:"#43203f","stroke-width":1,opacity:0.10}));
+    figM.appendChild(el("line",{x1:sx(-XR),y1:sy(0),x2:sx(XR),y2:sy(0),stroke:"#b08948","stroke-width":2,opacity:0.7}));
+    txt(figM, sx(XR)-4, sy(0)-6, 10.5, "#7c5e30", "end", 600, "the real line");
+
+    function orbit(cx,cy,r){ if(r<=0.02) return; figM.appendChild(el("circle",{cx:sx(cx),cy:sy(cy),r:S*r,fill:"none",stroke:col,"stroke-width":1.2,opacity:0.38,"clip-path":"url(#clipM)"})); }
+    function dot(x,y){ figM.appendChild(el("circle",{cx:sx(x),cy:sy(y),r:5.2,fill:col,stroke:"#fffdf9","stroke-width":1.4})); }
+
+    if(d<-1e-9){                                   // elliptic: conjugate pair on |z|=1, orbits encircle each
+      var b=Math.sqrt(-d)/2, ax=t/2;
+      [0.45,0.72].forEach(function(k){ var yc=b*(1+k*k)/(1-k*k), r=2*b*k/(1-k*k); orbit(ax,yc,r); orbit(ax,-yc,r); });
+      dot(ax,b); dot(ax,-b);
+      txt(figM, 12, 22, 12.5, col, "start", 700, "fixed points on the line: 0");
+    } else if(Math.abs(d)<1e-9){                   // parabolic: one doubled point on the line, horocycles
+      var p=t/2;
+      [0.45,0.9].forEach(function(rho){ orbit(p,rho,rho); orbit(p,-rho,rho); });
+      dot(p,0);
+      figM.appendChild(el("circle",{cx:sx(p),cy:sy(0),r:8.5,fill:"none",stroke:col,"stroke-width":1.4,opacity:0.6}));
+      txt(figM, 12, 22, 12.5, col, "start", 700, "fixed points on the line: 1 (doubled)");
+    } else {                                        // hyperbolic: reciprocal pair on the line, circles through both
+      var r0=Math.sqrt(d)/2, cxh=t/2, r1=cxh-r0, r2=cxh+r0;
+      [0.5,1.3].forEach(function(yc){ var R=Math.sqrt(r0*r0+yc*yc); orbit(cxh,yc,R); orbit(cxh,-yc,R); });
+      dot(r1,0); dot(r2,0);
+      txt(figM, 12, 22, 12.5, col, "start", 700, "fixed points on the line: 2");
+    }
+  }
+
+  // clip paths so curves/lines stay inside each panel
+  function addClip(svg,id){ var cp=el("clipPath",{id:id}); cp.appendChild(el("rect",{x:1,y:1,width:338,height:298})); var defs=el("defs",{}); defs.appendChild(cp); svg.appendChild(defs); }
+  addClip(figC,"clipC"); addClip(figM,"clipM");
+
+  // ---------- spine + wiring ----------
+  var eqTau=document.getElementById("eqTau"), vDisc=document.getElementById("vDisc"),
+      vSign=document.getElementById("vSign"), vRoots=document.getElementById("vRoots"),
+      vType=document.getElementById("vType"), tauOut=document.getElementById("tauOut"),
+      slider=document.getElementById("tau");
+
+  function render(t){
+    var d=t*t-4, ty=typeOf(d), col=colOf(ty);
+    eqTau.textContent=t.toFixed(2); tauOut.textContent=t.toFixed(2);
+    vDisc.textContent=(d<0?"\u2212":"")+Math.abs(d).toFixed(2);
+    vSign.textContent = d<-1e-9?"< 0":(Math.abs(d)<1e-9?"= 0":"> 0");
+    vRoots.textContent = d<-1e-9?"0":(Math.abs(d)<1e-9?"1":"2");
+    vType.textContent = ty + " · " + (ty==="elliptic"?"ellipse":ty==="parabolic"?"parabola":"hyperbola");
+    vType.style.color=col;
+    drawConic(t); drawMob(t);
+  }
+
+  slider.addEventListener("input",function(){ render(parseFloat(slider.value)); });
+  var btns=document.querySelectorAll(".btn");
+  for(var i=0;i<btns.length;i++){ btns[i].addEventListener("click",function(){ var v=parseFloat(this.getAttribute("data-t")); slider.value=v; render(v); }); }
+
+  render(0);
+})();
+</script>
+</body>
+</html>
