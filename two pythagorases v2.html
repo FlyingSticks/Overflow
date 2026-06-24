@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Two Pythagorases, One Sliding Point</title>
+<style>
+  :root { color-scheme: light; }
+  html, body { margin: 0; padding: 0; background: #faf6ef; }
+  body { color: #43203f; font-family: 'FreeSerif','Liberation Serif',Georgia,'Times New Roman',serif; -webkit-text-size-adjust: 100%; line-height: 1.5; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 56px; }
+  h1 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight: 700; color: #6a2c91; font-size: clamp(24px,5vw,38px); letter-spacing: -0.01em; margin: 0 0 10px; }
+  .lede { font-size: clamp(16px,2.4vw,18px); margin: 0 0 6px; max-width: 76ch; }
+  .howto { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 13.5px; color: #6a2c91; margin: 14px 0 4px; letter-spacing: 0.01em; max-width: 76ch; }
+  .stage { background: #ffffff; border: 1px solid #e7ddcd; border-radius: 10px; padding: 6px 8px 2px; box-shadow: 0 1px 0 #efe7d8; margin-top: 8px; }
+  svg { width: 100%; height: auto; display: block; touch-action: none; }
+  .pwrap { margin: 16px 2px 2px; }
+  .pwrap label { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9a8f7e; display: block; margin-bottom: 6px; }
+  input[type=range] { width: 100%; accent-color: #6a2c91; height: 28px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 4px; }
+  button { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 14px; letter-spacing: 0.02em; color: #43203f; background: #ffffff; border: 1.5px solid #c8b9d6; border-radius: 999px; padding: 9px 16px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .15s,color .15s,border-color .15s; }
+  button:hover { border-color: #6a2c91; }
+  button[aria-pressed="true"] { background: #6a2c91; border-color: #6a2c91; color: #faf6ef; }
+  button:focus-visible { outline: 3px solid #b08948; outline-offset: 2px; }
+  .grp { margin-top: 16px; }
+  .grp h3 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a8f7e; margin: 0 0 7px; }
+  .cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+  @media (max-width: 640px) { .cards { grid-template-columns: repeat(2,1fr); } }
+  .card { border: 1px solid #e7ddcd; border-radius: 8px; background: #ffffff; padding: 9px 10px; }
+  .card .k { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: #9a8f7e; }
+  .card .v { font-size: 21px; margin-top: 2px; line-height: 1.05; }
+  .card.aa .v { color: #c0322b; } .card.bb .v { color: #2f5fb0; } .card.cc .v { color: #6a2c91; }
+  .card.chk { border-color: #d8c6e6; background: #f7f1fb; } .card.chk .v { color: #6a2c91; font-size: 17px; }
+  .checkline { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #6a2c91; margin-top: 10px; letter-spacing: 0.01em; }
+  .checkline .n { color: #43203f; }
+  .ledger { margin-top: 24px; border-top: 1px solid #e7ddcd; padding-top: 16px; font-size: 15px; max-width: 82ch; }
+  .ledger h2 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a8f7e; margin: 0 0 8px; }
+  .ledger p { margin: 0 0 9px; }
+  .tag { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #6a2c91; border: 1px solid #d8c6e6; border-radius: 4px; padding: 1px 6px; margin-right: 7px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Two Pythagorases, one sliding point</h1>
+  <p class="lede">Two fixed unit squares share a red line; every black corner is pinned. The only motion is B sliding on the line.
+  <strong>Above</strong>, B is the corner of the rotating inscribed square &mdash; the Euclidean law c&sup2; = a&sup2; + b&sup2;.
+  <strong>Below</strong>, B drives the harmonic dissection: the pink triangles OAB and BPD always sum to the blue triangle OP2,
+  because the purple overlap OBP equals the white void &mdash; the Minkowski / slide reading.</p>
+  <p class="howto">Drag B (or the slider). Snap to 3-4-5 for 9, 16, 25 up top. The cards check both laws live: A+B=C above, OAB+BPD=OP2 below.</p>
+
+  <div class="stage">
+    <svg id="svg" viewBox="0 0 560 670" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Two stacked unit squares sharing a red line; rotation above, harmonic slide dissection below, driven by one sliding point B.">
+
+      <text x="150" y="28" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="12" letter-spacing="0.1em" fill="#9a8f7e">ROTATION &middot; c&sup2; = a&sup2; + b&sup2;</text>
+
+      <!-- TOP square: rotating inscribed square -->
+      <line id="diagT" stroke="#43203f" stroke-width="1" stroke-dasharray="4 5" stroke-opacity="0.3"/>
+      <polygon id="ct1" points="" fill="#c0322b" fill-opacity="0.12"/>
+      <polygon id="ct2" points="" fill="#c0322b" fill-opacity="0.12"/>
+      <polygon id="ct3" points="" fill="#c0322b" fill-opacity="0.12"/>
+      <polygon id="ct4" points="" fill="#c0322b" fill-opacity="0.12"/>
+      <polygon id="insc" points="" fill="#2f5fb0" fill-opacity="0.22" stroke="#2f5fb0" stroke-width="2" stroke-linejoin="round"/>
+      <polygon id="outerT" points="" fill="none" stroke="#43203f" stroke-width="2" stroke-linejoin="round"/>
+      <text id="cTop" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="20" fill="#2f5fb0" text-anchor="middle">c&sup2;</text>
+
+      <!-- red shared line -->
+      <line id="redline" x1="40" y1="300" x2="520" y2="300" stroke="#d4322b" stroke-width="3.5"/>
+      <text x="524" y="296" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="10.5" letter-spacing="0.06em" fill="#9a8f7e">ROTATION</text>
+      <text x="524" y="312" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="10.5" letter-spacing="0.06em" fill="#9a8f7e">SLIDE</text>
+
+      <!-- BOTTOM square: harmonic dissection -->
+      <polygon id="op2" points="" fill="#2f5fb0" fill-opacity="0.20"/>
+      <polygon id="oab" points="" fill="#c0322b" fill-opacity="0.17"/>
+      <polygon id="bpd" points="" fill="#c0322b" fill-opacity="0.17"/>
+      <polygon id="obp" points="" fill="#6a2c91" fill-opacity="0.36"/>
+      <polygon id="voidr" points="" fill="#43203f" fill-opacity="0.07" stroke="#9a8f7e" stroke-width="1" stroke-dasharray="4 3"/>
+      <polygon id="outerB" points="" fill="none" stroke="#43203f" stroke-width="2" stroke-linejoin="round"/>
+      <line id="diagB" stroke="#43203f" stroke-width="1.2" stroke-dasharray="5 4" stroke-opacity="0.55"/>
+      <line id="b2" stroke="#2f5fb0" stroke-width="1.5"/>
+
+      <text id="lOAB" font-family="'FreeSerif',Georgia,serif" font-size="14" fill="#a02a22" text-anchor="middle">OAB</text>
+      <text id="lBPD" font-family="'FreeSerif',Georgia,serif" font-size="13" fill="#a02a22" text-anchor="middle">BPD</text>
+      <text id="lOP2" font-family="'FreeSerif',Georgia,serif" font-size="15" fill="#23508f" text-anchor="middle">OP2</text>
+      <text id="lOBP" font-family="'FreeSerif',Georgia,serif" font-size="11" fill="#4a2154" text-anchor="middle">OBP</text>
+      <text id="lVoid" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="10.5" letter-spacing="0.05em" fill="#7d6a55" text-anchor="middle">VOID</text>
+
+      <!-- vertices -->
+      <circle id="ptO" r="4.2" fill="#43203f"/><text id="lO" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#43203f" text-anchor="middle">O</text>
+      <circle id="ptA" r="4.2" fill="#c0322b"/><text id="lA" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#c0322b" text-anchor="middle">A</text>
+      <circle id="ptD" r="4.2" fill="#2f5fb0"/><text id="lD" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#2f5fb0" text-anchor="middle">D</text>
+      <circle id="pt2" r="4.2" fill="#43203f"/><text id="l2" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#43203f" text-anchor="middle">2</text>
+      <circle id="ptP" r="4.8" fill="#7d3c9e" stroke="#faf6ef" stroke-width="1.4"/><text id="lP" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="14" fill="#7d3c9e" text-anchor="middle">P</text>
+
+      <text id="botTag" x="150" y="658" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="12" letter-spacing="0.1em" fill="#9a8f7e">SLIDE &middot; OAB + BPD = OP2 &middot; overlap = void</text>
+
+      <!-- shared sliding point B (on the red line) -->
+      <circle id="ptB" r="7.5" fill="#7d3c9e" stroke="#faf6ef" stroke-width="2.5"/>
+      <text id="lB" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#7d3c9e" text-anchor="middle">B</text>
+      <circle id="hitB" r="26" fill="#000000" fill-opacity="0" pointer-events="all" style="cursor:ew-resize"/>
+    </svg>
+  </div>
+
+  <div class="pwrap">
+    <label for="slide">Slide B along the red line</label>
+    <input id="slide" type="range" min="20" max="980" value="571">
+  </div>
+  <div class="controls">
+    <button id="btnSnap">Snap to 3-4-5</button>
+    <button id="btnPlay" aria-pressed="false">Play</button>
+  </div>
+
+  <div class="grp">
+    <h3>Rotation &mdash; Euclidean (c&sup2; = a&sup2; + b&sup2;)</h3>
+    <div class="cards">
+      <div class="card aa"><div class="k">a&sup2;</div><div class="v"><span id="vA">0.18</span></div></div>
+      <div class="card aa"><div class="k">b&sup2;</div><div class="v"><span id="vB">0.33</span></div></div>
+      <div class="card bb"><div class="k">c&sup2;</div><div class="v"><span id="vC">0.51</span></div></div>
+      <div class="card chk"><div class="k">check</div><div class="v">a&sup2;+b&sup2; = <span id="vSum">0.51</span></div></div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h3>Slide &mdash; harmonic (OAB + BPD = OP2)</h3>
+    <div class="cards">
+      <div class="card aa"><div class="k">OAB</div><div class="v"><span id="vOAB">0.00</span></div></div>
+      <div class="card aa"><div class="k">BPD</div><div class="v"><span id="vBPD">0.00</span></div></div>
+      <div class="card aa"><div class="k">OAB + BPD</div><div class="v"><span id="vSlideSum">0.00</span></div></div>
+      <div class="card bb"><div class="k">OP2</div><div class="v"><span id="vOP2">0.00</span></div></div>
+    </div>
+    <div class="checkline">OAB + BPD = OP2 <span id="vEq">&#10003;</span> &nbsp;&middot;&nbsp; overlap OBP <span class="n" id="vOBP">0.00</span> = void <span class="n" id="vVoid">0.00</span></div>
+  </div>
+
+  <div class="ledger">
+    <h2>The ledger</h2>
+    <p><span class="tag">Theorem</span>Above: the inscribed square has side c with c&sup2; = a&sup2; + b&sup2;. Below: with P fixed at OD &cap; (B&ndash;2), the upper triangle OAD
+    splits as OAB + OBP + BPD and the lower as OP2 + VOID. Both halves are equal, and OBP = VOID, so OAB + BPD = OP2 &mdash; exactly, for every B.</p>
+    <p><span class="tag">Two metrics</span>One sliding point, two combinations of the same split: sum of squares above (Euclidean, the rotation), and the
+    harmonic area balance below (the Minkowski slide). The overlap that cancels the void is what makes the slide reading hold.</p>
+    <p><span class="tag">Note</span>The bottom panel is now the five-region dissection of the harmonic figure rather than a generic sliding-apex &mdash;
+    OBP = VOID is verified live alongside OAB + BPD = OP2.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var X0 = 150, S = 260, YL = 300;
+  var T = 0.571;
+  var TMIN = 0.05, TMAX = 0.95;
+
+  function TL(u, v) { return [X0 + u * S, YL - v * S]; }          // top square (v up)
+  function BH(mx, my) { return [X0 + mx * S, (YL + S) - my * S]; } // bottom square, harmonic math coords (y up; A,D at my=1 on red line)
+  function $(id) { return document.getElementById(id); }
+  function P2(p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }
+  function setPts(id, arr) { $(id).setAttribute('points', arr.map(P2).join(' ')); }
+  function setPtsH(id, m) { setPts(id, m.map(function (p) { return BH(p[0], p[1]); })); }
+  function setLine(id, a, b) { var e = $(id); e.setAttribute('x1', a[0]); e.setAttribute('y1', a[1]); e.setAttribute('x2', b[0]); e.setAttribute('y2', b[1]); }
+  function setLineH(id, a, b) { setLine(id, BH(a[0], a[1]), BH(b[0], b[1])); }
+  function setXY(id, x, y) { var e = $(id); e.setAttribute('x', x.toFixed(1)); e.setAttribute('y', y.toFixed(1)); }
+  function setC(id, p) { var e = $(id); e.setAttribute('cx', p[0].toFixed(1)); e.setAttribute('cy', p[1].toFixed(1)); }
+  function cen(m) { var x = 0, y = 0; m.forEach(function (p) { x += p[0]; y += p[1]; }); return [x / m.length, y / m.length]; }
+
+  function render() {
+    var t = T, a = 1 - t, b = t, c = Math.hypot(a, b);
+
+    // ---- TOP: rotating inscribed square ----
+    setPts('outerT', [TL(0,0), TL(1,0), TL(1,1), TL(0,1)]);
+    setLine('diagT', TL(0,0), TL(1,1));
+    setPts('insc', [TL(t,0), TL(1,t), TL(1-t,1), TL(0,1-t)]);
+    setPts('ct1', [TL(0,0), TL(t,0), TL(0,1-t)]);
+    setPts('ct2', [TL(t,0), TL(1,0), TL(1,t)]);
+    setPts('ct3', [TL(1,t), TL(1,1), TL(1-t,1)]);
+    setPts('ct4', [TL(1-t,1), TL(0,1), TL(0,1-t)]);
+    var cC = TL(0.5, 0.5); setXY('cTop', cC[0], cC[1] + 7);
+
+    // ---- BOTTOM: harmonic dissection ----
+    var s = 1 / (2 - t);
+    var O = [0,0], A = [0,1], D = [1,1], Two = [1,0], B = [t,1], P = [s,s];
+    setPtsH('op2', [O, P, Two]);
+    setPtsH('oab', [O, A, B]);
+    setPtsH('bpd', [B, P, D]);
+    setPtsH('obp', [O, B, P]);
+    setPtsH('voidr', [P, D, Two]);
+    setPtsH('outerB', [O, Two, D, A]);
+    setLineH('diagB', O, D);
+    setLineH('b2', B, Two);
+
+    var pOAB = BH.apply(null, cen([O, A, B])); setXY('lOAB', pOAB[0], pOAB[1] + 5);
+    var pBPD = BH.apply(null, cen([B, P, D])); setXY('lBPD', pBPD[0] + 2, pBPD[1] + 5);
+    var pOP2 = BH.apply(null, cen([O, P, Two])); setXY('lOP2', pOP2[0] + 4, pOP2[1] + 5);
+    var obpArea = 0.5 * s * (1 - t), voidArea = 0.5 * (1 - s);
+    var pOBP = BH.apply(null, cen([O, B, P]));
+    if (obpArea > 0.02) { setXY('lOBP', pOBP[0], pOBP[1] + 4); $('lOBP').setAttribute('visibility','visible'); } else $('lOBP').setAttribute('visibility','hidden');
+    var pVoid = BH.apply(null, cen([P, D, Two]));
+    if (voidArea > 0.02) { setXY('lVoid', pVoid[0], pVoid[1] + 4); $('lVoid').setAttribute('visibility','visible'); } else $('lVoid').setAttribute('visibility','hidden');
+
+    // vertices
+    var Os = BH(0,0), As = BH(0,1), Ds = BH(1,1), Ts = BH(1,0), Ps = BH(s,s);
+    setC('ptO', Os); setXY('lO', Os[0] - 13, Os[1] + 5);
+    setC('ptA', As); setXY('lA', As[0] + 11, As[1] + 16);
+    setC('ptD', Ds); setXY('lD', Ds[0] - 11, Ds[1] + 16);
+    setC('pt2', Ts); setXY('l2', Ts[0] + 13, Ts[1] + 6);
+    setC('ptP', Ps); setXY('lP', Ps[0] + 12, Ps[1] + 5);
+
+    // shared B handle (on red line)
+    var Bs = TL(t, 0);
+    setC('ptB', Bs); setC('hitB', Bs); setXY('lB', Bs[0], Bs[1] - 12);
+
+    // ---- numbers ----
+    var A2 = a * a, B2 = b * b, C2 = c * c;
+    $('vA').textContent = A2.toFixed(2); $('vB').textContent = B2.toFixed(2); $('vC').textContent = C2.toFixed(2); $('vSum').textContent = (A2 + B2).toFixed(2);
+    var OAB = t / 2, BPD = 0.5 * (1 - s) * (1 - t), OP2 = s / 2;
+    $('vOAB').textContent = OAB.toFixed(2); $('vBPD').textContent = BPD.toFixed(2); $('vSlideSum').textContent = (OAB + BPD).toFixed(2); $('vOP2').textContent = OP2.toFixed(2);
+    $('vOBP').textContent = obpArea.toFixed(2); $('vVoid').textContent = voidArea.toFixed(2);
+    $('vEq').innerHTML = (Math.abs(OAB + BPD - OP2) < 1e-6 && Math.abs(obpArea - voidArea) < 1e-6) ? '&#10003;' : '&#10007;';
+    $('slide').value = Math.round((T - 0) / 1 * 960 + 20);
+  }
+
+  // slider
+  var sl = $('slide');
+  sl.addEventListener('input', function () { stopPlay(); T = clampT((this.value - 20) / 960); render(); });
+  function clampT(x) { return Math.max(TMIN, Math.min(TMAX, x)); }
+
+  // drag B
+  var svg = $('svg'), hit = $('hitB'), dragging = false;
+  function toX(cx) { var pt = svg.createSVGPoint ? svg.createSVGPoint() : new DOMPoint(); pt.x = cx; pt.y = 0; var m = svg.getScreenCTM(); if (!m) return null; return pt.matrixTransform(m.inverse()).x; }
+  function moveTo(cx) { var x = toX(cx); if (x == null) return; T = clampT((x - X0) / S); sl.value = Math.round(T * 960 + 20); render(); }
+  hit.addEventListener('pointerdown', function (e) { e.preventDefault(); stopPlay(); dragging = true; try { hit.setPointerCapture(e.pointerId); } catch (x) {} moveTo(e.clientX); });
+  hit.addEventListener('pointermove', function (e) { if (dragging) moveTo(e.clientX); });
+  hit.addEventListener('pointerup', function (e) { dragging = false; try { hit.releasePointerCapture(e.pointerId); } catch (x) {} });
+  hit.addEventListener('pointercancel', function () { dragging = false; });
+
+  $('btnSnap').addEventListener('click', function () { stopPlay(); T = 4 / 7; sl.value = Math.round(T * 960 + 20); render(); });
+
+  var btnPlay = $('btnPlay'), raf = null, ph = 0;
+  function tick() { ph += 0.012; var u = (Math.sin(ph) + 1) / 2; T = clampT(u); sl.value = Math.round(T * 960 + 20); render(); raf = requestAnimationFrame(tick); }
+  function stopPlay() { if (raf) { cancelAnimationFrame(raf); raf = null; } btnPlay.setAttribute('aria-pressed', 'false'); btnPlay.textContent = 'Play'; }
+  btnPlay.addEventListener('click', function () { if (raf) stopPlay(); else { btnPlay.setAttribute('aria-pressed', 'true'); btnPlay.textContent = 'Pause'; raf = requestAnimationFrame(tick); } });
+
+  render();
+})();
+</script>
+</body>
+</html>

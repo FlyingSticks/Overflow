@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OAB + BPD = OP2</title>
+<style>
+  :root { color-scheme: light; }
+  html, body { margin: 0; padding: 0; background: #faf6ef; }
+  body { color: #43203f; font-family: 'FreeSerif','Liberation Serif',Georgia,'Times New Roman',serif; -webkit-text-size-adjust: 100%; line-height: 1.5; }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 28px 20px 56px; }
+  h1 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight: 700; color: #6a2c91; font-size: clamp(23px,5vw,36px); letter-spacing: -0.01em; margin: 0 0 10px; }
+  .lede { font-size: clamp(16px,2.4vw,18px); margin: 0 0 6px; max-width: 76ch; }
+  .eqn { font-family: 'FreeSerif',Georgia,serif; font-size: clamp(18px,2.8vw,23px); background: #f1eadf; border-radius: 8px; padding: 8px 15px; display: inline-block; margin: 8px 0 2px; }
+  .eqn .pk { color: #c0322b; } .eqn .bl { color: #2f5fb0; }
+  .howto { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 13.5px; color: #6a2c91; margin: 12px 0 4px; letter-spacing: 0.01em; max-width: 76ch; }
+  .stage { background: #ffffff; border: 1px solid #e7ddcd; border-radius: 10px; padding: 6px 8px 2px; box-shadow: 0 1px 0 #efe7d8; margin-top: 8px; }
+  svg { width: 100%; height: auto; display: block; touch-action: none; }
+  .pwrap { margin: 16px 2px 2px; }
+  .pwrap label { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9a8f7e; display: block; margin-bottom: 6px; }
+  input[type=range] { width: 100%; accent-color: #6a2c91; height: 28px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 9px; margin: 14px 0 4px; }
+  button { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 13.5px; letter-spacing: 0.02em; color: #43203f; background: #ffffff; border: 1.5px solid #c8b9d6; border-radius: 999px; padding: 8px 15px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .15s,color .15s,border-color .15s; }
+  button:hover { border-color: #6a2c91; }
+  button[aria-pressed="true"] { background: #6a2c91; border-color: #6a2c91; color: #faf6ef; }
+  button:focus-visible { outline: 3px solid #b08948; outline-offset: 2px; }
+  .cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; margin-top: 16px; }
+  @media (max-width: 640px) { .cards { grid-template-columns: repeat(2,1fr); } }
+  .card { border: 1px solid #e7ddcd; border-radius: 8px; background: #ffffff; padding: 9px 10px; }
+  .card .k { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #9a8f7e; }
+  .card .v { font-size: 21px; margin-top: 2px; line-height: 1.05; }
+  .card.pk .v { color: #c0322b; } .card.bl .v { color: #2f5fb0; }
+  .card.sum { border-color: #e6c3c3; background: #fbf3f2; } .card.sum .v { color: #c0322b; }
+  .checkline { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 14.5px; color: #6a2c91; margin-top: 12px; letter-spacing: 0.01em; }
+  .checkline.gm { color: #8a6a1f; }
+  .checkline .n { color: #43203f; }
+  .ledger { margin-top: 24px; border-top: 1px solid #e7ddcd; padding-top: 16px; font-size: 15px; max-width: 82ch; }
+  .ledger h2 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a8f7e; margin: 0 0 8px; }
+  .ledger p { margin: 0 0 9px; }
+  .tag { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #6a2c91; border: 1px solid #d8c6e6; border-radius: 4px; padding: 1px 6px; margin-right: 7px; }
+  .tag.g { color: #8a6a1f; border-color: #d8c69a; } .tag.gr { color: #2e7d52; border-color: #a9d2bb; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>OAB + BPD = OP2</h1>
+  <p class="lede">B slides along the top edge from A to D. P is pinned where the diagonal OD meets the line from B to the corner,
+  so the two pink triangles always sum to the blue one. The fan to the corner is that family of B&ndash;lines; it cuts the top edge
+  into the <span style="color:#8a6a1f">reciprocal ladder</span> 1, &frac12;, &frac13;&hellip;, while the bottom carries the
+  <span style="color:#2e7d52">&radic; ladder</span>, and the semicircle on AD reads the geometric mean.</p>
+  <div class="eqn"><span class="pk">OAB</span> + <span class="pk">BPD</span> = <span class="bl">OP2</span></div>
+  <p class="howto">Drag B (or the slider). Snap to marks 2, 3, 4 &mdash; B lands exactly on the reciprocal ticks. Toggle the ladders to declutter.</p>
+
+  <div class="stage">
+    <svg id="svg" viewBox="0 0 680 600" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="A 2 by 1 rectangle with a Thales semicircle on top; reciprocal ladder on the top edge, square-root ladder on the bottom, with a fan of lines to the corner; pink triangles OAB and BPD equal blue triangle OP2.">
+
+      <!-- Thales semicircle -->
+      <path id="arc" fill="none" stroke="#b08948" stroke-width="1.8"/>
+      <line id="vrad" stroke="#b08948" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.55"/>
+      <circle id="ptC" r="3.4" fill="#8a6a1f"/>
+      <text id="lC" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="10.5" letter-spacing="0.08em" fill="#8a6a1f" text-anchor="middle">CENTER</text>
+
+      <!-- ladders + fan (built by JS) -->
+      <g id="ladders"></g>
+
+      <!-- filled triangles -->
+      <polygon id="op2" points="" fill="#2f5fb0" fill-opacity="0.20"/>
+      <polygon id="oab" points="" fill="#c0322b" fill-opacity="0.17"/>
+      <polygon id="bpd" points="" fill="#c0322b" fill-opacity="0.17"/>
+      <polygon id="obp" points="" fill="#6a2c91" fill-opacity="0.36"/>
+
+      <!-- inscribed right triangle A-B'-D + altitude -->
+      <line id="chordA" stroke="#b08948" stroke-width="1.5"/>
+      <line id="chordD" stroke="#b08948" stroke-width="1.5"/>
+      <line id="alt" stroke="#8a6a1f" stroke-width="1.4" stroke-dasharray="5 3"/>
+      <polyline id="rang" fill="none" stroke="#8a6a1f" stroke-width="1.3"/>
+      <circle id="ptBp" r="4.5" fill="#8a6a1f" stroke="#faf6ef" stroke-width="1.5"/>
+      <text id="lBp" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="14" fill="#8a6a1f" text-anchor="middle">B&prime;</text>
+
+      <!-- rectangle + structural lines -->
+      <polygon id="rect" points="" fill="none" stroke="#43203f" stroke-width="1.8" stroke-linejoin="round"/>
+      <line id="diag" stroke="#43203f" stroke-width="1.3" stroke-dasharray="5 4" stroke-opacity="0.55"/>
+      <line id="b2" stroke="#2f5fb0" stroke-width="1.9"/>
+      <line id="ob" stroke="#c0322b" stroke-width="1.4"/>
+      <line id="pd" stroke="#c0322b" stroke-width="1.4"/>
+
+      <!-- region labels -->
+      <text id="lOAB" font-family="'FreeSerif',Georgia,serif" font-size="15" fill="#a02a22" text-anchor="middle">OAB</text>
+      <text id="lBPD" font-family="'FreeSerif',Georgia,serif" font-size="15" fill="#a02a22" text-anchor="middle">BPD</text>
+      <text id="lOP2" font-family="'FreeSerif',Georgia,serif" font-size="16" fill="#23508f" text-anchor="middle">OP2</text>
+      <text id="lOBP" font-family="'FreeSerif',Georgia,serif" font-size="12" fill="#4a2154" text-anchor="middle">OBP</text>
+
+      <!-- vertices -->
+      <circle id="ptO" r="4.5" fill="#43203f"/><text id="lO" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="16" fill="#43203f" text-anchor="middle">O</text>
+      <circle id="ptA" r="4.5" fill="#c0322b"/><text id="lA" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="16" fill="#c0322b" text-anchor="middle">A</text>
+      <circle id="ptD" r="4.5" fill="#2f5fb0"/><text id="lD" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="16" fill="#2f5fb0" text-anchor="middle">D</text>
+      <circle id="pt2" r="4.5" fill="#43203f"/><text id="l2" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="16" fill="#43203f" text-anchor="middle">2</text>
+      <circle id="ptP" r="5" fill="#7d3c9e" stroke="#faf6ef" stroke-width="1.5"/><text id="lP" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#7d3c9e" text-anchor="middle">P</text>
+
+      <!-- B handle -->
+      <circle id="ptB" r="7.5" fill="#7d3c9e" stroke="#faf6ef" stroke-width="2.5"/>
+      <text id="lB" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#7d3c9e" text-anchor="middle">B</text>
+      <circle id="hitB" r="28" fill="#000000" fill-opacity="0" pointer-events="all" style="cursor:ew-resize"/>
+    </svg>
+  </div>
+
+  <div class="pwrap">
+    <label for="slide">Slide B from A to D</label>
+    <input id="slide" type="range" min="0" max="1000" value="500">
+  </div>
+  <div class="controls">
+    <button id="b2btn">B &rarr; 2 &nbsp;(&frac12;)</button>
+    <button id="b3btn">B &rarr; 3 &nbsp;(&frac13;)</button>
+    <button id="b4btn">B &rarr; 4 &nbsp;(&frac14;)</button>
+    <button id="bLad" aria-pressed="true">Ladders</button>
+    <button id="bPlay" aria-pressed="false">Play</button>
+  </div>
+
+  <div class="cards">
+    <div class="card pk"><div class="k">OAB</div><div class="v"><span id="vOAB">0.50</span></div></div>
+    <div class="card pk"><div class="k">BPD</div><div class="v"><span id="vBPD">0.17</span></div></div>
+    <div class="card sum"><div class="k">OAB + BPD</div><div class="v"><span id="vSum">0.67</span></div></div>
+    <div class="card bl"><div class="k">OP2</div><div class="v"><span id="vOP2">0.67</span></div></div>
+  </div>
+  <div class="checkline">OAB + BPD = OP2 <span id="vEq">&#10003;</span> &nbsp;&middot;&nbsp; overlap OBP <span class="n" id="vOBP">0.33</span> cancels both sides &nbsp;&middot;&nbsp; B&rsquo;s value <span class="n" id="vVal">1/2</span></div>
+  <div class="checkline gm">Thales: right angle at B&prime; <span id="vRA">&#10003;</span> &nbsp;&middot;&nbsp; altitude BB&prime; = &radic;(AB&middot;BD) = <span class="n" id="vGM">1.000</span> (geometric mean)</div>
+
+  <div class="ledger">
+    <h2>The ledger</h2>
+    <p><span class="tag">Theorem</span>With P at OD &cap; (B&ndash;2), the upper triangle OAD splits as OAB + OBP + BPD and the lower as OP2 + leftover; the shared OBP
+    cancels, leaving OAB + BPD = OP2 &mdash; exactly, for every B.</p>
+    <p><span class="tag g">Reciprocal ladder</span>The line from the corner to height n on the left edge meets the top at x = 2(n&minus;1)/n, whose value is 1/n. So the fan to the
+    corner cuts the top into 1, &frac12;, &frac13;&hellip;&rarr;0, and each fan-line crosses OD at OP2 = n/(n+1). The ladder and the area law are one construction.</p>
+    <p><span class="tag gr">&radic; ladder</span>The bottom carries the partner scale at x = &radic;n, so the squared position reads the integer n &mdash; the additive register against the
+    reciprocal one above. <span class="tag g">Thales</span>The semicircle on AD supplies the geometric mean &radic;(AB&middot;BD) at B, the multiplicative bridge between them.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var OX = 90, OY = 540, SC = 250;
+  var XB = 1.0;
+  var XMIN = 0.02, XMAX = 1.97;
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  function MX(x) { return OX + SC * x; }
+  function MY(y) { return OY - SC * y; }
+  function $(id) { return document.getElementById(id); }
+  function poly(pts) { return pts.map(function (p) { return MX(p[0]).toFixed(1) + ',' + MY(p[1]).toFixed(1); }).join(' '); }
+  function setXY(id, x, y) { var e = $(id); e.setAttribute('x', x.toFixed(1)); e.setAttribute('y', y.toFixed(1)); }
+  function setC(id, x, y) { var e = $(id); e.setAttribute('cx', x.toFixed(1)); e.setAttribute('cy', y.toFixed(1)); }
+  function line(id, ax, ay, bx, by) { var e = $(id); e.setAttribute('x1', MX(ax)); e.setAttribute('y1', MY(ay)); e.setAttribute('x2', MX(bx)); e.setAttribute('y2', MY(by)); }
+  function cen(pts) { var x = 0, y = 0; pts.forEach(function (p) { x += p[0]; y += p[1]; }); return [x / pts.length, y / pts.length]; }
+  function vis(id, on) { $(id).setAttribute('visibility', on ? 'visible' : 'hidden'); }
+
+  // ---------- static scaffolding ----------
+  (function arc() {
+    var d = '';
+    for (var i = 0; i <= 64; i++) { var th = Math.PI * i / 64; d += (i ? 'L' : 'M') + MX(1 + Math.cos(th)).toFixed(1) + ',' + MY(1 + Math.sin(th)).toFixed(1) + ' '; }
+    $('arc').setAttribute('d', d);
+    line('vrad', 1, 1, 1, 2);
+    setC('ptC', MX(1), MY(1)); setXY('lC', MX(1), MY(1) - 9);
+  })();
+
+  function mkLine(x1, y1, x2, y2, stroke, w, op, dash) {
+    var e = document.createElementNS(SVGNS, 'line');
+    e.setAttribute('x1', x1.toFixed(1)); e.setAttribute('y1', y1.toFixed(1));
+    e.setAttribute('x2', x2.toFixed(1)); e.setAttribute('y2', y2.toFixed(1));
+    e.setAttribute('stroke', stroke); e.setAttribute('stroke-width', w); e.setAttribute('stroke-opacity', op);
+    if (dash) e.setAttribute('stroke-dasharray', dash);
+    return e;
+  }
+  function mkText(x, y, txt, size, fill, weight) {
+    var e = document.createElementNS(SVGNS, 'text');
+    e.setAttribute('x', x.toFixed(1)); e.setAttribute('y', y.toFixed(1));
+    e.setAttribute('font-size', size); e.setAttribute('fill', fill); e.setAttribute('text-anchor', 'middle');
+    e.setAttribute('font-family', weight === 'i' ? "'FreeSerif',Georgia,serif" : "'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif");
+    if (weight === 'i') e.setAttribute('font-style', 'italic');
+    e.textContent = txt;
+    return e;
+  }
+
+  (function buildLadders() {
+    var g = $('ladders'), n, x, px;
+    var corner = [MX(2), MY(0)];
+    // fan lines from corner to top marks (dense toward D)
+    var fanN = [1, 2, 3, 4, 5, 6, 8, 11, 16, 24, 40];
+    for (var i = 0; i < fanN.length; i++) {
+      n = fanN[i]; x = 2 * (n - 1) / n;
+      g.appendChild(mkLine(corner[0], corner[1], MX(x), MY(1), '#b08948', 0.8, i < 4 ? 0.22 : 0.14));
+    }
+    // top reciprocal ticks + labels
+    var topN = [1, 2, 3, 4, 5, 6, 8];
+    for (i = 0; i < topN.length; i++) {
+      n = topN[i]; x = 2 * (n - 1) / n; px = MX(x);
+      g.appendChild(mkLine(px, MY(1) - 5, px, MY(1) + 5, '#8a6a1f', 1.2, 0.8));
+      if (n <= 4) {
+        g.appendChild(mkText(px, MY(1) - 20, String(n), 11, '#43203f'));
+        g.appendChild(mkText(px, MY(1) - 9, '1/' + n, 9.5, '#8a6a1f'));
+      } else {
+        g.appendChild(mkText(px, MY(1) - 9, String(n), 8.5, '#9a8f7e'));
+      }
+    }
+    g.appendChild(mkText(MX(2) + 16, MY(1) - 9, '\u221E', 13, '#8a6a1f'));
+    // bottom sqrt ticks + labels
+    var sq = [0, 1, 2, 3, 4];
+    for (i = 0; i < sq.length; i++) {
+      n = sq[i]; x = Math.sqrt(n); px = MX(x);
+      g.appendChild(mkLine(px, MY(0) - 5, px, MY(0) + 5, '#2e7d52', 1.2, 0.85));
+      g.appendChild(mkText(px, MY(0) + 21, '\u221A' + n, 11, '#2e7d52'));
+    }
+  })();
+
+  // ---------- dynamic ----------
+  function render() {
+    var s = 2 / (4 - XB);
+    var O = [0, 0], A = [0, 1], D = [2, 1], Two = [2, 0], B = [XB, 1], P = [2 * s, s];
+
+    var hh = Math.sqrt(Math.max(0, XB * (2 - XB)));
+    var Bp = [XB, 1 + hh];
+    line('chordA', A[0], A[1], Bp[0], Bp[1]);
+    line('chordD', Bp[0], Bp[1], D[0], D[1]);
+    line('alt', B[0], B[1], Bp[0], Bp[1]);
+    setC('ptBp', MX(Bp[0]), MY(Bp[1])); setXY('lBp', MX(Bp[0]), MY(Bp[1]) - 10);
+    var bpx = MX(Bp[0]), bpy = MY(Bp[1]);
+    var ax = MX(A[0]) - bpx, ay = MY(A[1]) - bpy, dx = MX(D[0]) - bpx, dy = MY(D[1]) - bpy;
+    var la = Math.hypot(ax, ay) || 1, ld = Math.hypot(dx, dy) || 1, m = 13;
+    ax /= la; ay /= la; dx /= ld; dy /= ld;
+    var p1 = [bpx + m * ax, bpy + m * ay], p2 = [p1[0] + m * dx, p1[1] + m * dy], p3 = [bpx + m * dx, bpy + m * dy];
+    $('rang').setAttribute('points', p1.map(function (v) { return v.toFixed(1); }).join(',') + ' ' + p2.map(function (v) { return v.toFixed(1); }).join(',') + ' ' + p3.map(function (v) { return v.toFixed(1); }).join(','));
+    var showBp = hh > 0.12;
+    vis('ptBp', showBp); vis('lBp', showBp); vis('rang', showBp); vis('alt', hh > 0.04);
+
+    $('op2').setAttribute('points', poly([O, P, Two]));
+    $('oab').setAttribute('points', poly([O, A, B]));
+    $('bpd').setAttribute('points', poly([B, P, D]));
+    $('obp').setAttribute('points', poly([O, B, P]));
+
+    $('rect').setAttribute('points', poly([O, Two, D, A]));
+    line('diag', O[0], O[1], D[0], D[1]);
+    line('b2', B[0], B[1], Two[0], Two[1]);
+    line('ob', O[0], O[1], B[0], B[1]);
+    line('pd', P[0], P[1], D[0], D[1]);
+
+    var cOAB = cen([O, A, B]); setXY('lOAB', MX(cOAB[0]), MY(cOAB[1]) + 5);
+    var cBPD = cen([B, P, D]); setXY('lBPD', MX(cBPD[0]) + 4, MY(cBPD[1]) + 5);
+    var cOP2 = cen([O, P, Two]); setXY('lOP2', MX(cOP2[0]) + 6, MY(cOP2[1]) + 5);
+    var cOBP = cen([O, B, P]);
+    if (Math.abs(s * (2 - XB)) > 0.16) { setXY('lOBP', MX(cOBP[0]), MY(cOBP[1]) + 4); vis('lOBP', true); } else vis('lOBP', false);
+
+    setC('ptO', MX(0), MY(0)); setXY('lO', MX(0) - 14, MY(0) + 6);
+    setC('ptA', MX(0), MY(1)); setXY('lA', MX(0) - 14, MY(1) + 5);
+    setC('ptD', MX(2), MY(1)); setXY('lD', MX(2) + 14, MY(1) + 5);
+    setC('pt2', MX(2), MY(0)); setXY('l2', MX(2) + 14, MY(0) + 6);
+    setC('ptP', MX(P[0]), MY(P[1])); setXY('lP', MX(P[0]) + 13, MY(P[1]) + 5);
+    setC('ptB', MX(B[0]), MY(B[1])); setXY('lB', MX(B[0]), MY(B[1]) + 18);
+    setC('hitB', MX(B[0]), MY(B[1]));
+
+    var OAB = XB / 2, BPD = 0.5 * (1 - s) * (2 - XB), OP2 = s, OBP = 0.5 * s * (2 - XB);
+    $('vOAB').textContent = OAB.toFixed(2);
+    $('vBPD').textContent = BPD.toFixed(2);
+    $('vSum').textContent = (OAB + BPD).toFixed(2);
+    $('vOP2').textContent = OP2.toFixed(2);
+    $('vOBP').textContent = OBP.toFixed(2);
+    $('vEq').innerHTML = Math.abs(OAB + BPD - OP2) < 1e-6 ? '&#10003;' : '&#10007;';
+    var val = (2 - XB) / 2;
+    $('vVal').textContent = val.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+    $('vGM').textContent = hh.toFixed(3);
+    $('vRA').innerHTML = '&#10003;';
+    $('slide').value = Math.round(XB / 2 * 1000);
+  }
+
+  $('slide').addEventListener('input', function () { stopPlay(); XB = clamp(this.value / 1000 * 2); render(); });
+  function clamp(x) { return Math.max(XMIN, Math.min(XMAX, x)); }
+
+  var svg = $('svg'), hit = $('hitB'), dragging = false;
+  function toX(cx) { var pt = svg.createSVGPoint ? svg.createSVGPoint() : new DOMPoint(); pt.x = cx; pt.y = 0; var m = svg.getScreenCTM(); if (!m) return null; var p = pt.matrixTransform(m.inverse()); return (p.x - OX) / SC; }
+  function moveTo(cx) { var ux = toX(cx); if (ux == null) return; XB = clamp(ux); render(); }
+  hit.addEventListener('pointerdown', function (e) { e.preventDefault(); stopPlay(); dragging = true; try { hit.setPointerCapture(e.pointerId); } catch (x) {} moveTo(e.clientX); });
+  hit.addEventListener('pointermove', function (e) { if (dragging) moveTo(e.clientX); });
+  hit.addEventListener('pointerup', function (e) { dragging = false; try { hit.releasePointerCapture(e.pointerId); } catch (x) {} });
+  hit.addEventListener('pointercancel', function () { dragging = false; });
+
+  function mark(n) { return 2 * (n - 1) / n; }
+  $('b2btn').addEventListener('click', function () { stopPlay(); XB = mark(2); render(); });
+  $('b3btn').addEventListener('click', function () { stopPlay(); XB = mark(3); render(); });
+  $('b4btn').addEventListener('click', function () { stopPlay(); XB = mark(4); render(); });
+
+  var bLad = $('bLad');
+  bLad.addEventListener('click', function () {
+    var on = bLad.getAttribute('aria-pressed') === 'true';
+    bLad.setAttribute('aria-pressed', on ? 'false' : 'true');
+    $('ladders').setAttribute('visibility', on ? 'hidden' : 'visible');
+  });
+
+  var bPlay = $('bPlay'), raf = null, ph = 0;
+  function tick() { ph += 0.010; var u = (Math.sin(ph) + 1) / 2; XB = clamp(u * 2); render(); raf = requestAnimationFrame(tick); }
+  function stopPlay() { if (raf) { cancelAnimationFrame(raf); raf = null; } bPlay.setAttribute('aria-pressed', 'false'); bPlay.textContent = 'Play'; }
+  bPlay.addEventListener('click', function () { if (raf) stopPlay(); else { bPlay.setAttribute('aria-pressed', 'true'); bPlay.textContent = 'Pause'; raf = requestAnimationFrame(tick); } });
+
+  render();
+})();
+</script>
+</body>
+</html>
