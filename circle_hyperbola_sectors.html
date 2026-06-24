@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Circle (+) and Hyperbola (&minus;)</title>
+<style>
+  :root { color-scheme: light; }
+  html, body { margin: 0; padding: 0; background: #faf6ef; }
+  body { color: #43203f; font-family: 'FreeSerif','Liberation Serif',Georgia,'Times New Roman',serif; -webkit-text-size-adjust: 100%; line-height: 1.5; }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 28px 20px 56px; }
+  h1 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight: 700; color: #6a2c91; font-size: clamp(23px,5vw,36px); letter-spacing: -0.01em; margin: 0 0 10px; }
+  .lede { font-size: clamp(16px,2.4vw,18px); margin: 0 0 6px; max-width: 76ch; }
+  .eqn { font-family: 'FreeSerif',Georgia,serif; font-size: clamp(17px,2.6vw,22px); background: #f1eadf; border-radius: 8px; padding: 8px 15px; display: inline-block; margin: 8px 0 2px; }
+  .eqn .pk { color: #c0322b; } .eqn .bl { color: #2f5fb0; } .eqn .gd { color: #8a6a1f; } .eqn .pu { color: #6a2c91; }
+  .howto { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 13.5px; color: #6a2c91; margin: 12px 0 4px; letter-spacing: 0.01em; max-width: 76ch; }
+  .stage { background: #ffffff; border: 1px solid #e7ddcd; border-radius: 10px; padding: 6px 8px 2px; box-shadow: 0 1px 0 #efe7d8; margin-top: 8px; }
+  svg { width: 100%; height: auto; display: block; touch-action: none; overflow: hidden; }
+  .pwrap { margin: 16px 2px 2px; }
+  .pwrap label { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #9a8f7e; display: block; margin-bottom: 6px; }
+  input[type=range] { width: 100%; accent-color: #6a2c91; height: 28px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 9px; margin: 14px 0 4px; }
+  button { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 13.5px; letter-spacing: 0.02em; color: #43203f; background: #ffffff; border: 1.5px solid #c8b9d6; border-radius: 999px; padding: 8px 15px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .15s,color .15s,border-color .15s; }
+  button:hover { border-color: #6a2c91; }
+  button[aria-pressed="true"] { background: #6a2c91; border-color: #6a2c91; color: #faf6ef; }
+  button:focus-visible { outline: 3px solid #b08948; outline-offset: 2px; }
+  .cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; margin-top: 16px; }
+  @media (max-width: 640px) { .cards { grid-template-columns: repeat(2,1fr); } }
+  .card { border: 1px solid #e7ddcd; border-radius: 8px; background: #ffffff; padding: 9px 10px; }
+  .card .k { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #9a8f7e; }
+  .card .v { font-size: 21px; margin-top: 2px; line-height: 1.05; }
+  .card.pk .v { color: #c0322b; } .card.bl .v { color: #2f5fb0; } .card.gd .v { color: #8a6a1f; } .card.pu .v { color: #6a2c91; }
+  .checkline { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 14.5px; color: #6a2c91; margin-top: 12px; letter-spacing: 0.01em; }
+  .checkline.gm { color: #8a6a1f; }
+  .checkline .n { color: #43203f; }
+  .ledger { margin-top: 24px; border-top: 1px solid #e7ddcd; padding-top: 16px; font-size: 15px; max-width: 82ch; }
+  .ledger h2 { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a8f7e; margin: 0 0 8px; }
+  .ledger p { margin: 0 0 9px; }
+  .tag { font-family: 'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #6a2c91; border: 1px solid #d8c6e6; border-radius: 4px; padding: 1px 6px; margin-right: 7px; }
+  .tag.g { color: #8a6a1f; border-color: #d8c69a; } .tag.gr { color: #2e7d52; border-color: #a9d2bb; } .tag.pk { color: #c0322b; border-color: #e6c3c3; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>The circle (+) and the hyperbola (&minus;)</h1>
+  <p class="lede">One slider sets a single number. On the unit circle <span style="color:#2f5fb0">x&sup2; + y&sup2; = 1</span> it is the angle &theta;, and the sector has area &theta;/2. On the unit hyperbola
+  <span style="color:#c0322b">x&sup2; &minus; y&sup2; = 1</span> the same number is the rapidity &phi;, and that sector has area &phi;/2. Same construction, one sign flipped. The
+  <span style="color:#8a6a1f">light cone v = &plusmn;1</span> is where the rapidity runs off to infinity; &phi; is half the log of the cross-ratio of the worldline with the two null rays, read on the
+  shared vertex tangent. This is the companion to the area identity &mdash; the literal <span style="color:#2f5fb0">+</span> versus <span style="color:#c0322b">&minus;</span>.</p>
+  <div class="eqn">circular sector <span class="bl">&theta;/2</span> &nbsp;&middot;&nbsp; hyperbolic sector <span class="pk">&phi;/2</span> &nbsp;&middot;&nbsp; <span class="pu">&phi; = &frac12; ln D</span></div>
+  <p class="howto">Drag the slider, or grab H on the hyperbola. The snaps land the boost on multiplier e<sup>&phi;</sup> = 2, 3, 4 &mdash; exactly the reciprocal-ladder rungs &mdash; giving v = &#8533;, &#8536;, 15/17. Toggle the cross-ratio reading off the vertex tangent.</p>
+
+  <div class="stage">
+    <svg id="svg" viewBox="0 0 540 620" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="A unit circle and a unit hyperbola sharing a centre and the vertex at one. A shared parameter sets a circular sector of area theta over two and a hyperbolic sector of area phi over two. Gold asymptotes are the light cone; a vertical tangent at the vertex carries the cross-ratio whose half-log is the rapidity.">
+
+      <!-- sector fills (behind everything) -->
+      <polygon id="secHyp" points="" fill="#c0322b" fill-opacity="0.15"/>
+      <polygon id="secCirc" points="" fill="#2f5fb0" fill-opacity="0.15"/>
+
+      <!-- axes -->
+      <line id="xax" stroke="#43203f" stroke-width="1.4" stroke-opacity="0.8"/>
+      <line id="yax" stroke="#43203f" stroke-width="1" stroke-dasharray="3 4" stroke-opacity="0.45"/>
+
+      <!-- light cone (asymptotes / null directions) -->
+      <line id="asU" stroke="#b08948" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line id="asW" stroke="#b08948" stroke-width="1.5" stroke-opacity="0.9"/>
+
+      <!-- curves -->
+      <circle id="circle" fill="none" stroke="#2f5fb0" stroke-width="1.6" stroke-opacity="0.65"/>
+      <polyline id="hyp" fill="none" stroke="#c0322b" stroke-width="1.8" stroke-opacity="0.85"/>
+
+      <!-- rays: circle radius and the worldline -->
+      <line id="rayC" stroke="#2f5fb0" stroke-width="1.8"/>
+      <line id="rayH" stroke="#c0322b" stroke-width="2.2"/>
+
+      <!-- cross-ratio overlay: vertex tangent x=1 with the four pierced heights -->
+      <g id="cr">
+        <line id="trans" stroke="#6a2c91" stroke-width="1.6" stroke-dasharray="4 3" stroke-opacity="0.9"/>
+        <circle id="ptNp" r="4" fill="#b08948"/>
+        <circle id="ptNm" r="4" fill="#b08948"/>
+        <circle id="ptV" r="5" fill="#6a2c91" stroke="#faf6ef" stroke-width="1.3"/>
+        <text id="lV" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="14" fill="#6a2c91" text-anchor="middle">v</text>
+      </g>
+
+      <!-- static labels -->
+      <text id="lvp" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="11.5" fill="#8a6a1f" text-anchor="middle">v = +1 &middot; u</text>
+      <text id="lvm" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="11.5" fill="#8a6a1f" text-anchor="middle">v = &minus;1 &middot; w</text>
+      <text id="lv0" font-family="'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif" font-size="11.5" fill="#6f6657" text-anchor="middle">v = 0</text>
+
+      <!-- vertices + moving points -->
+      <circle id="ptO" r="4.5" fill="#43203f"/><text id="lO" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="16" fill="#43203f" text-anchor="middle">O</text>
+      <circle id="ptVx" r="4" fill="#43203f"/><text id="lVx" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="14" fill="#43203f" text-anchor="middle">1</text>
+      <circle id="ptC" r="5" fill="#2f5fb0" stroke="#faf6ef" stroke-width="1.4"/><text id="lC" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#2f5fb0" text-anchor="middle">C</text>
+      <circle id="ptH" r="5.5" fill="#c0322b" stroke="#faf6ef" stroke-width="1.5"/><text id="lH" font-family="'FreeSerif',Georgia,serif" font-style="italic" font-size="15" fill="#c0322b" text-anchor="middle">H</text>
+
+      <!-- drag handle on H -->
+      <circle id="hitH" r="30" fill="#000000" fill-opacity="0" pointer-events="all" style="cursor:grab"/>
+    </svg>
+  </div>
+
+  <div class="pwrap">
+    <label for="slide">Angle &theta; = rapidity &phi;</label>
+    <input id="slide" type="range" min="0" max="1000" value="462">
+  </div>
+  <div class="controls">
+    <button id="m2btn">&mu; &rarr; 2 &nbsp;(v=&#8533;)</button>
+    <button id="m3btn">&mu; &rarr; 3 &nbsp;(v=&#8536;)</button>
+    <button id="m4btn">&mu; &rarr; 4 &nbsp;(v=15/17)</button>
+    <button id="bCR" aria-pressed="true">Cross-ratio</button>
+    <button id="bPlay" aria-pressed="false">Play</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="k">&phi; = &theta; (rapidity = angle)</div><div class="v"><span id="vPhi">0.693</span></div></div>
+    <div class="card pk"><div class="k">v = tanh &phi;</div><div class="v"><span id="vV">0.600</span></div></div>
+    <div class="card gd"><div class="k">&mu; = e<sup>&phi;</sup> (Turn)</div><div class="v"><span id="vMu">2.000</span></div></div>
+    <div class="card pu"><div class="k">D = (1+v)/(1&minus;v)</div><div class="v"><span id="vD">4.00</span></div></div>
+  </div>
+  <div class="checkline">circular sector <span style="color:#2f5fb0">&theta;/2</span> = <span class="n" id="vSecC">0.347</span> &nbsp;&middot;&nbsp; hyperbolic sector <span style="color:#c0322b">&phi;/2</span> = <span class="n" id="vSecH">0.347</span> &nbsp;&middot;&nbsp; equal <span id="vEqA">&#10003;</span></div>
+  <div class="checkline">&phi; = &frac12; ln D = <span class="n" id="vHalf">0.693</span> <span id="vEqB">&#10003;</span> &nbsp;&middot;&nbsp; D = &mu;&sup2; &nbsp;&middot;&nbsp; rapidities add (Reach), &mu; multiplies (Turn) &mdash; the log carries one to the other</div>
+  <div class="checkline gm">light cone v = &plusmn;1 are the asymptotes &mdash; the neutral surface &nbsp;&middot;&nbsp; in u = x+y, w = x&minus;y the curve is uw = 1, with (u, w) = (<span class="n" id="vU">2.000</span>, <span class="n" id="vW">0.500</span>) so uw = <span class="n" id="vUW">1.000</span></div>
+
+  <div class="ledger">
+    <h2>The ledger</h2>
+    <p><span class="tag">Theorem</span>The unit circle and unit hyperbola are one equation x&sup2; + &epsilon;y&sup2; = 1 with &epsilon; = &plusmn;1. The sector cut from the vertex to the parameter has area &theta;/2 when &epsilon; = +1 and &phi;/2 when &epsilon; = &minus;1 &mdash; the semicircle measures the angle, the hyperbola measures the rapidity. The two are the same picture with the sign of the second square flipped, sharing centre, vertex, and the vertical tangent there.</p>
+    <p><span class="tag g">Neutral surface</span>The asymptotes v = &plusmn;1 are the light cone: the boundary that belongs to neither the timelike nor the spacelike side. For the circle the matching null directions are the circular points, slopes &plusmn;i &mdash; imaginary. A real null pair gives a real measure (the boost, multiplier e<sup>&phi;</sup>); an imaginary null pair gives an imaginary measure (the rotation, multiplier e<sup>i&theta;</sup>). The signature sign &epsilon; is exactly this swap.</p>
+    <p><span class="tag pk">Discriminant</span>A boost is the hyperbolic M&ouml;bius map of the line of directions: two real fixed points (the nulls), real multiplier D = e<sup>2&phi;</sup>. A rotation is the elliptic M&ouml;bius map: fixed points the circular points &plusmn;i, multiplier e<sup>2i&theta;</sup>. Same trichotomy as the conic classification &mdash; hyperbolic against elliptic, with the parabolic case (v = 1, a null direction) degenerate between them.</p>
+    <p><span class="tag gr">Anharmonic</span>Rapidity is the logarithm of an anharmonic ratio: &phi; = &frac12; ln D, where D is the cross-ratio of (rest, worldline; the two nulls), read where they pierce the vertex tangent. The Reciprocal involution &lambda; &rarr; 1/&lambda; sends D &rarr; 1/D, i.e. &phi; &rarr; &minus;&phi; &mdash; boost reversal. The Complement &lambda; &rarr; 1&minus;&lambda; moves the absolute, re-choosing which directions count as null &mdash; the step between the three Cayley&ndash;Klein geometries. So the six anharmonic values are these three standpoints (in two orientations), not six Lorentz operations.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var OX = 180, OY = 330, SC = 115;
+  var TMIN = 0, TMAX = 1.5;
+  var T = Math.log(2);            // open at mu = 2, v = 3/5, D = 4
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  function MX(x) { return OX + SC * x; }
+  function MY(y) { return OY - SC * y; }
+  function $(id) { return document.getElementById(id); }
+  function poly(pts) { return pts.map(function (p) { return MX(p[0]).toFixed(1) + ',' + MY(p[1]).toFixed(1); }).join(' '); }
+  function setXY(id, x, y) { var e = $(id); e.setAttribute('x', x.toFixed(1)); e.setAttribute('y', y.toFixed(1)); }
+  function setC(id, x, y) { var e = $(id); e.setAttribute('cx', x.toFixed(1)); e.setAttribute('cy', y.toFixed(1)); }
+  function line(id, ax, ay, bx, by) { var e = $(id); e.setAttribute('x1', MX(ax).toFixed(1)); e.setAttribute('y1', MY(ay).toFixed(1)); e.setAttribute('x2', MX(bx).toFixed(1)); e.setAttribute('y2', MY(by).toFixed(1)); }
+  function clamp(x) { return Math.max(TMIN, Math.min(TMAX, x)); }
+
+  // ---------- static scaffolding ----------
+  (function initStatic() {
+    // unit circle
+    var c = $('circle'); c.setAttribute('cx', MX(0).toFixed(1)); c.setAttribute('cy', MY(0).toFixed(1)); c.setAttribute('r', SC);
+    // hyperbola right branch (sampled, symmetric in t)
+    var hb = 1.62, M = 96, h = [];
+    for (var i = 0; i <= M; i++) { var s = -hb + 2 * hb * i / M; h.push([Math.cosh(s), Math.sinh(s)]); }
+    $('hyp').setAttribute('points', poly(h));
+    // asymptotes (full diagonals through O), kept inside the frame
+    line('asU', -1.5, -1.5, 2.5, 2.5);     // y = x  : v = +1, u-axis (w = 0)
+    line('asW', -1.5, 1.5, 2.5, -2.5);     // y = -x : v = -1, w-axis (u = 0)
+    // axes
+    line('xax', -1.5, 0, 2.95, 0);
+    line('yax', 0, -2.45, 0, 2.6);
+    // vertex tangent x = 1, from (1,-1) to (1,1)
+    line('trans', 1, -1, 1, 1);
+    // static dots + labels
+    setC('ptO', MX(0), MY(0)); setXY('lO', MX(0) - 14, MY(0) + 16);
+    setC('ptVx', MX(1), MY(0)); setXY('lVx', MX(1), MY(0) + 19);
+    setC('ptNp', MX(1), MY(1)); setC('ptNm', MX(1), MY(-1));
+    setXY('lvp', MX(1.85), MY(2.1)); setXY('lvm', MX(1.85), MY(-2.1));
+    setXY('lv0', MX(2.55), MY(0) + 16);
+  })();
+
+  function sectorPts(isCircle, t) {
+    var N = 56, pts = [[0, 0], [1, 0]];
+    for (var i = 1; i <= N; i++) {
+      var s = t * i / N;
+      pts.push(isCircle ? [Math.cos(s), Math.sin(s)] : [Math.cosh(s), Math.sinh(s)]);
+    }
+    return poly(pts);
+  }
+
+  // ---------- dynamic ----------
+  function render() {
+    var t = clamp(T);
+    var v = Math.tanh(t), ch = Math.cosh(t), sh = Math.sinh(t);
+    var C = [Math.cos(t), Math.sin(t)], H = [ch, sh];
+    var D = (1 + v) / (1 - v), mu = Math.exp(t);
+
+    $('secCirc').setAttribute('points', sectorPts(true, t));
+    $('secHyp').setAttribute('points', sectorPts(false, t));
+    line('rayC', 0, 0, C[0], C[1]);
+    line('rayH', 0, 0, H[0], H[1]);
+
+    setC('ptC', MX(C[0]), MY(C[1])); setXY('lC', MX(C[0]) - 12, MY(C[1]) - 8);
+    setC('ptH', MX(H[0]), MY(H[1])); setXY('lH', MX(H[0]) + 13, MY(H[1]) - 5);
+    setC('hitH', MX(H[0]), MY(H[1]));
+    setC('ptV', MX(1), MY(v)); setXY('lV', MX(1) + 14, MY(v) + 4);
+
+    $('vPhi').textContent = t.toFixed(3);
+    $('vV').textContent = v.toFixed(3);
+    $('vMu').textContent = mu.toFixed(3);
+    $('vD').textContent = D.toFixed(2);
+    $('vSecC').textContent = (t / 2).toFixed(3);
+    $('vSecH').textContent = (t / 2).toFixed(3);
+    $('vEqA').innerHTML = '&#10003;';
+    var half = 0.5 * Math.log(D);
+    $('vHalf').textContent = half.toFixed(3);
+    $('vEqB').innerHTML = Math.abs(half - t) < 1e-6 ? '&#10003;' : '&#10007;';
+    $('vU').textContent = mu.toFixed(3);
+    $('vW').textContent = (1 / mu).toFixed(3);
+    $('vUW').textContent = '1.000';
+
+    $('slide').value = Math.round(t / TMAX * 1000);
+  }
+
+  $('slide').addEventListener('input', function () { stopPlay(); T = clamp(this.value / 1000 * TMAX); render(); });
+
+  // grab H: aim the worldline at the pointer, capped below the light cone
+  var svg = $('svg'), hit = $('hitH'), dragging = false;
+  function toXY(cx, cy) {
+    var pt = svg.createSVGPoint ? svg.createSVGPoint() : new DOMPoint();
+    pt.x = cx; pt.y = cy; var m = svg.getScreenCTM(); if (!m) return null;
+    var p = pt.matrixTransform(m.inverse());
+    return [(p.x - OX) / SC, (OY - p.y) / SC];
+  }
+  function aim(cx, cy) {
+    var mm = toXY(cx, cy); if (!mm) return;
+    var mx = mm[0], my = mm[1];
+    var slope = mx > 0.08 ? my / mx : (my > 0 ? 9 : -9);
+    var vv = Math.max(0, Math.min(0.99, slope));
+    if (vv >= Math.tanh(TMAX)) { T = TMAX; } else { T = clamp(Math.atanh(vv)); }
+    render();
+  }
+  hit.addEventListener('pointerdown', function (e) { e.preventDefault(); stopPlay(); dragging = true; try { hit.setPointerCapture(e.pointerId); } catch (x) {} hit.style.cursor = 'grabbing'; aim(e.clientX, e.clientY); });
+  hit.addEventListener('pointermove', function (e) { if (dragging) aim(e.clientX, e.clientY); });
+  hit.addEventListener('pointerup', function (e) { dragging = false; try { hit.releasePointerCapture(e.pointerId); } catch (x) {} hit.style.cursor = 'grab'; });
+  hit.addEventListener('pointercancel', function () { dragging = false; hit.style.cursor = 'grab'; });
+
+  $('m2btn').addEventListener('click', function () { stopPlay(); T = Math.log(2); render(); });
+  $('m3btn').addEventListener('click', function () { stopPlay(); T = Math.log(3); render(); });
+  $('m4btn').addEventListener('click', function () { stopPlay(); T = Math.log(4); render(); });
+
+  var bCR = $('bCR');
+  bCR.addEventListener('click', function () {
+    var on = bCR.getAttribute('aria-pressed') === 'true';
+    bCR.setAttribute('aria-pressed', on ? 'false' : 'true');
+    $('cr').setAttribute('visibility', on ? 'hidden' : 'visible');
+  });
+
+  var bPlay = $('bPlay'), raf = null, ph = 0;
+  function tick() { ph += 0.012; var u = (1 - Math.cos(ph)) / 2; T = clamp(u * TMAX); render(); raf = requestAnimationFrame(tick); }
+  function stopPlay() { if (raf) { cancelAnimationFrame(raf); raf = null; } bPlay.setAttribute('aria-pressed', 'false'); bPlay.textContent = 'Play'; }
+  bPlay.addEventListener('click', function () { if (raf) stopPlay(); else { bPlay.setAttribute('aria-pressed', 'true'); bPlay.textContent = 'Pause'; raf = requestAnimationFrame(tick); } });
+
+  render();
+})();
+</script>
+</body>
+</html>
