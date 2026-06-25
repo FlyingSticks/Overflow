@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cross-Ratio: ad = ±bc</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --purple:#6a2c91;
+    --crimson:#c0322b; --gold:#b08948; --goldtx:#8a6b3a;
+  }
+  html,body{margin:0;padding:0;background:#faf6ef;color:#43203f;}
+  body{
+    font-family:'FreeSerif','Times New Roman',Georgia,serif;
+    line-height:1.5; padding:22px 16px 60px;
+  }
+  .wrap{max-width:780px;margin:0 auto;}
+  h1{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-weight:700;font-size:1.5rem;margin:0 0 2px;color:#43203f;letter-spacing:.2px;
+  }
+  .lede{margin:0 0 22px;font-size:1rem;color:#5a3a55;}
+  h2{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-weight:700;font-size:1.12rem;margin:30px 0 4px;color:#6a2c91;
+  }
+  .note{margin:0 0 10px;font-size:.96rem;color:#5a3a55;}
+  .formula{font-style:italic;}
+  svg{width:100%;height:auto;display:block;touch-action:none;
+      background:#fffdf8;border:1px solid #e7ddcb;border-radius:6px;}
+  .readout{
+    margin:10px 0 0;padding:10px 14px;background:#f3ecdd;border:1px solid #e1d5bd;
+    border-radius:6px;font-size:.95rem;
+  }
+  .readout .row{margin:2px 0;}
+  .interp{margin-top:7px;font-style:italic;color:#43203f;}
+  .controls{margin:10px 0 0;display:flex;gap:10px;flex-wrap:wrap;}
+  button{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-size:.9rem;padding:7px 13px;border-radius:6px;cursor:pointer;
+    background:#fffdf8;color:#43203f;border:1.5px solid #6a2c91;
+  }
+  button:active{background:#efe7d6;}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:baseline;margin-right:3px;}
+  .legend{font-size:.86rem;color:#5a3a55;margin:6px 0 0;}
+  code{font-family:'TeX Gyre Heros',monospace;background:#efe7d6;padding:0 3px;border-radius:3px;}
+  footer{margin-top:34px;font-size:.85rem;color:#7a6a76;border-top:1px solid #e7ddcb;padding-top:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>The cross-ratio as ad = ±bc</h1>
+  <p class="lede">Two points <b>C</b> and <b>D</b> each cut the same segment <b>PQ</b>. Write
+    <span class="formula">a = PC, b = CQ, c = PD, d = DQ</span>. Then the cross-ratio is
+    <span class="formula">λ = (a/b)/(c/d) = ad/bc</span>. The whole story lives in two values of λ.</p>
+
+  <!-- ================= DIAGRAM A ================= -->
+  <h2>1 · Two cuts, one segment — drag C and D</h2>
+  <p class="note"><b>+1:</b> the two cut-ratios are equal (ad = bc) → C and D are the <i>same point</i>; the figure collapses.
+     &nbsp;<b>−1:</b> equal in size, opposite in sign (ad = −bc) → one cut inside, one outside — the <b>harmonic</b> pair.</p>
+
+  <svg id="svgA" viewBox="0 0 720 380" role="img" aria-label="Cross-ratio line with draggable points C and D">
+    <defs>
+      <marker id="arrGold" markerWidth="9" markerHeight="9" refX="6.2" refY="3" orient="auto-start-reverse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#b08948"/></marker>
+      <marker id="arrCrim" markerWidth="9" markerHeight="9" refX="6.2" refY="3" orient="auto-start-reverse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#c0322b"/></marker>
+    </defs>
+
+    <text id="lamText" x="360" y="30" text-anchor="middle" font-size="22" fill="#43203f">λ = ad/bc = …</text>
+    <text id="stateText" x="360" y="52" text-anchor="middle" font-size="14" fill="#8a6b3a">…</text>
+
+    <!-- inside band -->
+    <rect x="285" y="72" width="150" height="32" fill="#b08948" opacity="0.16"/>
+    <text x="290" y="100" font-size="10" fill="#8a6b3a">inside&#160;P—Q</text>
+
+    <!-- axis -->
+    <line x1="40" y1="88" x2="680" y2="88" stroke="#43203f" stroke-width="1" opacity="0.45"/>
+
+    <!-- P, Q -->
+    <line x1="285" y1="80" x2="285" y2="96" stroke="#43203f" stroke-width="2"/>
+    <text x="285" y="118" text-anchor="middle" font-size="14" fill="#43203f">P</text>
+    <text x="285" y="131" text-anchor="middle" font-size="10" fill="#43203f" opacity="0.6">t = 0</text>
+    <line x1="435" y1="80" x2="435" y2="96" stroke="#43203f" stroke-width="2"/>
+    <text x="435" y="118" text-anchor="middle" font-size="14" fill="#43203f">Q</text>
+    <text x="435" y="131" text-anchor="middle" font-size="10" fill="#43203f" opacity="0.6">t = 1</text>
+
+    <!-- C -->
+    <line id="cGuide" x1="300" y1="96" x2="300" y2="148" stroke="#6a2c91" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+    <circle id="cDot" cx="300" cy="88" r="8" fill="#6a2c91"/>
+    <circle id="cHit" cx="300" cy="88" r="22" fill="#6a2c91" fill-opacity="0" pointer-events="all"/>
+    <text id="cLabel" x="300" y="66" text-anchor="middle" font-size="15" fill="#6a2c91">C</text>
+    <text id="cRatio" x="300" y="150" text-anchor="middle" font-size="13" fill="#8a6b3a">a/b = …</text>
+    <text id="cTag"   x="300" y="164" text-anchor="middle" font-size="11" fill="#8a6b3a">…</text>
+
+    <!-- D -->
+    <line id="dGuide" x1="210" y1="96" x2="210" y2="180" stroke="#c0322b" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+    <circle id="dDot" cx="210" cy="88" r="8" fill="#c0322b"/>
+    <circle id="dHit" cx="210" cy="88" r="22" fill="#c0322b" fill-opacity="0" pointer-events="all"/>
+    <text id="dLabel" x="210" y="66" text-anchor="middle" font-size="15" fill="#c0322b">D</text>
+    <text id="dRatio" x="210" y="182" text-anchor="middle" font-size="13" fill="#c0322b">c/d = …</text>
+    <text id="dTag"   x="210" y="196" text-anchor="middle" font-size="11" fill="#c0322b">…</text>
+
+    <!-- balance panel -->
+    <text x="40" y="218" font-size="12" fill="#43203f">signed areas&#160;&#160;ad&#160;&#160;and&#160;&#160;bc&#160;&#160;as arrows from O&#160;&#160;(equal &amp; opposite ⇒ they cancel):</text>
+    <line x1="360" y1="230" x2="360" y2="312" stroke="#43203f" stroke-width="1" opacity="0.35"/>
+    <text x="366" y="240" font-size="10" fill="#43203f" opacity="0.6">O</text>
+    <text x="40" y="262" font-size="13" fill="#43203f">ad</text>
+    <line id="adBar" x1="360" y1="258" x2="360" y2="258" stroke="#b08948" stroke-width="6"/>
+    <text id="adVal" x="360" y="252" font-size="12" fill="#8a6b3a">…</text>
+    <text x="40" y="278" font-size="13" fill="#43203f">bc</text>
+    <line id="bcBar" x1="360" y1="274" x2="360" y2="274" stroke="#c0322b" stroke-width="6"/>
+    <text id="bcVal" x="360" y="288" font-size="12" fill="#c0322b">…</text>
+    <circle id="sumDot" cx="360" cy="306" r="4" fill="#43203f"/>
+    <text id="sumVal" x="360" y="320" text-anchor="middle" font-size="11" fill="#43203f">ad + bc = …</text>
+  </svg>
+
+  <div class="controls">
+    <button id="btnHarm">Make harmonic&#160;&#160;(D ← conjugate of C)</button>
+    <button id="btnCoin">Make coincident&#160;&#160;(D ← C)</button>
+  </div>
+  <p class="legend">
+    <span class="swatch" style="background:#43203f"></span>P, Q&#160;&#160;frame&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#6a2c91"></span>C&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#c0322b"></span>D&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#b08948"></span>positive (inside)&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#c0322b"></span>negative (outside)
+  </p>
+
+  <div class="readout" id="readA">
+    <div class="row">directed lengths:&#160; a = PC = <span id="rA_a">…</span>,&#160; b = CQ = <span id="rA_b">…</span>,&#160; c = PD = <span id="rA_c">…</span>,&#160; d = DQ = <span id="rA_d">…</span></div>
+    <div class="row interp" id="rA_interp">…</div>
+  </div>
+
+  <!-- ================= DIAGRAM B ================= -->
+  <h2>2 · The harmonic involution — λ locked at −1</h2>
+  <p class="note">Now <b>D is forced</b> to be the harmonic conjugate of C, so λ = −1 always. Drag C inside the segment and
+     watch D answer from outside. The minus sign <i>is</i> that inside↔outside flip.</p>
+
+  <svg id="svgB" viewBox="0 0 720 300" role="img" aria-label="Harmonic involution: drag C inside, D is its conjugate outside">
+    <defs>
+      <marker id="arrCrimB" markerWidth="9" markerHeight="9" refX="6.2" refY="3" orient="auto-start-reverse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#c0322b"/></marker>
+    </defs>
+
+    <text x="360" y="28" text-anchor="middle" font-size="16" fill="#8a6b3a">λ = ad/bc = −1&#160;&#160;(locked — every position is harmonic)</text>
+
+    <!-- inside band -->
+    <rect x="305" y="104" width="110" height="32" fill="#b08948" opacity="0.16"/>
+    <text x="310" y="132" font-size="10" fill="#8a6b3a">inside&#160;P—Q</text>
+
+    <!-- arc connector -->
+    <path id="bArc" d="M 350 120 Q 320 60 290 120" fill="none" stroke="#6a2c91" stroke-width="1.4" opacity="0.55"/>
+
+    <!-- axis -->
+    <line x1="40" y1="120" x2="680" y2="120" stroke="#43203f" stroke-width="1" opacity="0.45"/>
+
+    <!-- P, Q (fixed points) -->
+    <line x1="305" y1="112" x2="305" y2="128" stroke="#43203f" stroke-width="2"/>
+    <text x="305" y="152" text-anchor="middle" font-size="14" fill="#43203f">P</text>
+    <text x="305" y="165" text-anchor="middle" font-size="9" fill="#43203f" opacity="0.7">fixed point</text>
+    <line x1="415" y1="112" x2="415" y2="128" stroke="#43203f" stroke-width="2"/>
+    <text x="415" y="152" text-anchor="middle" font-size="14" fill="#43203f">Q</text>
+    <text x="415" y="165" text-anchor="middle" font-size="9" fill="#43203f" opacity="0.7">fixed point</text>
+
+    <!-- D inf arrow -->
+    <line id="bInfArrow" x1="668" y1="120" x2="668" y2="120" stroke="#c0322b" stroke-width="2" marker-end="none"/>
+    <text id="bInfText" x="660" y="104" text-anchor="end" font-size="12" fill="#c0322b"></text>
+
+    <!-- C -->
+    <circle id="bcDot" cx="350" cy="120" r="8" fill="#6a2c91"/>
+    <circle id="bcHit" cx="350" cy="120" r="22" fill="#6a2c91" fill-opacity="0" pointer-events="all"/>
+    <text id="bcLabel" x="350" y="98" text-anchor="middle" font-size="15" fill="#6a2c91">C</text>
+    <text id="bcRatio" x="350" y="176" text-anchor="middle" font-size="13" fill="#6a2c91">a/b = …</text>
+    <text id="bcTag"   x="350" y="190" text-anchor="middle" font-size="11" fill="#6a2c91">inside (+)</text>
+
+    <!-- D -->
+    <circle id="bdDot" cx="290" cy="120" r="8" fill="#c0322b"/>
+    <text id="bdLabel" x="290" y="98" text-anchor="middle" font-size="15" fill="#c0322b">D</text>
+    <text id="bdRatio" x="290" y="176" text-anchor="middle" font-size="13" fill="#c0322b">c/d = …</text>
+    <text id="bdTag"   x="290" y="190" text-anchor="middle" font-size="11" fill="#c0322b">outside (−)</text>
+
+    <text id="bNote" x="360" y="238" text-anchor="middle" font-size="12.5" fill="#43203f">…</text>
+  </svg>
+
+  <div class="readout" id="readB">
+    <div class="row">C:&#160; t = <span id="rB_tc">…</span>,&#160; a/b = <span id="rB_ab">…</span></div>
+    <div class="row">D:&#160; t = <span id="rB_td">…</span>,&#160; c/d = <span id="rB_cd">…</span></div>
+    <div class="row interp" id="rB_interp">…</div>
+  </div>
+
+  <footer>
+    Convention: λ = (C−P)(D−Q) ⁄ (C−Q)(D−P), with P, Q the frame. Harmonic ⇒ λ = −1; coincidence ⇒ λ = +1.
+    All values verified numerically before build. flyingsticks · Anharmonic Interface.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PLUM="#43203f", PURPLE="#6a2c91", CRIMSON="#c0322b", GOLD="#b08948", GOLDTX="#8a6b3a";
+  var MINUS="\u2212";
+
+  function $(id){ return document.getElementById(id); }
+  function sa(el,k,v){ el.setAttribute(k,v); }
+  function tc(el,s){ el.textContent=s; }
+  function clamp(v,lo,hi){ return v<lo?lo:(v>hi?hi:v); }
+  // signed number, unicode minus
+  function f2(x){
+    if(!isFinite(x)) return "\u00b1\u221e";
+    var s = x<0 ? MINUS : "+";
+    return s + Math.abs(x).toFixed(2);
+  }
+  function ratioStr(num,den){
+    if(Math.abs(den)<1e-9) return "\u00b1\u221e";
+    return f2(num/den);
+  }
+
+  /* ---------- DIAGRAM A : free C and D ---------- */
+  (function diagramA(){
+    var svg=$("svgA");
+    var UNIT=150, X0=285, VIEW_W=720;          // x(t)=X0+UNIT t ; P at 285, Q at 435
+    var T_MIN=-1.45, T_MAX=2.45;
+    var sB=24;                                  // px per unit of signed area
+    function x(t){ return X0+UNIT*t; }
+    function tFromX(px){ return (px-X0)/UNIT; }
+
+    var tC=0.25, tD=-0.5;                        // start on a harmonic pair
+
+    var cDot=$("cDot"),cHit=$("cHit"),cLabel=$("cLabel"),cRatio=$("cRatio"),cTag=$("cTag"),cGuide=$("cGuide");
+    var dDot=$("dDot"),dHit=$("dHit"),dLabel=$("dLabel"),dRatio=$("dRatio"),dTag=$("dTag"),dGuide=$("dGuide");
+    var adBar=$("adBar"),adVal=$("adVal"),bcBar=$("bcBar"),bcVal=$("bcVal"),sumDot=$("sumDot"),sumVal=$("sumVal");
+    var lamText=$("lamText"),stateText=$("stateText");
+    var rA_a=$("rA_a"),rA_b=$("rA_b"),rA_c=$("rA_c"),rA_d=$("rA_d"),rA_interp=$("rA_interp");
+
+    function setBar(barEl,valEl,val,y,above){
+      var Ox=360, len=sB*val, clip=false;
+      if(len>150){len=150;clip=true;} if(len<-150){len=-150;clip=true;}
+      sa(barEl,"y1",y); sa(barEl,"y2",y); sa(barEl,"x1",Ox);
+      if(Math.abs(val)<0.02){
+        sa(barEl,"x2",Ox+0.01); sa(barEl,"marker-end","none");
+      } else {
+        sa(barEl,"x2",Ox+len);
+        sa(barEl,"marker-end", val>0?"url(#arrGold)":"url(#arrCrim)");
+        sa(barEl,"stroke", val>0?GOLD:CRIMSON);
+      }
+      var lx=Ox+len+(val>=0?6:-6);
+      sa(valEl,"x",lx);
+      sa(valEl,"text-anchor", val>=0?"start":"end");
+      sa(valEl,"y", y+(above?-6:14));
+      tc(valEl, f2(val)+(clip?" \u2192":""));
+      sa(valEl,"fill", val>0?GOLDTX:CRIMSON);
+    }
+
+    function update(){
+      var xC=x(tC), xD=x(tD);
+      var a=tC, b=1-tC, c=tD, d=1-tD;
+      var ad=a*d, bc=b*c, sum=ad+bc;
+      var bcZero=Math.abs(bc)<1e-9;
+      var lam=bcZero?Infinity:ad/bc;
+
+      // C
+      sa(cDot,"cx",xC); sa(cHit,"cx",xC); sa(cLabel,"x",xC);
+      sa(cGuide,"x1",xC); sa(cGuide,"x2",xC);
+      sa(cRatio,"x",xC); sa(cTag,"x",xC);
+      var cIn=(tC>0&&tC<1);
+      tc(cRatio,"a/b = "+ratioStr(a,b));
+      tc(cTag, cIn?"inside (+)":"outside ("+MINUS+")");
+      sa(cRatio,"fill", cIn?GOLDTX:CRIMSON);
+      sa(cTag,"fill", cIn?GOLDTX:CRIMSON);
+      sa(cGuide,"stroke", cIn?GOLDTX:CRIMSON);
+
+      // D
+      sa(dDot,"cx",xD); sa(dHit,"cx",xD); sa(dLabel,"x",xD);
+      sa(dGuide,"x1",xD); sa(dGuide,"x2",xD);
+      sa(dRatio,"x",xD); sa(dTag,"x",xD);
+      var dIn=(tD>0&&tD<1);
+      tc(dRatio,"c/d = "+ratioStr(c,d));
+      tc(dTag, dIn?"inside (+)":"outside ("+MINUS+")");
+      sa(dRatio,"fill", dIn?GOLDTX:CRIMSON);
+      sa(dTag,"fill", dIn?GOLDTX:CRIMSON);
+      sa(dGuide,"stroke", dIn?GOLDTX:CRIMSON);
+
+      // balance arrows
+      setBar(adBar,adVal,ad,258,true);
+      setBar(bcBar,bcVal,bc,274,false);
+      var sx=360+clamp(sB*sum,-150,150);
+      sa(sumDot,"cx",sx); sa(sumVal,"x",sx);
+      tc(sumVal,"ad + bc = "+f2(sum));
+      var nullbal=Math.abs(sum)<0.03;
+      sa(sumDot,"fill", nullbal?GOLD:PLUM);
+      sa(sumVal,"fill", nullbal?GOLDTX:PLUM);
+
+      // lambda + state
+      tc(lamText,"\u03bb = ad/bc = "+(bcZero?"\u00b1\u221e":f2(lam)));
+      var state="drag the dots", col=GOLDTX;
+      if(!bcZero && Math.abs(lam+1)<0.02){
+        state="HARMONIC   \u00b7   ad = "+MINUS+"bc   \u00b7   one inside, one outside"; col=GOLDTX;
+      } else if(!bcZero && Math.abs(lam-1)<0.02){
+        state="COINCIDENT   \u00b7   ad = bc   \u00b7   C and D collapsed to one point"; col=CRIMSON;
+      }
+      tc(stateText,state); sa(stateText,"fill",col);
+
+      // html readout
+      tc(rA_a,f2(a)); tc(rA_b,f2(b)); tc(rA_c,f2(c)); tc(rA_d,f2(d));
+      var msg;
+      if(!bcZero && Math.abs(lam+1)<0.02){
+        msg="Harmonic conjugates. One ratio is +, the other "+MINUS+", equal in size — so ad = "+MINUS+"bc and the signed areas cancel to zero. This is the harmonic cross-ratio.";
+      } else if(!bcZero && Math.abs(lam-1)<0.02){
+        msg="a/b = c/d, so the two points divide PQ identically — they are the same point. ad = bc, \u03bb = +1: the trivial, collapsed end.";
+      } else {
+        msg="\u03bb = "+(bcZero?"\u00b1\u221e":f2(lam))+". Use the buttons, or drag so one point is inside PQ and the other outside with matching ratio (\u2192 "+MINUS+"1), or drop D onto C (\u2192 +1).";
+      }
+      tc(rA_interp,msg);
+    }
+
+    // dragging
+    function dragify(hit, onMove){
+      var active=false;
+      hit.style.cursor="grab";
+      function pos(e){
+        var r=svg.getBoundingClientRect();
+        var sx=VIEW_W/r.width;
+        return (e.clientX-r.left)*sx;
+      }
+      hit.addEventListener("pointerdown",function(e){
+        e.preventDefault(); active=true; hit.setPointerCapture(e.pointerId);
+        hit.style.cursor="grabbing"; onMove(pos(e));
+      });
+      hit.addEventListener("pointermove",function(e){ if(active) onMove(pos(e)); });
+      function end(e){ active=false; hit.style.cursor="grab"; try{hit.releasePointerCapture(e.pointerId);}catch(_){} }
+      hit.addEventListener("pointerup",end);
+      hit.addEventListener("pointercancel",end);
+    }
+    dragify(cHit,function(px){ tC=clamp(tFromX(px),T_MIN,T_MAX); update(); });
+    dragify(dHit,function(px){ tD=clamp(tFromX(px),T_MIN,T_MAX); update(); });
+
+    $("btnHarm").addEventListener("click",function(){
+      // harmonic conjugate of C wrt P=0,Q=1 : D = C/(2C-1)
+      var den=2*tC-1;
+      if(Math.abs(den)<0.04){ tC=0.30; den=2*tC-1; }   // avoid the infinite case
+      tD=clamp(tC/den,T_MIN,T_MAX); update();
+    });
+    $("btnCoin").addEventListener("click",function(){ tD=tC; update(); });
+
+    update();
+  })();
+
+  /* ---------- DIAGRAM B : harmonic involution ---------- */
+  (function diagramB(){
+    var svg=$("svgB");
+    var UNIT=110, X0=305, VIEW_W=720;            // P at 305, Q at 415, mid 360
+    var T_MIN=0.06, T_MAX=0.94;
+    var LEFT=46, RIGHT=674;                        // visible drawing window for D
+    function x(t){ return X0+UNIT*t; }
+    function tFromX(px){ return (px-X0)/UNIT; }
+
+    var tC=0.30;
+
+    var bcDot=$("bcDot"),bcHit=$("bcHit"),bcLabel=$("bcLabel"),bcRatio=$("bcRatio"),bcTag=$("bcTag");
+    var bdDot=$("bdDot"),bdLabel=$("bdLabel"),bdRatio=$("bdRatio"),bdTag=$("bdTag");
+    var bInfArrow=$("bInfArrow"),bInfText=$("bInfText"),bArc=$("bArc"),bNote=$("bNote");
+    var rB_tc=$("rB_tc"),rB_ab=$("rB_ab"),rB_td=$("rB_td"),rB_cd=$("rB_cd"),rB_interp=$("rB_interp");
+
+    function update(){
+      var xC=x(tC);
+      var den=2*tC-1;
+      var inf=Math.abs(den)<1e-4;
+      var tD=inf?Infinity:tC/den;
+      var xD=inf?null:x(tD);
+
+      var pinned=false, side=0;
+      if(inf){ pinned=true; side=(tC<0.5)?-1:1; }
+      else if(xD<LEFT){ pinned=true; side=-1; }
+      else if(xD>RIGHT){ pinned=true; side=1; }
+      var xDdraw=pinned?(side<0?LEFT+6:RIGHT-6):xD;
+
+      // C
+      sa(bcDot,"cx",xC); sa(bcHit,"cx",xC); sa(bcLabel,"x",xC);
+      sa(bcRatio,"x",xC); sa(bcTag,"x",xC);
+      var a=tC,b=1-tC;
+      tc(bcRatio,"a/b = "+ratioStr(a,b));
+
+      // D
+      sa(bdDot,"cx",xDdraw);
+      // ratio at infinity: PD/DQ -> -1 as D -> inf
+      var cdStr;
+      if(inf){ cdStr=f2(-1); }
+      else { cdStr=ratioStr(tD,1-tD); }
+      // place D ratio so it stays on screen
+      if(pinned){
+        sa(bdRatio,"x", side<0?LEFT+6:RIGHT-6);
+        sa(bdRatio,"text-anchor", side<0?"start":"end");
+        sa(bdTag,"x", side<0?LEFT+6:RIGHT-6);
+        sa(bdTag,"text-anchor", side<0?"start":"end");
+      } else {
+        sa(bdRatio,"x",xDdraw); sa(bdRatio,"text-anchor","middle");
+        sa(bdTag,"x",xDdraw); sa(bdTag,"text-anchor","middle");
+      }
+      tc(bdRatio,"c/d = "+cdStr);
+
+      // arc
+      var midx=(xC+xDdraw)/2;
+      sa(bArc,"d","M "+xC+" 120 Q "+midx+" 58 "+xDdraw+" 120");
+
+      // infinity arrow / D label
+      if(pinned){
+        tc(bdLabel,"");
+        var tip=side<0?40:680;
+        sa(bInfArrow,"x1",xDdraw); sa(bInfArrow,"x2",tip);
+        sa(bInfArrow,"y1",120); sa(bInfArrow,"y2",120);
+        sa(bInfArrow,"marker-end","url(#arrCrimB)");
+        sa(bInfText,"x", side<0?58:662);
+        sa(bInfText,"text-anchor", side<0?"start":"end");
+        tc(bInfText,"D \u2192 \u221e");
+      } else {
+        sa(bdLabel,"x",xDdraw); tc(bdLabel,"D");
+        sa(bInfArrow,"marker-end","none"); sa(bInfArrow,"x2",bInfArrow.getAttribute("x1"));
+        tc(bInfText,"");
+      }
+
+      // note
+      var note;
+      if(Math.abs(tC-0.5)<0.03){
+        note="C at the midpoint  \u21d2  D at infinity — the two ends of the line are one point.";
+      } else if(tC<0.12){
+        note="As C \u2192 P, D \u2192 P too: P is a fixed point of the conjugacy.";
+      } else if(tC>0.88){
+        note="As C \u2192 Q, D \u2192 Q too: Q is a fixed point of the conjugacy.";
+      } else {
+        note="C inside (+), D outside ("+MINUS+"): same magnitude, opposite sign \u2014 always \u03bb = "+MINUS+"1.";
+      }
+      tc(bNote,note);
+
+      // readout
+      tc(rB_tc, f2(tC));
+      tc(rB_ab, ratioStr(a,b));
+      tc(rB_td, inf?"\u00b1\u221e":f2(tD));
+      tc(rB_cd, cdStr);
+      tc(rB_interp,"D is the harmonic conjugate of C, so ad = "+MINUS+"bc and \u03bb = "+MINUS+"1 at every position. The endpoints P, Q are the only points fixed by C \u2194 D.");
+    }
+
+    function dragify(hit,onMove){
+      var active=false;
+      hit.style.cursor="grab";
+      function pos(e){ var r=svg.getBoundingClientRect(); return (e.clientX-r.left)*(VIEW_W/r.width); }
+      hit.addEventListener("pointerdown",function(e){ e.preventDefault(); active=true; hit.setPointerCapture(e.pointerId); hit.style.cursor="grabbing"; onMove(pos(e)); });
+      hit.addEventListener("pointermove",function(e){ if(active) onMove(pos(e)); });
+      function end(e){ active=false; hit.style.cursor="grab"; try{hit.releasePointerCapture(e.pointerId);}catch(_){} }
+      hit.addEventListener("pointerup",end);
+      hit.addEventListener("pointercancel",end);
+    }
+    dragify(bcHit,function(px){ tC=clamp(tFromX(px),T_MIN,T_MAX); update(); });
+
+    update();
+  })();
+
+})();
+</script>
+</body>
+</html>
