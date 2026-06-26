@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cross-Ratio: Size and Shape</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --purple:#6a2c91;
+    --crimson:#c0322b; --gold:#b08948; --goldtx:#8a6b3a; --green:#2c6e49;
+  }
+  html,body{margin:0;padding:0;background:#faf6ef;color:#43203f;}
+  body{
+    font-family:'FreeSerif','Times New Roman',Georgia,serif;
+    line-height:1.5; padding:22px 16px 60px;
+  }
+  .wrap{max-width:780px;margin:0 auto;}
+  h1{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-weight:700;font-size:1.5rem;margin:0 0 2px;color:#43203f;letter-spacing:.2px;
+  }
+  .lede{margin:0 0 22px;font-size:1rem;color:#5a3a55;}
+  h2{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-weight:700;font-size:1.12rem;margin:30px 0 4px;color:#6a2c91;
+  }
+  .note{margin:0 0 10px;font-size:.96rem;color:#5a3a55;}
+  .formula{font-style:italic;}
+  svg{width:100%;height:auto;display:block;touch-action:none;
+      background:#fffdf8;border:1px solid #e7ddcb;border-radius:6px;}
+  .readout{
+    margin:10px 0 0;padding:10px 14px;background:#f3ecdd;border:1px solid #e1d5bd;
+    border-radius:6px;font-size:.95rem;
+  }
+  .readout .row{margin:2px 0;}
+  .interp{margin-top:7px;font-style:italic;color:#43203f;}
+  .controls{margin:10px 0 0;display:flex;gap:10px;flex-wrap:wrap;}
+  button{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-size:.9rem;padding:7px 13px;border-radius:6px;cursor:pointer;
+    background:#fffdf8;color:#43203f;border:1.5px solid #6a2c91;
+  }
+  button:active{background:#efe7d6;}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:baseline;margin-right:3px;}
+  .bar{display:inline-block;width:20px;height:0;border-top:3px solid #6a2c91;vertical-align:middle;margin-right:3px;}
+  .legend{font-size:.86rem;color:#5a3a55;margin:6px 0 0;}
+  code{font-family:'TeX Gyre Heros',monospace;background:#efe7d6;padding:0 3px;border-radius:3px;}
+  .book{margin:8px 0 0;padding:12px 14px;background:#f7f1e6;border:1px solid #e7ddcb;border-radius:6px;font-size:.96rem;}
+  .book .eq{font-style:italic;margin:4px 0;}
+  footer{margin-top:34px;font-size:.85rem;color:#7a6a76;border-top:1px solid #e7ddcb;padding-top:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>The cross-ratio: size and shape</h1>
+  <p class="lede">Cut <b>PQ</b> twice and write <span class="formula">a = PC, b = CQ, c = PD, d = DQ</span>. The rectangle of
+    width <span class="formula">c + d</span> and height <span class="formula">a + b</span> falls into four pieces —
+    <span class="formula">(a + b)(c + d) = ac + ad + bc + bd</span>. The harmonic condition wears two costumes at once,
+    and they turn out to be a single event.</p>
+
+  <!-- ================= DIAGRAM 1 ================= -->
+  <h2>1 · One event, two costumes — drag C and D</h2>
+  <p class="note">The two <b>complements</b> <span class="formula">ad, bc</span> (off the diagonal) and the two
+    <b>diagonal-rectangles</b> <span class="formula">ac, bd</span> (the green diagonal runs through them).
+    When the inner point P lands on the diagonal, the complements match in <b>size</b> and the diagonal-rectangles match in
+    <b>shape</b> — both at the same instant, witnessed by the two corner-diagonals lining up straight.</p>
+
+  <svg id="svg1" viewBox="0 0 720 390" role="img" aria-label="The four sub-rectangles of a cut, drawn to scale, with the two corner-diagonals">
+    <text id="s1State" x="360" y="22" text-anchor="middle" font-size="15" fill="#8a6b3a">…</text>
+
+    <!-- number line -->
+    <rect x="285" y="44" width="150" height="16" fill="#b08948" opacity="0.16"/>
+    <text x="290" y="56" font-size="9" fill="#8a6b3a">inside&#160;P—Q</text>
+    <line x1="60" y1="52" x2="660" y2="52" stroke="#43203f" stroke-width="1" opacity="0.45"/>
+    <line x1="285" y1="44" x2="285" y2="60" stroke="#43203f" stroke-width="2"/>
+    <text x="285" y="78" text-anchor="middle" font-size="12" fill="#43203f">P</text>
+    <line x1="435" y1="44" x2="435" y2="60" stroke="#43203f" stroke-width="2"/>
+    <text x="435" y="78" text-anchor="middle" font-size="12" fill="#43203f">Q</text>
+
+    <circle id="c1Dot" cx="322.5" cy="52" r="7" fill="#6a2c91"/>
+    <circle id="c1Hit" cx="322.5" cy="52" r="20" fill="#6a2c91" fill-opacity="0" pointer-events="all"/>
+    <text id="c1Label" x="322.5" y="36" text-anchor="middle" font-size="14" fill="#6a2c91">C</text>
+    <circle id="d1Dot" cx="210" cy="52" r="7" fill="#c0322b"/>
+    <circle id="d1Hit" cx="210" cy="52" r="20" fill="#c0322b" fill-opacity="0" pointer-events="all"/>
+    <text id="d1Label" x="210" y="36" text-anchor="middle" font-size="14" fill="#c0322b">D</text>
+
+    <!-- four sub-rectangles (to scale): shape pair (ac, bd) under, then size pair (ad, bc) -->
+    <rect id="rAC" x="306" y="185" width="27" height="13.5" fill="#6a2c91" fill-opacity="0.20"/>
+    <rect id="rBD" x="333" y="198.5" width="81" height="40.5" fill="#6a2c91" fill-opacity="0.20"/>
+    <rect id="rAD" x="333" y="185" width="81" height="13.5" fill="#b08948" fill-opacity="0.42"/>
+    <rect id="rBC" x="306" y="198.5" width="27" height="40.5" fill="#c0322b" fill-opacity="0.42"/>
+
+    <!-- main diagonal (straight reference) and the two corner-diagonals via P -->
+    <line id="mDiag" x1="306" y1="185" x2="414" y2="239" stroke="#2c6e49" stroke-width="2.2"/>
+    <polyline id="pPoly" points="306,185 333,198.5 414,239" fill="none" stroke="#6a2c91" stroke-width="1.8" stroke-linejoin="round"/>
+    <rect id="boxOut" x="306" y="185" width="108" height="54" fill="none" stroke="#43203f" stroke-width="1.2"/>
+    <circle id="pDot" cx="333" cy="198.5" r="4.5" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+
+    <!-- edge letters mark the four directed lengths -->
+    <text id="eLc" x="319.5" y="179" text-anchor="middle" font-size="13" fill="#43203f" font-style="italic">c</text>
+    <text id="eLd" x="373.5" y="179" text-anchor="middle" font-size="13" fill="#43203f" font-style="italic">d</text>
+    <text id="eLa" x="298" y="195.75" text-anchor="end" font-size="13" fill="#43203f" font-style="italic">a</text>
+    <text id="eLb" x="298" y="222.75" text-anchor="end" font-size="13" fill="#43203f" font-style="italic">b</text>
+
+    <!-- verdicts -->
+    <text id="vSize"  x="360" y="346" text-anchor="middle" font-size="14" fill="#2c6e49">SAME SIZE&#160;&#160;|ad| = |bc|&#160;&#160;✓</text>
+    <text id="vShape" x="360" y="368" text-anchor="middle" font-size="14" fill="#2c6e49">SAME SHAPE&#160;&#160;ac ∼ bd&#160;&#160;·&#160;&#160;corner-diagonals straight, bend 0.0°&#160;&#160;✓</text>
+  </svg>
+
+  <div class="controls">
+    <button id="bHarm">Make harmonic&#160;&#160;(D ← conjugate of C)</button>
+    <button id="bCoin">Make coincident&#160;&#160;(D ← C)</button>
+  </div>
+  <p class="legend">
+    <span class="swatch" style="background:#b08948"></span>ad&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#c0322b"></span>bc&#160;&#160;— complements (the <b>size</b> pair)&#160;&#160;·&#160;&#160;
+    <span class="swatch" style="background:#6a2c91"></span>ac, bd&#160;&#160;— diagonal-rectangles (the <b>shape</b> pair)<br>
+    <span class="bar" style="border-color:#2c6e49"></span>main diagonal (straight reference)&#160;&#160;·&#160;&#160;
+    <span class="bar" style="border-color:#6a2c91"></span>corner-diagonals via P&#160;&#160;(ac's, then bd's)
+  </p>
+
+  <div class="readout" id="read1">
+    <div class="row">directed lengths:&#160; a = <span id="o_a">…</span>,&#160; b = <span id="o_b">…</span>,&#160; c = <span id="o_c">…</span>,&#160; d = <span id="o_d">…</span></div>
+    <div class="row">size pair:&#160; ad = <span id="o_ad">…</span>,&#160; bc = <span id="o_bc">…</span>&#160;&#160;|&#160;&#160;shape pair:&#160; ac = <span id="o_ac">…</span>,&#160; bd = <span id="o_bd">…</span></div>
+    <div class="row">conserved (always):&#160; ad·bc = <span id="o_p1">…</span>&#160; = ac·bd = <span id="o_p2">…</span>&#160; = abcd = <span id="o_p3">…</span></div>
+    <div class="row interp" id="o_interp">…</div>
+  </div>
+
+  <!-- ================= DIAGRAM 2 (static) ================= -->
+  <h2>2 · The bookkeeping — quotient vs product</h2>
+  <p class="note">Two ratios live in this picture, and only one is a cross-ratio. The harmonic example below
+    (<span class="formula">a = +0.25, b = +0.75, c = −0.50, d = +1.50</span>) has P exactly on the diagonal.</p>
+
+  <svg id="svg2" viewBox="0 0 720 210" role="img" aria-label="Static harmonic dissection with the four areas labelled">
+    <text x="360" y="22" text-anchor="middle" font-size="12" fill="#8a6b3a">harmonic example &#160;·&#160; P on the diagonal &#160;·&#160; |ad| = |bc| = 0.38, &#160; ac ∼ bd (both 2:1)</text>
+
+    <!-- box 200x100 to scale, centred -->
+    <rect x="260" y="95" width="50"  height="25" fill="#6a2c91" fill-opacity="0.20"/>
+    <rect x="310" y="70" width="150" height="25" fill="#b08948" fill-opacity="0.42"/>
+    <rect x="260" y="95" width="50"  height="75" fill="#c0322b" fill-opacity="0.42"/>
+    <rect x="310" y="95" width="150" height="75" fill="#6a2c91" fill-opacity="0.20"/>
+    <line x1="260" y1="70" x2="460" y2="170" stroke="#2c6e49" stroke-width="2.2"/>
+    <rect x="260" y="70" width="200" height="100" fill="none" stroke="#43203f" stroke-width="1.2"/>
+    <circle cx="310" cy="95" r="4" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+
+    <text x="285" y="86"  text-anchor="middle" font-size="11" fill="#43203f">ac</text>
+    <text x="285" y="98"  text-anchor="middle" font-size="9"  fill="#6a2c91">−0.12</text>
+    <text x="385" y="84"  text-anchor="middle" font-size="11" fill="#8a6b3a">ad</text>
+    <text x="385" y="93"  text-anchor="middle" font-size="9"  fill="#8a6b3a">+0.38</text>
+    <text x="285" y="135" text-anchor="middle" font-size="11" fill="#c0322b">bc</text>
+    <text x="285" y="147" text-anchor="middle" font-size="9"  fill="#c0322b">−0.38</text>
+    <text x="385" y="135" text-anchor="middle" font-size="11" fill="#6a2c91">bd</text>
+    <text x="385" y="147" text-anchor="middle" font-size="9"  fill="#6a2c91">+1.12</text>
+
+    <text x="285" y="62"  text-anchor="middle" font-size="12" fill="#43203f" font-style="italic">c</text>
+    <text x="385" y="62"  text-anchor="middle" font-size="12" fill="#43203f" font-style="italic">d</text>
+    <text x="252" y="86"  text-anchor="end"    font-size="12" fill="#43203f" font-style="italic">a</text>
+    <text x="252" y="135" text-anchor="end"    font-size="12" fill="#43203f" font-style="italic">b</text>
+  </svg>
+
+  <div class="book">
+    <div class="eq">cross-ratio &#160; λ = (a/b) ÷ (c/d) = ad / bc&#160;&#160;— the <b>quotient</b> of the size pair. Harmonic ⇒ λ = −1.</div>
+    <div class="eq">shape ratio &#160; ac / bd = (a/b) × (c/d)&#160;&#160;— the <b>product</b> of the same two cut-ratios.</div>
+    <div class="eq">conservation &#160; ad · bc = ac · bd = abcd&#160;&#160;— always, for any position of the cuts.</div>
+    <p style="margin:8px 0 0;">The quotient and the product are different animals. <b>ad / bc is a genuine cross-ratio</b> —
+      invariant under every projective (Möbius) map of the four points, which is exactly why the harmonic value −1 is a real,
+      drawable number. <b>ac / bd is only an affine shape ratio</b> — it survives shifting and scaling but is changed by inversion,
+      so it is <i>not</i> a cross-ratio. The conservation law says the four sub-areas are never independent: the product of the two
+      complements always equals the product of the two diagonal-rectangles. What harmonic adds on top is the one extra condition
+      that the complements also <i>match</i> — and matched size, similar shape, and straight corner-diagonals are three names for it.</p>
+  </div>
+
+  <footer>
+    Convention: λ = (C−P)(D−Q) ⁄ (C−Q)(D−P), with P, Q the frame. On the diagonal ⇒ |λ| = 1 (harmonic −1, or coincident +1);
+    the sign is the inside/outside colour, not the diagonal. All values verified numerically before build.
+    flyingsticks · Anharmonic Interface.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PLUM="#43203f", PURPLE="#6a2c91", CRIMSON="#c0322b", GOLD="#b08948", GOLDTX="#8a6b3a", GREEN="#2c6e49";
+  var MINUS="\u2212", SIM="\u223c", MUTED="#a89aae";
+
+  function $(id){ return document.getElementById(id); }
+  function sa(el,k,v){ el.setAttribute(k,v); }
+  function tc(el,s){ el.textContent=s; }
+  function clamp(v,lo,hi){ return v<lo?lo:(v>hi?hi:v); }
+  function f2(x){ if(!isFinite(x)) return "\u00b1\u221e"; return (x<0?MINUS:"+")+Math.abs(x).toFixed(2); }
+
+  (function main(){
+    var svg=$("svg1");
+    var UNIT=150, X0=285, VIEW_W=720, T_MIN=-1.45, T_MAX=2.45;
+    var S=54, CX=360, CY=212;                       // box centre + pixels-per-unit (common scale)
+    function x(t){ return X0+UNIT*t; }
+    function tFromX(px){ return (px-X0)/UNIT; }
+
+    var tC=0.25, tD=-0.5;                            // open on a harmonic pair
+
+    var c1Dot=$("c1Dot"),c1Hit=$("c1Hit"),c1Label=$("c1Label");
+    var d1Dot=$("d1Dot"),d1Hit=$("d1Hit"),d1Label=$("d1Label");
+    var s1State=$("s1State");
+    var rAC=$("rAC"),rAD=$("rAD"),rBC=$("rBC"),rBD=$("rBD");
+    var mDiag=$("mDiag"),pPoly=$("pPoly"),boxOut=$("boxOut"),pDot=$("pDot");
+    var eLa=$("eLa"),eLb=$("eLb"),eLc=$("eLc"),eLd=$("eLd");
+    var vSize=$("vSize"),vShape=$("vShape");
+    var o_a=$("o_a"),o_b=$("o_b"),o_c=$("o_c"),o_d=$("o_d");
+    var o_ad=$("o_ad"),o_bc=$("o_bc"),o_ac=$("o_ac"),o_bd=$("o_bd");
+    var o_p1=$("o_p1"),o_p2=$("o_p2"),o_p3=$("o_p3"),o_interp=$("o_interp");
+
+    function update(){
+      var xC=x(tC), xD=x(tD);
+      var a=tC, b=1-tC, c=tD, d=1-tD;
+      var ad=a*d, bc=b*c, ac=a*c, bd=b*d;
+      var mA=Math.abs(a),mB=Math.abs(b),mC=Math.abs(c),mD=Math.abs(d);
+      var bcZero=Math.abs(bc)<1e-9;
+      var lam=bcZero?Infinity:ad/bc;
+
+      // box to scale: width |c|+|d|, height |a|+|b|
+      var W=S*(mC+mD), H=S*(mA+mB);
+      var bl=CX-W/2, bt=CY-H/2, br=CX+W/2, bb=CY+H/2;
+      var vx=bl+S*mC, hy=bt+S*mA;                    // inner point P
+
+      // number-line dots
+      sa(c1Dot,"cx",xC); sa(c1Hit,"cx",xC); sa(c1Label,"x",xC);
+      sa(d1Dot,"cx",xD); sa(d1Hit,"cx",xD); sa(d1Label,"x",xD);
+
+      // four sub-rectangles  (TL=ac, TR=ad, BL=bc, BR=bd)
+      sa(rAC,"x",bl); sa(rAC,"y",bt); sa(rAC,"width",S*mC); sa(rAC,"height",S*mA);
+      sa(rAD,"x",vx); sa(rAD,"y",bt); sa(rAD,"width",S*mD); sa(rAD,"height",S*mA);
+      sa(rBC,"x",bl); sa(rBC,"y",hy); sa(rBC,"width",S*mC); sa(rBC,"height",S*mB);
+      sa(rBD,"x",vx); sa(rBD,"y",hy); sa(rBD,"width",S*mD); sa(rBD,"height",S*mB);
+      // sign colour for the complements (the size pair)
+      sa(rAD,"fill", ad>=0?GOLD:CRIMSON);
+      sa(rBC,"fill", bc>=0?GOLD:CRIMSON);
+
+      // main diagonal, corner-diagonal polyline, outline, inner point
+      sa(mDiag,"x1",bl); sa(mDiag,"y1",bt); sa(mDiag,"x2",br); sa(mDiag,"y2",bb);
+      sa(pPoly,"points", bl+","+bt+" "+vx+","+hy+" "+br+","+bb);
+      sa(boxOut,"x",bl); sa(boxOut,"y",bt); sa(boxOut,"width",W); sa(boxOut,"height",H);
+      sa(pDot,"cx",vx); sa(pDot,"cy",hy);
+
+      // edge letters ride the moving edges
+      sa(eLc,"x",bl+S*mC/2); sa(eLc,"y",bt-6);
+      sa(eLd,"x",vx+S*mD/2); sa(eLd,"y",bt-6);
+      sa(eLa,"x",bl-8); sa(eLa,"y",bt+S*mA/2+4);
+      sa(eLb,"x",bl-8); sa(eLb,"y",hy+S*mB/2+4);
+
+      // the single event
+      var equal=Math.abs(mA*mD - mB*mC)<2e-3;        // |ad| = |bc|
+      sa(pDot,"fill", equal?GOLD:PLUM);
+      // bend between the two corner-diagonals  v1=(|c|,|a|), v2=(|d|,|b|)
+      var n1=Math.sqrt(mC*mC+mA*mA), n2=Math.sqrt(mD*mD+mB*mB);
+      var bend=(n1>1e-9&&n2>1e-9)? Math.acos(clamp((mC*mD+mA*mB)/(n1*n2),-1,1))*180/Math.PI : 0;
+
+      tc(vSize, "SAME SIZE\u00a0\u00a0|ad| = |bc|\u00a0\u00a0"+(equal?"\u2713":"\u2717"));
+      sa(vSize,"fill", equal?GREEN:MUTED);
+      tc(vShape, "SAME SHAPE\u00a0\u00a0ac "+SIM+" bd\u00a0\u00a0\u00b7\u00a0\u00a0corner-diagonals "
+                 +(equal?"straight":"bent")+", bend "+bend.toFixed(1)+"\u00b0\u00a0\u00a0"+(equal?"\u2713":"\u2717"));
+      sa(vShape,"fill", equal?GREEN:MUTED);
+
+      // state
+      var st,stc;
+      if(!bcZero && Math.abs(lam+1)<0.02){ st="HARMONIC   \u00b7   \u03bb = ad/bc = "+MINUS+"1"; stc=GOLDTX; }
+      else if(!bcZero && Math.abs(lam-1)<0.02){ st="COINCIDENT   \u00b7   \u03bb = +1"; stc=CRIMSON; }
+      else { st="\u03bb = ad/bc = "+(bcZero?"\u00b1\u221e":f2(lam)); stc=GOLDTX; }
+      tc(s1State,st); sa(s1State,"fill",stc);
+
+      // readout
+      tc(o_a,f2(a)); tc(o_b,f2(b)); tc(o_c,f2(c)); tc(o_d,f2(d));
+      tc(o_ad,f2(ad)); tc(o_bc,f2(bc)); tc(o_ac,f2(ac)); tc(o_bd,f2(bd));
+      o_ad.style.color = ad>=0?GOLDTX:CRIMSON;
+      o_bc.style.color = bc>=0?GOLDTX:CRIMSON;
+      tc(o_p1,f2(ad*bc)); tc(o_p2,f2(ac*bd)); tc(o_p3,f2(a*b*c*d));
+      var msg;
+      if(!bcZero && Math.abs(lam+1)<0.02){
+        msg="Harmonic. |ad| = |bc| (equal size) and ac "+SIM+" bd (equal shape) are one event \u2014 the two corner-diagonals lie straight along the green line. One cut inside (+), one outside ("+MINUS+"), so ad = "+MINUS+"bc: the signed areas cancel.";
+      } else if(!bcZero && Math.abs(lam-1)<0.02){
+        msg="Coincident. Still on the diagonal \u2014 equal size, similar shape, straight corner-diagonals \u2014 but both cuts share a sign, so ad = +bc and the areas add rather than cancel. The box is a perfect square. Harmonic only when the two colours differ.";
+      } else {
+        msg="Off the diagonal. The corner-diagonals bend at P, so the complements differ in size and the diagonal-rectangles differ in shape \u2014 both at once. Still a cross-ratio, just not harmonic. Snap to a button to straighten the diagonals.";
+      }
+      tc(o_interp,msg);
+    }
+
+    function dragify(hit,onMove){
+      var active=false;
+      hit.style.cursor="grab";
+      function pos(e){ var r=svg.getBoundingClientRect(); return (e.clientX-r.left)*(VIEW_W/r.width); }
+      hit.addEventListener("pointerdown",function(e){ e.preventDefault(); active=true; hit.setPointerCapture(e.pointerId); hit.style.cursor="grabbing"; onMove(pos(e)); });
+      hit.addEventListener("pointermove",function(e){ if(active) onMove(pos(e)); });
+      function end(e){ active=false; hit.style.cursor="grab"; try{hit.releasePointerCapture(e.pointerId);}catch(_){} }
+      hit.addEventListener("pointerup",end);
+      hit.addEventListener("pointercancel",end);
+    }
+    dragify(c1Hit,function(px){ tC=clamp(tFromX(px),T_MIN,T_MAX); update(); });
+    dragify(d1Hit,function(px){ tD=clamp(tFromX(px),T_MIN,T_MAX); update(); });
+
+    $("bHarm").addEventListener("click",function(){
+      var den=2*tC-1;
+      if(Math.abs(den)<0.04){ tC=0.30; den=2*tC-1; }
+      tD=clamp(tC/den,T_MIN,T_MAX); update();
+    });
+    $("bCoin").addEventListener("click",function(){ tD=tC; update(); });
+
+    update();
+  })();
+})();
+</script>
+</body>
+</html>
