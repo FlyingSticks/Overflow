@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cross-Ratio — from the segment to the sphere</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --plum5:#5a3a55; --purple:#6a2c91;
+    --crimson:#c0322b; --gold:#b08948; --goldtx:#8a6b3a; --green:#2c6e49;
+    --line:#e7ddcb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--plum);}
+  body{font-family:'FreeSerif','Times New Roman',Georgia,serif;line-height:1.5;
+       padding:40px 18px 64px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px;margin:0 auto;}
+  .kicker{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+          font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--goldtx);margin:0 0 6px;}
+  h1{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;font-weight:700;
+     font-size:1.9rem;margin:0 0 6px;color:var(--plum);letter-spacing:.2px;}
+  .sub{font-style:italic;color:var(--plum5);margin:0 0 8px;font-size:1.04rem;}
+  .intro{color:var(--plum5);margin:0 0 26px;font-size:.99rem;max-width:60ch;}
+  .rule{height:1px;background:var(--line);border:0;margin:0 0 26px;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:stretch;}
+  a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;
+         background:#fffdf8;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+         transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;}
+  a.card:hover,a.card:focus-visible{transform:translateY(-3px);
+         box-shadow:0 8px 22px rgba(67,32,63,.12);border-color:#d8c8ab;outline:none;}
+  .thumb{width:100%;height:138px;background:var(--cream);border-bottom:1px solid var(--line);display:block;}
+  .thumb svg{width:100%;height:100%;display:block;}
+  .body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1;}
+  .step{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;font-size:.7rem;
+        letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 4px;}
+  h2.t{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;font-weight:700;
+       font-size:1.06rem;margin:0 0 6px;color:var(--purple);line-height:1.25;}
+  .desc{font-size:.92rem;color:var(--plum);margin:0 0 12px;flex:1;}
+  .meta{display:flex;align-items:center;gap:8px;font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+        font-size:.74rem;color:var(--plum5);}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:var(--cream);}
+  .tag.int{color:var(--green);border-color:#cfe0d3;}
+  .tag.pdf{color:var(--crimson);border-color:#eccfcd;}
+  .open{margin-left:auto;color:var(--purple);font-weight:700;}
+  footer{margin-top:34px;font-size:.82rem;color:#7a6a76;border-top:1px solid var(--line);padding-top:12px;
+         font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;}
+  footer .r{float:right;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">flyingsticks · Anharmonic Interface</p>
+  <h1>The cross-ratio — from the segment to the sphere</h1>
+  <p class="sub">Two cuts on a segment, the single number they make — and the sphere where its six values live.</p>
+  <p class="intro">Cut a segment twice and the cross-ratio λ = (a/b)/(c/d) = ad/bc tells the whole story; the harmonic
+    value λ = −1 is where the figure balances. Reorder the four points and that one number becomes six, whose natural
+    home is the Riemann sphere — the real, drawable values ring the equator, and the value goes complex only at the
+    poles. Four pieces, in reading order: the harmonic balance, its size-and-shape reading, a short written note, and
+    the sphere where the value lives.</p>
+  <hr class="rule">
+
+  <div class="grid">
+
+    <!-- Card 1 : ad = ±bc -->
+    <a class="card" href="Cross_ratio_ad_bc.html">
+      <span class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 260 138" role="img" aria-label="signed complements rectangle">
+          <rect x="40" y="28" width="45"  height="22.5" fill="#faf6ef"/>
+          <rect x="85" y="28" width="135" height="22.5" fill="#b08948" fill-opacity="0.42"/>
+          <rect x="40" y="50.5" width="45"  height="60" fill="#c0322b" fill-opacity="0.42"/>
+          <rect x="85" y="50.5" width="135" height="60" fill="#faf6ef"/>
+          <line x1="40" y1="28" x2="220" y2="110.5" stroke="#2c6e49" stroke-width="2.4"/>
+          <rect x="40" y="28" width="180" height="82.5" fill="none" stroke="#43203f" stroke-width="1.1"/>
+          <circle cx="85" cy="50.5" r="3.2" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+          <text x="157" y="43" text-anchor="middle" font-family="serif" font-size="11" fill="#8a6b3a" font-style="italic">ad</text>
+          <text x="62"  y="86" text-anchor="middle" font-family="serif" font-size="11" fill="#c0322b" font-style="italic">bc</text>
+          <text x="130" y="128" text-anchor="middle" font-family="serif" font-size="12" fill="#43203f">ad = −bc</text>
+        </svg>
+      </span>
+      <span class="body">
+        <span class="step">Start here</span>
+        <h2 class="t">ad = ±bc — the harmonic balance</h2>
+        <span class="desc">Drag two cuts along a segment and watch the cross-ratio. The signed complements
+          ad and bc are equal and opposite at λ = −1 — drawn both as cancelling arrows and as equal areas to scale.</span>
+        <span class="meta"><span class="tag int">interactive</span> <span>HTML</span> <span class="open">Open →</span></span>
+      </span>
+    </a>
+
+    <!-- Card 2 : size and shape -->
+    <a class="card" href="Cross_ratio_size_and_shape.html">
+      <span class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 260 138" role="img" aria-label="four-piece dissection">
+          <rect x="40" y="28" width="45"  height="22.5" fill="#6a2c91" fill-opacity="0.20"/>
+          <rect x="85" y="28" width="135" height="22.5" fill="#b08948" fill-opacity="0.42"/>
+          <rect x="40" y="50.5" width="45"  height="60" fill="#c0322b" fill-opacity="0.42"/>
+          <rect x="85" y="50.5" width="135" height="60" fill="#6a2c91" fill-opacity="0.20"/>
+          <line x1="40" y1="28" x2="220" y2="110.5" stroke="#2c6e49" stroke-width="2.6"/>
+          <polyline points="40,28 85,50.5 220,110.5" fill="none" stroke="#6a2c91" stroke-width="1.3" stroke-linejoin="round"/>
+          <rect x="40" y="28" width="180" height="82.5" fill="none" stroke="#43203f" stroke-width="1.1"/>
+          <circle cx="85" cy="50.5" r="3.2" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+          <text x="60"  y="44" text-anchor="middle" font-family="serif" font-size="10" fill="#6a2c91" font-style="italic">ac</text>
+          <text x="157" y="44" text-anchor="middle" font-family="serif" font-size="10" fill="#8a6b3a" font-style="italic">ad</text>
+          <text x="60"  y="86" text-anchor="middle" font-family="serif" font-size="10" fill="#c0322b" font-style="italic">bc</text>
+          <text x="157" y="86" text-anchor="middle" font-family="serif" font-size="10" fill="#6a2c91" font-style="italic">bd</text>
+        </svg>
+      </span>
+      <span class="body">
+        <span class="step">Then</span>
+        <h2 class="t">Size and shape — one event</h2>
+        <span class="desc">The same cut as a four-piece rectangle. Matched size, same proportions, and straight
+          corner-diagonals turn out to be one condition — and the colour is the sign that splits harmonic from coincident.</span>
+        <span class="meta"><span class="tag int">interactive</span> <span>HTML</span> <span class="open">Open →</span></span>
+      </span>
+    </a>
+
+    <!-- Card 3 : the note (PDF) -->
+    <a class="card" href="Three_names_one_condition.pdf">
+      <span class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 260 138" role="img" aria-label="working note, PDF">
+          <rect x="86" y="16" width="88" height="112" rx="4" fill="#fffdf8" stroke="#43203f" stroke-width="1.1"/>
+          <path d="M160 16 L174 30 L160 30 Z" fill="#efe7d6" stroke="#43203f" stroke-width="1.1"/>
+          <rect x="96" y="28" width="46" height="6" rx="2" fill="#6a2c91"/>
+          <rect x="96" y="40" width="64" height="3" rx="1.5" fill="#cbb9a0"/>
+          <rect x="96" y="47" width="58" height="3" rx="1.5" fill="#cbb9a0"/>
+          <!-- mini dissection -->
+          <rect x="100" y="62" width="24" height="11" fill="#b08948" fill-opacity="0.42"/>
+          <rect x="100" y="73" width="24" height="20" fill="#c0322b" fill-opacity="0.42"/>
+          <rect x="124" y="62" width="36" height="11" fill="#6a2c91" fill-opacity="0.18"/>
+          <rect x="124" y="73" width="36" height="20" fill="#6a2c91" fill-opacity="0.18"/>
+          <line x1="100" y1="62" x2="160" y2="93" stroke="#2c6e49" stroke-width="1.8"/>
+          <rect x="100" y="62" width="60" height="31" fill="none" stroke="#43203f" stroke-width="0.9"/>
+          <rect x="96" y="104" width="64" height="3" rx="1.5" fill="#cbb9a0"/>
+          <rect x="96" y="111" width="50" height="3" rx="1.5" fill="#cbb9a0"/>
+        </svg>
+      </span>
+      <span class="body">
+        <span class="step">And</span>
+        <h2 class="t">Three names for one condition</h2>
+        <span class="desc">A short working note with diagrams: why size, shape, and diagonals are a single fact,
+          why the sign is a separate axis, and a ledger pricing each claim.</span>
+        <span class="meta"><span class="tag pdf">PDF · note</span> <span>3 pp.</span> <span class="open">Open →</span></span>
+      </span>
+    </a>
+
+    <!-- Card 4 : the λ-sphere -->
+    <a class="card" href="Lambda_sphere.html">
+      <span class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 260 138" role="img" aria-label="lambda on the Riemann sphere">
+          <circle cx="130" cy="64" r="50" fill="#f3ecdd" stroke="#d8c8ab" stroke-width="1"/>
+          <line x1="130" y1="21" x2="130" y2="107" stroke="#43203f" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.4"/>
+          <path d="M 80 64 A 50 25 0 0 1 180 64" fill="none" stroke="#6a2c91" stroke-width="1.1" stroke-dasharray="3 3" opacity="0.4"/>
+          <path d="M 80 64 A 50 25 0 0 0 180 64" fill="none" stroke="#6a2c91" stroke-width="1.8"/>
+          <!-- hexagon of the six real special values: degenerate / harmonic alternating -->
+          <circle cx="180" cy="64"   r="3.4" fill="#a89aae" stroke="#faf6ef" stroke-width="1"/>
+          <circle cx="155" cy="85.6" r="3.4" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+          <circle cx="105" cy="85.6" r="3.4" fill="#a89aae" stroke="#faf6ef" stroke-width="1"/>
+          <circle cx="80"  cy="64"   r="3.4" fill="#b08948" stroke="#faf6ef" stroke-width="1"/>
+          <circle cx="105" cy="42.4" r="3.4" fill="#a89aae" stroke="#faf6ef" stroke-width="1" opacity="0.4"/>
+          <circle cx="155" cy="42.4" r="3.4" fill="#b08948" stroke="#faf6ef" stroke-width="1" opacity="0.4"/>
+          <!-- equianharmonic poles -->
+          <circle cx="130" cy="21"  r="4" fill="#6a2c91" stroke="#faf6ef" stroke-width="1.1"/>
+          <circle cx="130" cy="107" r="4" fill="#6a2c91" stroke="#faf6ef" stroke-width="1.1" opacity="0.4"/>
+          <!-- a lifted λ, off the equator -->
+          <circle cx="150" cy="50" r="3.2" fill="#43203f" stroke="#faf6ef" stroke-width="1"/>
+          <circle cx="150" cy="50" r="6"   fill="none" stroke="#b08948" stroke-width="1.5"/>
+          <text x="130" y="131" text-anchor="middle" font-family="serif" font-size="10" fill="#7a6a76" font-style="italic">real → equator</text>
+        </svg>
+      </span>
+      <span class="body">
+        <span class="step">Onward</span>
+        <h2 class="t">The λ-sphere — where it leaves the line</h2>
+        <span class="desc">The six values as a hexagon on the Riemann sphere: the real line is the equator,
+          the equianharmonic pair e<sup>±iπ/3</sup> the poles. Drag λ and watch the orbit ride the equator while
+          real, then lift off — toward the poles — when it goes complex. S₃ acts as rigid rotations.</span>
+        <span class="meta"><span class="tag int">interactive</span> <span>HTML</span> <span class="open">Open →</span></span>
+      </span>
+    </a>
+
+  </div>
+
+  <footer>
+    Convention: λ = (C−P)(D−Q) ⁄ (C−Q)(D−P). Harmonic at λ = −1, equianharmonic at e<sup>±iπ/3</sup>.
+    <span class="r">flyingsticks · Anharmonic Interface · 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
