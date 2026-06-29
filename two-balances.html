@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two balances in a split rectangle</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --purple:#6a2c91; --crimson:#c0322b; --gold:#b08948;
+    --ink:#5b3656; --quiet:#7a6a55; --line:#ece2d0;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; background:var(--cream); color:var(--plum);
+    font-family:'FreeSerif','Times New Roman',Georgia,serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:24px 18px 48px;}
+
+  h1{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-weight:700; font-size:clamp(21px,3.8vw,29px); letter-spacing:.2px;
+    line-height:1.14; margin:.1em 0 .28em;
+  }
+  .sub{font-size:clamp(14px,2.5vw,17px); line-height:1.55; color:var(--ink);
+       max-width:60ch; margin:.2em 0 1.1em;}
+  .sub i{font-style:italic;}
+
+  .fig{display:block; width:100%; height:auto; touch-action:none;
+       -webkit-user-select:none; user-select:none;
+       background:#fffdf8; border:1.5px solid var(--line); border-radius:14px;}
+  .fig:focus-visible{outline:3px solid var(--purple); outline-offset:2px;}
+
+  .hint{font-size:12.5px; color:var(--quiet); margin:9px 3px 0; line-height:1.45;}
+
+  .controls{display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin:12px 2px 2px;}
+  .ctl{font-size:15px; display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;}
+  .ctl input{width:17px; height:17px; accent-color:var(--purple); cursor:pointer;}
+  .btn{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:14px;
+    background:#fff; border:1.5px solid var(--plum); color:var(--plum);
+    border-radius:9px; padding:7px 16px; cursor:pointer;
+  }
+  .btn:active{background:#f0e7d8;}
+  .btn:focus-visible{outline:3px solid var(--purple); outline-offset:2px;}
+
+  .panels{display:flex; gap:14px; flex-wrap:wrap; margin-top:16px;}
+  .card{flex:1 1 300px; border:1.5px solid var(--line); border-radius:14px;
+        background:#fffdf8; padding:15px 17px 17px;}
+  .card h2,.ratio h2{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px; text-transform:uppercase; letter-spacing:1.3px;
+    color:var(--purple); margin:0 0 .55em;
+  }
+  .lead{font-size:14px; line-height:1.5; color:var(--ink); margin:0 0 .9em;}
+  .lead em,.lead i{font-style:italic;}
+  .row{display:flex; justify-content:space-between; align-items:baseline;
+       font-size:16px; margin:.6em 0 .28em;}
+  .tag i{font-style:italic;}
+  .val{font-variant-numeric:tabular-nums;
+       font-family:'FreeSerif','Times New Roman',serif; font-size:16px;}
+  .bar{height:13px; background:#efe7d6; border-radius:7px; overflow:hidden;}
+  .fill{height:100%; width:0; border-radius:7px;}
+  .fGold{background:var(--gold);}
+  .fCrim{background:var(--crimson);}
+  .fPlum{background:var(--purple);}
+  .note{font-size:12.5px; color:var(--quiet); margin:.95em 0 0; line-height:1.45;}
+  .note i{font-style:italic;}
+  .statusrow{display:flex; justify-content:space-between; align-items:center;
+             margin-top:.7em; font-size:14px;}
+  .statusrow i{font-style:italic;}
+  .pill{
+    font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.8px; padding:4px 11px;
+    border-radius:999px; white-space:nowrap;
+  }
+  .pill.ok{background:#e7f0e3; color:#2f6d33; border:1px solid #b9d6b0;}
+  .pill.off{background:#f3eadf; color:#8a6a3a; border:1px solid #e0cda9;}
+
+  .ratio{border:1.5px solid var(--line); border-radius:14px; background:#fffdf8;
+         padding:14px 17px; margin-top:14px;}
+  .ratiolead{font-size:13.5px; color:var(--ink); margin:0 0 .7em; line-height:1.5;}
+  .ratiolead i{font-style:italic;}
+  .ratiovals{display:flex; gap:10px; flex-wrap:wrap;}
+  .rv{flex:1 1 120px; text-align:center; font-size:15px; padding:9px 6px;
+      border-radius:9px; background:#f6efe2;}
+  .rv i{font-style:italic;}
+  .rv b{font-variant-numeric:tabular-nums; font-weight:600;}
+  .rv.fixed{background:#efe6d2; outline:1.5px solid var(--gold); color:#7a5a26;}
+
+  .ledger{font-size:13px; line-height:1.62; color:var(--ink);
+          margin-top:20px; padding-top:14px; border-top:1px solid #e6dcc9;}
+  .ledger i{font-style:italic;}
+
+  /* SVG presentation — literal hex only, never var() inside SVG */
+  .cTL,.cBR{fill:#b08948; fill-opacity:.14;}
+  .cTR,.cBL{fill:#c0322b; fill-opacity:.14;}
+  .border{fill:none; stroke:#43203f; stroke-width:2;}
+  .divider{stroke:#43203f; stroke-opacity:.4; stroke-width:1.2;}
+  .diagonal{stroke:#43203f; stroke-width:2.4; stroke-linecap:round;}
+  .glow{stroke:#b08948; stroke-width:9; stroke-linecap:round;}
+  .elen{fill:#43203f; font-style:italic; font-size:17px;
+        font-family:'FreeSerif','Times New Roman',serif;}
+  .total{fill:#b08948; font-style:italic; font-size:13.5px;
+         font-family:'FreeSerif','Times New Roman',serif;}
+  .cellLbl{font-size:14.5px; font-family:'FreeSerif','Times New Roman',serif;}
+  .tGold{fill:#6f5326;}
+  .tCrim{fill:#a82a23;}
+  .sym{font-style:italic;}
+  .phalo{fill:#6a2c91; fill-opacity:.16;}
+  .phandle{fill:#6a2c91; stroke:#faf6ef; stroke-width:2.5;}
+  .plabel{fill:#6a2c91; font-style:italic; font-weight:700; font-size:15px;
+          font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;}
+
+  @media (max-width:520px){ .panels{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Two balances in a split rectangle</h1>
+  <p class="sub">Point <i>P</i> cuts the rectangle into four cells, with areas <i>ab</i>, <i>ad</i>, <i>cb</i>, <i>cd</i>. Drag it anywhere. The cross&#8209;products of the cells stay equal for <em>every</em> position — the multiplicative balance never moves. The complements <i>ad</i> and <i>cb</i> reach equal <em>areas</em> only when <i>P</i> sits on the diagonal — the additive balance, which closes precisely on the line <i>a</i>&#8202;:&#8202;<i>b</i> = <i>c</i>&#8202;:&#8202;<i>d</i>.</p>
+
+  <svg id="fig" class="fig" viewBox="0 0 660 430" tabindex="0"
+       role="img" aria-label="A rectangle split into four cells by a draggable point P, with a diagonal. Use arrow keys to move P.">
+    <rect id="cellTL" class="cTL"/>
+    <rect id="cellTR" class="cTR"/>
+    <rect id="cellBL" class="cBL"/>
+    <rect id="cellBR" class="cBR"/>
+
+    <rect id="rectBorder" class="border" x="70" y="70" width="480" height="300"/>
+
+    <line id="vline" class="divider"/>
+    <line id="hline" class="divider"/>
+
+    <line id="diagGlow" class="glow" x1="70" y1="70" x2="550" y2="370" opacity="0"/>
+    <line id="diag" class="diagonal" x1="70" y1="70" x2="550" y2="370"/>
+
+    <text class="total" x="310" y="400" text-anchor="middle">b + d = 4.80</text>
+    <text class="total" x="562" y="225" text-anchor="start">a + c = 3.00</text>
+
+    <text id="lblA" class="elen" text-anchor="end">a</text>
+    <text id="lblB" class="elen" text-anchor="middle">b</text>
+    <text id="lblC" class="elen" text-anchor="end">c</text>
+    <text id="lblD" class="elen" text-anchor="middle">d</text>
+
+    <text id="txtTL" class="cellLbl tGold" text-anchor="middle"><tspan class="sym">ab</tspan><tspan id="nTL"> = 0.00</tspan></text>
+    <text id="txtTR" class="cellLbl tCrim" text-anchor="middle"><tspan class="sym">ad</tspan><tspan id="nTR"> = 0.00</tspan></text>
+    <text id="txtBL" class="cellLbl tCrim" text-anchor="middle"><tspan class="sym">cb</tspan><tspan id="nBL"> = 0.00</tspan></text>
+    <text id="txtBR" class="cellLbl tGold" text-anchor="middle"><tspan class="sym">cd</tspan><tspan id="nBR"> = 0.00</tspan></text>
+
+    <circle id="phalo" class="phalo" r="16"/>
+    <circle id="phandle" class="phandle" r="7.5"/>
+    <text id="plabel" class="plabel">P</text>
+  </svg>
+
+  <p class="hint">Drag anywhere inside the figure to move <i>P</i> (the figure also takes keyboard focus — arrow keys nudge it). Or lock <i>P</i> to the diagonal and slide along it.</p>
+
+  <div class="controls">
+    <label class="ctl"><input type="checkbox" id="lockBox"> Lock P to the diagonal</label>
+    <button id="resetBtn" class="btn" type="button">Reset</button>
+  </div>
+
+  <div class="panels">
+    <section class="card">
+      <h2>Product &middot; holds everywhere</h2>
+      <p class="lead">The two cross&#8209;products of the cells. They rise and fall together but never split apart.</p>
+      <div class="row"><span class="tag"><i>ab</i> &middot; <i>cd</i></span><span class="val" id="pv1">0</span></div>
+      <div class="bar"><div class="fill fGold" id="pbar1"></div></div>
+      <div class="row"><span class="tag"><i>ad</i> &middot; <i>cb</i></span><span class="val" id="pv2">0</span></div>
+      <div class="bar"><div class="fill fCrim" id="pbar2"></div></div>
+      <p class="note">Both equal <i>abcd</i> for every <i>P</i> — the bars stay locked at the same length.</p>
+    </section>
+
+    <section class="card">
+      <h2>Area &middot; closes on the diagonal</h2>
+      <p class="lead">The two complement cells. Equal <em>areas</em> only when <i>P</i> rides the diagonal.</p>
+      <div class="row"><span class="tag"><i>ad</i></span><span class="val" id="av1">0</span></div>
+      <div class="bar"><div class="fill fCrim" id="abar1"></div></div>
+      <div class="row"><span class="tag"><i>cb</i></span><span class="val" id="av2">0</span></div>
+      <div class="bar"><div class="fill fPlum" id="abar2"></div></div>
+      <div class="statusrow"><span>gap = <i>ad</i> &minus; <i>cb</i> = <span class="val" id="agap">0</span></span><span class="pill off" id="apill">off the line</span></div>
+    </section>
+  </div>
+
+  <section class="ratio">
+    <h2>Side ratios</h2>
+    <p class="ratiolead"><i>a</i>&#8202;:&#8202;<i>b</i> and <i>c</i>&#8202;:&#8202;<i>d</i> pinch onto the rectangle's own ratio <i>H</i>&#8202;:&#8202;<i>W</i> = 0.625 exactly on the diagonal — the mediant standing between them.</p>
+    <div class="ratiovals">
+      <span class="rv"><i>a</i>/<i>b</i> = <b id="rab">0</b></span>
+      <span class="rv fixed"><i>H</i>/<i>W</i> = 0.625</span>
+      <span class="rv"><i>c</i>/<i>d</i> = <b id="rcd">0</b></span>
+    </div>
+  </section>
+
+  <p class="ledger">Both balances are theorems. The four areas are the rank&#8209;one array [<i>a</i>&#8202;&#8202;<i>c</i>] &otimes; [<i>b</i>&#8202;&#8202;<i>d</i>], so the cross&#8209;products <i>ab</i>&middot;<i>cd</i> and <i>ad</i>&middot;<i>cb</i> are each <i>abcd</i> — equal for all <i>P</i> (the multiplicative, Turn&#8209;side invariant; verified to floating&#8209;point noise). The complements <i>ad</i> and <i>cb</i> are equal exactly when <i>P</i> lies on the diagonal, i.e. <i>a</i>&#8202;:&#8202;<i>b</i> = <i>c</i>&#8202;:&#8202;<i>d</i> — Euclid I.43, the additive (Reach&#8209;side) special case.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var svg = document.getElementById("fig");
+  var L = 70, T = 70, R = 550, B = 370;   // rectangle box, SVG units
+  var W = R - L, H = B - T;               // 480 x 300
+  var U = 100;                            // px per unit (one unit for both axes)
+  var m = 8;                              // clamp margin so all four cells stay positive
+  var MAXP = Math.pow((W * H) / (4 * U * U), 2); // max of abcd (at the centre) = 12.96
+  var initX = 260, initY = 160;
+
+  var Px = initX, Py = initY, locked = false, dragging = false;
+
+  function $(id){ return document.getElementById(id); }
+
+  var cellTL=$("cellTL"), cellTR=$("cellTR"), cellBL=$("cellBL"), cellBR=$("cellBR");
+  var vline=$("vline"), hline=$("hline"), glow=$("diagGlow");
+  var lblA=$("lblA"), lblB=$("lblB"), lblC=$("lblC"), lblD=$("lblD");
+  var txtTL=$("txtTL"), txtTR=$("txtTR"), txtBL=$("txtBL"), txtBR=$("txtBR");
+  var nTL=$("nTL"), nTR=$("nTR"), nBL=$("nBL"), nBR=$("nBR");
+  var phalo=$("phalo"), phandle=$("phandle"), plabel=$("plabel");
+  var pv1=$("pv1"), pv2=$("pv2"), pbar1=$("pbar1"), pbar2=$("pbar2");
+  var av1=$("av1"), av2=$("av2"), abar1=$("abar1"), abar2=$("abar2");
+  var agap=$("agap"), apill=$("apill");
+  var rab=$("rab"), rcd=$("rcd");
+  var lockBox=$("lockBox"), resetBtn=$("resetBtn");
+
+  function diagY(x){ return T + (x - L) / W * H; }
+
+  function setRect(el, x, y, w, h){
+    el.setAttribute("x", x); el.setAttribute("y", y);
+    el.setAttribute("width", w < 0 ? 0 : w);
+    el.setAttribute("height", h < 0 ? 0 : h);
+  }
+  function setLine(el, x1, y1, x2, y2){
+    el.setAttribute("x1", x1); el.setAttribute("y1", y1);
+    el.setAttribute("x2", x2); el.setAttribute("y2", y2);
+  }
+  function setPos(el, x, y){ el.setAttribute("x", x); el.setAttribute("y", y); }
+
+  function placeCell(txtEl, numEl, cx, cy, area, w, h){
+    if (w < 56 || h < 26){ txtEl.setAttribute("opacity", 0); return; }
+    txtEl.setAttribute("opacity", 1);
+    txtEl.setAttribute("x", cx);
+    txtEl.setAttribute("y", cy + 5);
+    numEl.textContent = " = " + area.toFixed(2);
+  }
+
+  function update(){
+    Px = Math.min(R - m, Math.max(L + m, Px));
+    if (locked){ Py = diagY(Px); }
+    Py = Math.min(B - m, Math.max(T + m, Py));
+
+    var b = Px - L, d = R - Px, a = Py - T, c = B - Py;
+    var au = a / U, bu = b / U, cu = c / U, du = d / U;
+    var aTL = au * bu, aTR = au * du, aBL = cu * bu, aBR = cu * du;
+
+    setRect(cellTL, L,  T,  b, a);
+    setRect(cellTR, Px, T,  d, a);
+    setRect(cellBL, L,  Py, b, c);
+    setRect(cellBR, Px, Py, d, c);
+
+    setLine(vline, Px, T, Px, B);
+    setLine(hline, L, Py, R, Py);
+
+    phalo.setAttribute("cx", Px);   phalo.setAttribute("cy", Py);
+    phandle.setAttribute("cx", Px); phandle.setAttribute("cy", Py);
+    setPos(plabel, Px + 13, Py + 18);
+
+    setPos(lblB, (L + Px) / 2, T - 12);
+    setPos(lblD, (Px + R) / 2, T - 12);
+    setPos(lblA, L - 15, (T + Py) / 2 + 5);
+    setPos(lblC, L - 15, (Py + B) / 2 + 5);
+
+    placeCell(txtTL, nTL, (L + Px) / 2, (T + Py) / 2, aTL, b, a);
+    placeCell(txtTR, nTR, (Px + R) / 2, (T + Py) / 2, aTR, d, a);
+    placeCell(txtBL, nBL, (L + Px) / 2, (Py + B) / 2, aBL, b, c);
+    placeCell(txtBR, nBR, (Px + R) / 2, (Py + B) / 2, aBR, d, c);
+
+    // product card — two independent computations, locked together against the common max
+    var p1 = aTL * aBR, p2 = aTR * aBL;
+    pv1.textContent = p1.toFixed(4);
+    pv2.textContent = p2.toFixed(4);
+    pbar1.style.width = (p1 / MAXP * 100).toFixed(1) + "%";
+    pbar2.style.width = (p2 / MAXP * 100).toFixed(1) + "%";
+
+    // area card — complements, each against the larger of the pair
+    av1.textContent = aTR.toFixed(3);
+    av2.textContent = aBL.toFixed(3);
+    var mx = Math.max(aTR, aBL, 1e-6);
+    abar1.style.width = (aTR / mx * 100).toFixed(1) + "%";
+    abar2.style.width = (aBL / mx * 100).toFixed(1) + "%";
+    var gap = aTR - aBL;
+    agap.textContent = (gap >= 0 ? "+" : "") + gap.toFixed(3);
+    var balanced = Math.abs(gap) < 0.01;
+    apill.textContent = balanced ? "on the diagonal" : "off the line";
+    apill.className = "pill " + (balanced ? "ok" : "off");
+
+    // side ratios
+    rab.textContent = (a / b).toFixed(3);
+    rcd.textContent = (c / d).toFixed(3);
+
+    // diagonal glow
+    var onDiag = locked || Math.abs(Py - diagY(Px)) < 1.3;
+    glow.setAttribute("opacity", onDiag ? 1 : 0);
+  }
+
+  // --- pointer drag: press anywhere in the figure ---
+  function toSVG(evt){
+    var pt = svg.createSVGPoint();
+    pt.x = evt.clientX; pt.y = evt.clientY;
+    var ctm = svg.getScreenCTM();
+    if (!ctm) return { x: Px, y: Py };
+    return pt.matrixTransform(ctm.inverse());
+  }
+  function start(evt){
+    dragging = true;
+    try { svg.setPointerCapture(evt.pointerId); } catch (e) {}
+    var p = toSVG(evt); Px = p.x; Py = p.y; update();
+    evt.preventDefault();
+  }
+  function moveTo(evt){
+    if (!dragging) return;
+    var p = toSVG(evt); Px = p.x; Py = p.y; update();
+    evt.preventDefault();
+  }
+  function end(evt){
+    dragging = false;
+    try { svg.releasePointerCapture(evt.pointerId); } catch (e) {}
+  }
+  svg.addEventListener("pointerdown", start);
+  svg.addEventListener("pointermove", moveTo);
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", end);
+
+  // --- keyboard path ---
+  svg.addEventListener("keydown", function(evt){
+    var step = evt.shiftKey ? 12 : 3;
+    var handled = true;
+    if (evt.key === "ArrowLeft")  { Px -= step; }
+    else if (evt.key === "ArrowRight") { Px += step; }
+    else if (evt.key === "ArrowUp")    { if (!locked) Py -= step; }
+    else if (evt.key === "ArrowDown")  { if (!locked) Py += step; }
+    else { handled = false; }
+    if (handled){ update(); evt.preventDefault(); }
+  });
+
+  lockBox.addEventListener("change", function(){
+    locked = lockBox.checked; update();
+  });
+  resetBtn.addEventListener("click", function(){
+    Px = initX; Py = initY; locked = false; lockBox.checked = false; update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

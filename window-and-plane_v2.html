@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Window and the Plane</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --purple:#6a2c91; --crimson:#c0322b; --gold:#b08948;
+    --ink:#5b3656; --quiet:#7a6a55; --line:#ece2d0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; background:var(--cream); color:var(--plum);
+    font-family:'FreeSerif','Times New Roman',Georgia,serif; -webkit-text-size-adjust:100%;}
+  .wrap{max-width:720px; margin:0 auto; padding:26px 18px 56px;}
+
+  h1{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight:700;
+     font-size:clamp(24px,4.4vw,34px); letter-spacing:.2px; line-height:1.1; margin:.1em 0 .12em;}
+  .deck{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight:400;
+        font-size:clamp(14px,2.5vw,16px); color:var(--purple); letter-spacing:.3px; margin:0 0 1.1em;}
+  h2{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight:700;
+     font-size:clamp(16px,2.8vw,20px); letter-spacing:.2px; line-height:1.2; margin:1.7em 0 .5em;
+     display:flex; align-items:baseline; gap:.55em;}
+  h2 .n{font-size:.72em; color:var(--gold); font-variant-numeric:tabular-nums; font-weight:700;}
+  p{font-size:clamp(15px,2.5vw,17px); line-height:1.62; color:var(--ink); margin:.55em 0 .9em; max-width:64ch;}
+  p i,.deck i{font-style:italic;} b{color:var(--plum);}
+  .lead-em{color:var(--plum); font-style:italic;}
+
+  figure{margin:1.1em 0 1.2em;}
+  .fig{display:block; width:100%; height:auto; touch-action:none;
+       -webkit-user-select:none; user-select:none;
+       background:#fffdf8; border:1.5px solid var(--line); border-radius:14px;}
+  .fig:focus-visible{outline:3px solid var(--purple); outline-offset:2px;}
+  figcaption{font-size:12.5px; color:var(--quiet); margin:9px 4px 0; line-height:1.5;}
+  figcaption i{font-style:italic;}
+
+  /* readout strips */
+  .read{border:1.5px solid var(--line); border-radius:14px; background:#fffdf8; padding:13px 16px 15px; margin-top:11px;}
+  .read h3{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:11.5px;
+     text-transform:uppercase; letter-spacing:1.3px; color:var(--purple); margin:0 0 .7em;}
+  .lenrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .lenchip{font-family:'FreeSerif',serif; font-size:15px; padding:3px 10px; border-radius:8px;
+     border:1px solid var(--line); background:#f6efe2; display:inline-flex; gap:6px; align-items:center;}
+  .lenchip i{font-style:italic;}
+  .sgn{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:13px; font-weight:700;
+       border-radius:5px; padding:0 6px;}
+  .sgn.pos{color:#2f6d33; background:#e7f0e3;}
+  .sgn.neg{color:#a83a2a; background:#f3e6e0;}
+  .lamline{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:.2em 0 .8em;}
+  .lambig{font-family:'FreeSerif',serif; font-size:26px; font-variant-numeric:tabular-nums; min-width:3.2ch;}
+  .lambig.pos{color:var(--gold);} .lambig.neg{color:var(--purple);}
+  .where{font-size:14px; color:var(--ink); line-height:1.5; margin:.2em 0 0;}
+  .where i{font-style:italic;} .where b{color:var(--plum);}
+  .key{display:flex; gap:16px; flex-wrap:wrap; margin:.7em 0 0; font-size:12.5px; color:var(--quiet);}
+  .key span{display:inline-flex; align-items:center; gap:7px;}
+  .sw{width:14px; height:14px; border-radius:3px; display:inline-block; border:1px solid #d9cdb6;}
+  .sw.g{background:rgba(176,137,72,.30);} .sw.p{background:rgba(106,44,145,.26);}
+
+  .duo{display:flex; gap:16px; flex-wrap:wrap;}
+  .duo .col{flex:1 1 150px;}
+  .big{font-family:'FreeSerif',serif; font-size:20px; font-variant-numeric:tabular-nums;}
+
+  .ledger{font-size:13px; line-height:1.62; color:var(--ink); margin-top:24px; padding-top:15px;
+          border-top:1px solid #e6dcc9;}
+  .ledger b{color:var(--plum);} .ledger i{font-style:italic;}
+
+  /* SVG presentation — literal hex only */
+  .edgeline{stroke:#43203f; stroke-opacity:.45; stroke-width:1.4;}
+  .rectb{fill:none; stroke:#43203f; stroke-width:2.4;}
+  .cross{stroke:#6a2c91; stroke-opacity:.5; stroke-width:1.2; stroke-dasharray:5 5;}
+  .badge{font-family:'FreeSerif',serif; font-style:italic; font-size:16px; fill:#43203f;
+         paint-order:stroke; stroke:#fffdf8; stroke-width:3.4px; stroke-linejoin:round;}
+  .corner{fill:#43203f;}
+  .phaloR{fill:#6a2c91; fill-opacity:.16;} .phandleR{fill:#6a2c91; stroke:#faf6ef; stroke-width:2.5;}
+  .plabelR{fill:#6a2c91; font-style:italic; font-weight:700; font-size:15px;
+           font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;}
+
+  .axis{stroke:#43203f; stroke-width:1.8;}
+  .tick{stroke:#43203f; stroke-opacity:.5; stroke-width:1.2;}
+  .ticklbl{font-family:'FreeSerif',serif; font-size:12px; fill:#7a6a55;}
+  .circ{fill:none; stroke:#43203f; stroke-width:1.5; stroke-dasharray:none; stroke-opacity:.7;}
+  .seg{stroke:#b08948; stroke-width:7; stroke-opacity:.30; stroke-linecap:round;}
+  .arc{fill:none; stroke:#6a2c91; stroke-width:1.5; stroke-opacity:.55;}
+  .ptA{fill:#43203f;} .lblBig{font-family:'FreeSerif',serif; font-style:italic; font-size:16px;
+       paint-order:stroke; stroke:#fffdf8; stroke-width:3.4px; stroke-linejoin:round;}
+  .ptC{fill:#6a2c91; stroke:#faf6ef; stroke-width:2.2;} .ptD{fill:#b08948; stroke:#faf6ef; stroke-width:2.2;}
+  .lblC{fill:#6a2c91;} .lblD{fill:#8a6a26;} .lblO{fill:#7a6a55; font-size:12px;}
+  .inflbl{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:13px;
+          font-style:italic; fill:#6a2c91;}
+
+  @media (max-width:540px){ h2{gap:.4em;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Window and the Plane</h1>
+  <p class="deck">Why the point has to be free to leave the rectangle</p>
+
+  <p>The split rectangle looks like the whole stage. It isn't. It's a <b>window</b> &mdash; a single bright room in a much larger plane, and the four edges that frame it are not boundaries at all but four <i>infinite lines</i>. The rectangle is just the one room where all four lines happen to face the same way. To see what the cross&#8209;ratio is really doing, we have to open the window and let the point walk out.</p>
+
+  <h2><span class="n">1</span> Each length watches a line</h2>
+  <p>Read the four lengths as signed measurements: <i>a</i> = <i>P</i><sub>y</sub> &minus; <i>T</i> is the drop from the top edge down to <i>P</i>, and likewise <i>c</i> from the bottom, <i>b</i> from the left, <i>d</i> from the right. Each one is pinned to a single edge &mdash; and that edge is really the whole horizontal or vertical line through it. A length is positive on one side of its line, zero on it, negative on the far side. <i>a</i> doesn't care about the rectangle; it watches one line and reports which side of it <i>P</i> is on. Inside the room, all four happen to read positive at once. That agreement is the only thing that makes the inside special.</p>
+
+  <figure>
+    <svg id="figR" class="fig" viewBox="0 0 760 560" tabindex="0"
+         role="img" aria-label="A rectangle whose four edges extend to infinite lines, cutting the plane into nine regions shaded by the sign of the cross-ratio. Drag P; arrow keys move it.">
+      <!-- nine region washes (static) -->
+      <rect x="0"   y="0"   width="255" height="180" fill="#b08948" fill-opacity="0.09"/>
+      <rect x="255" y="0"   width="250" height="180" fill="#6a2c91" fill-opacity="0.09"/>
+      <rect x="505" y="0"   width="255" height="180" fill="#b08948" fill-opacity="0.09"/>
+      <rect x="0"   y="180" width="255" height="200" fill="#6a2c91" fill-opacity="0.09"/>
+      <rect x="255" y="180" width="250" height="200" fill="#b08948" fill-opacity="0.09"/>
+      <rect x="505" y="180" width="255" height="200" fill="#6a2c91" fill-opacity="0.09"/>
+      <rect x="0"   y="380" width="255" height="180" fill="#b08948" fill-opacity="0.09"/>
+      <rect x="255" y="380" width="250" height="180" fill="#6a2c91" fill-opacity="0.09"/>
+      <rect x="505" y="380" width="255" height="180" fill="#b08948" fill-opacity="0.09"/>
+
+      <!-- extended edge lines -->
+      <line class="edgeline" x1="255" y1="0" x2="255" y2="560"/>
+      <line class="edgeline" x1="505" y1="0" x2="505" y2="560"/>
+      <line class="edgeline" x1="0" y1="180" x2="760" y2="180"/>
+      <line class="edgeline" x1="0" y1="380" x2="760" y2="380"/>
+
+      <!-- crosshair through P -->
+      <line id="r_vx" class="cross"/>
+      <line id="r_hy" class="cross"/>
+
+      <!-- the rectangle -->
+      <rect class="rectb" x="255" y="180" width="250" height="200"/>
+      <circle class="corner" cx="255" cy="180" r="3"/>
+      <circle class="corner" cx="505" cy="180" r="3"/>
+      <circle class="corner" cx="255" cy="380" r="3"/>
+      <circle class="corner" cx="505" cy="380" r="3"/>
+
+      <!-- sign badges, each sitting on the line it governs -->
+      <text class="badge" id="r_a" x="380" y="170" text-anchor="middle">a&#8201;<tspan id="r_as">+</tspan></text>
+      <text class="badge" id="r_c" x="380" y="400" text-anchor="middle">c&#8201;<tspan id="r_cs">+</tspan></text>
+      <text class="badge" id="r_b" x="222" y="285" text-anchor="middle">b&#8201;<tspan id="r_bs">+</tspan></text>
+      <text class="badge" id="r_d" x="538" y="285" text-anchor="middle">d&#8201;<tspan id="r_ds">+</tspan></text>
+
+      <circle id="r_halo" class="phaloR" r="15"/>
+      <circle id="r_p" class="phandleR" r="7.5"/>
+      <text id="r_plabel" class="plabelR">P</text>
+    </svg>
+    <figcaption>Drag <i>P</i> anywhere &mdash; the four extended edges cut the plane into nine rooms. Each badge sits on the line it watches and flips as <i>P</i> crosses. Gold rooms have &Lambda; &gt; 0, purple rooms &Lambda; &lt; 0.</figcaption>
+  </figure>
+
+  <div class="read">
+    <h3>What the position decides</h3>
+    <div class="lamline">
+      <span style="font-size:15px;">&Lambda; = <i>ad</i>/<i>cb</i> =</span>
+      <span class="lambig pos" id="r_lam">+1.000</span>
+    </div>
+    <div class="lenrow">
+      <span class="lenchip"><i>a</i><span class="sgn pos" id="r_ca">+</span></span>
+      <span class="lenchip"><i>b</i><span class="sgn pos" id="r_cb">+</span></span>
+      <span class="lenchip"><i>c</i><span class="sgn pos" id="r_cc">+</span></span>
+      <span class="lenchip"><i>d</i><span class="sgn pos" id="r_cd">+</span></span>
+    </div>
+    <p class="where" id="r_where">&nbsp;</p>
+    <div class="key">
+      <span><span class="sw g"></span> &Lambda; &gt; 0 &mdash; home &amp; corner blocks</span>
+      <span><span class="sw p"></span> &Lambda; &lt; 0 &mdash; the four edge bands</span>
+    </div>
+  </div>
+
+  <h2><span class="n">2</span> Sign is geography</h2>
+  <p>Now the whole picture is just bookkeeping on those four lines. Their crossing cuts the plane into nine rooms, and the sign of the cross&#8209;ratio is fixed by one fact: &Lambda; = <i>ad</i>/<i>cb</i> carries the sign of all four lengths multiplied together, so <b>sign&#8202;&Lambda; = (&minus;1)<sup>&#8202;(number of negative lengths)</sup></b>. At home, none are negative: &Lambda; &gt; 0. Step into one of the four edge bands and exactly one length flips: &Lambda; &lt; 0. Reach a far corner block and two flip, so &Lambda; swings positive again. None of this is decreed by a formula laid over the figure &mdash; it is read straight off where <i>P</i> is standing. Sign is geography.</p>
+  <p>That settles the question the rectangle could never answer. The harmonic value <b>&Lambda; = &minus;1</b> needs &Lambda; negative, which needs an <i>odd</i> number of sign flips, which can only happen in an edge band &mdash; <i>outside</i> the rectangle. Locked inside, &minus;1 is not merely hard to find; it is unreachable, and any figure that pinned <i>P</i> indoors could only <i>assert</i> the harmonic case, never show it. Open the window and it appears on its own, on the hyperbola that threads those purple bands.</p>
+
+  <h2><span class="n">3</span> The same exile, on a bare line</h2>
+  <p>Strip away the second dimension and the same fact stands in its plainest dress. Fix two points <i>A</i> and <i>B</i>. The <i>harmonic conjugate</i> of a third point <i>C</i> is the fourth point <i>D</i> that makes the cross&#8209;ratio (<i>A</i>,<i>B</i>;<i>C</i>,<i>D</i>) equal to &minus;1. Slide <i>C</i> and watch where <i>D</i> must go: whenever <i>C</i> sits between <i>A</i> and <i>B</i>, its partner <i>D</i> is thrown <i>outside</i>; bring <i>C</i> to the midpoint and <i>D</i> escapes to infinity. The exile of &minus;1 you just saw in two dimensions is this one&#8209;dimensional fact wearing an extra coat.</p>
+
+  <figure>
+    <svg id="figH" class="fig" viewBox="0 0 760 210" tabindex="0"
+         role="img" aria-label="A line carrying points A and B, with C draggable and its harmonic conjugate D. C inside the segment forces D outside. They are inverse points in the circle on diameter AB.">
+      <line class="seg" id="h_seg" x1="304" y1="120" x2="456" y2="120"/>
+      <circle class="circ" cx="380" cy="120" r="76"/>
+      <g id="h_ticks"></g>
+      <line class="axis" x1="30" y1="120" x2="730" y2="120"/>
+
+      <path id="h_arc" class="arc"/>
+
+      <circle class="ptA" cx="304" cy="120" r="5"/>
+      <circle class="ptA" cx="456" cy="120" r="5"/>
+      <circle class="ptA" cx="380" cy="120" r="2.5"/>
+      <text class="lblBig ptA" x="304" y="150" text-anchor="middle" style="fill:#43203f;">A</text>
+      <text class="lblBig ptA" x="456" y="150" text-anchor="middle" style="fill:#43203f;">B</text>
+      <text class="lblO" x="380" y="150" text-anchor="middle">O</text>
+
+      <text id="h_dinf" class="inflbl" text-anchor="middle" opacity="0">D &#8594; &#8734;</text>
+      <circle id="h_dpt" class="ptD" cx="553" cy="120" r="6"/>
+      <circle id="h_cpt" class="ptC" cx="414" cy="120" r="6"/>
+      <text id="h_dlbl" class="lblBig lblD" y="105" text-anchor="middle">D</text>
+      <text id="h_clbl" class="lblBig lblC" y="105" text-anchor="middle">C</text>
+    </svg>
+    <figcaption>Drag <i>C</i> (purple) or <i>D</i> (gold). The cross&#8209;ratio stays pinned at &minus;1. The circle is the one on diameter <i>AB</i>; <i>C</i> and <i>D</i> are always <i>inverse points</i> in it &mdash; one inside, one outside.</figcaption>
+  </figure>
+
+  <div class="read">
+    <h3>The conjugate pair</h3>
+    <div class="duo">
+      <div class="col">
+        <div style="font-size:13px;color:#7a6a55;">cross&#8209;ratio (<i>A</i>,<i>B</i>;<i>C</i>,<i>D</i>)</div>
+        <div class="big" style="color:#6a2c91;" id="h_cr">&minus;1.000</div>
+      </div>
+      <div class="col">
+        <div style="font-size:13px;color:#7a6a55;">inversion <i>OC</i> &middot; <i>OD</i></div>
+        <div class="big" style="color:#8a6a26;" id="h_inv">1.000</div>
+      </div>
+    </div>
+    <p class="where" id="h_io" style="margin-top:.7em;">&nbsp;</p>
+    <div class="key">
+      <span>C = <b id="h_cv" style="font-variant-numeric:tabular-nums;">0</b></span>
+      <span>D = <b id="h_dv" style="font-variant-numeric:tabular-nums;">0</b></span>
+    </div>
+  </div>
+
+  <h2><span class="n">4</span> The one shared point</h2>
+  <p>It is tempting to call these the same machine &mdash; both involutions, both reciprocal in look, both fixed at &plusmn;1. They are not. Harmonic conjugation is a <i>motion of the line</i>: a projective map, so it preserves every cross&#8209;ratio and leaves &Lambda; untouched. The complement&#8209;swap is a <i>relabeling</i>: it sends &Lambda; to 1/&Lambda;, inverting the very quantity the other preserves. Brought onto one value&#8209;line they part cleanly &mdash; &Lambda; &rarr; &minus;&Lambda; for the motion, &Lambda; &rarr; 1/&Lambda; for the relabeling, fixed at {0,&#8202;&infin;} and {&plusmn;1} &mdash; and only the second belongs to the anharmonic group. The seductive &ldquo;&plusmn;1 on both sides&rdquo; was only the cost of parking <i>A</i> and <i>B</i> at &#8723;1; move them to 0 and &infin; and it vanishes. What survives is narrower and truer: <b>&Lambda; = &minus;1 is the fixed point of the swap</b> &mdash; the self&#8209;paired value &mdash; <b>and equally the place where the involution fixing {<i>A</i>,&#8202;<i>B</i>} exchanges {<i>C</i>,&#8202;<i>D</i>}</b>. The relabeling and the motion agree at exactly one value, and that value is the harmonic one. That single shared point is the whole connection; there is no identity past it.</p>
+
+  <p class="ledger"><b>Ledger.</b> <i>Theorem:</i> with signed lengths, sign&#8202;&Lambda; = (&minus;1) raised to the count of negative lengths, so &Lambda; &lt; 0 holds exactly in the four edge bands and nowhere inside the rectangle (checked across the plane to floating&#8209;point noise). <i>Theorem:</i> for <i>A</i>, <i>B</i> at &minus;1 and +1, the harmonic conjugate of <i>C</i> is <i>D</i> = 1/<i>C</i>; it satisfies (<i>A</i>,<i>B</i>;<i>C</i>,<i>D</i>) = &minus;1 and <i>OC</i>&middot;<i>OD</i> = 1, so harmonic conjugacy <i>is</i> inversion in the circle on diameter <i>AB</i> &mdash; whence <i>C</i> inside forces <i>D</i> outside, and the midpoint maps to infinity. <i>Observation:</i> the harmonic locus of the rectangle lives in the same exterior bands these two facts describe, which is why the point must be free to leave. <i>Theorem:</i> the harmonic value &Lambda; = &minus;1 is the fixed point of the pair&#8209;swap &Lambda; &harr; 1/&Lambda; &mdash; equivalently, the condition that the projective involution fixing {<i>A</i>,&#8202;<i>B</i>} interchanges {<i>C</i>,&#8202;<i>D</i>}. <i>Caution:</i> an identity of conditions, not of maps. Harmonic conjugation preserves the cross&#8209;ratio (it is projective); the pair&#8209;swap inverts it; forced onto one value&#8209;line they read as &Lambda; &rarr; &minus;&Lambda; and &Lambda; &rarr; 1/&Lambda;, distinct involutions fixed at {0,&#8202;&infin;} and {&plusmn;1}, only the second anharmonic. The matching &plusmn;1 is an artifact of placing <i>A</i>,&#8202;<i>B</i> at &#8723;1; at 0 and &infin; it dissolves.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===================== Figure 1 : sign geography =====================
+  (function(){
+    var svg = document.getElementById("figR");
+    var L=255,T=180,R=505,B=380, VBW=760,VBH=560;
+    var Px=380, Py=280, dragging=false;
+
+    function $(id){ return document.getElementById(id); }
+    var vx=$("r_vx"), hy=$("r_hy"), halo=$("r_halo"), p=$("r_p"), plabel=$("r_plabel");
+    var as=$("r_as"), bs=$("r_bs"), cs=$("r_cs"), ds=$("r_ds");
+    var ca=$("r_ca"), cb=$("r_cb"), cc=$("r_cc"), cd=$("r_cd");
+    var lam=$("r_lam"), where=$("r_where");
+
+    function setSign(el, pos){ el.textContent = pos ? "+" : "\u2212"; }
+    function setChip(el, pos){ el.textContent = pos ? "+" : "\u2212"; el.className = "sgn " + (pos?"pos":"neg"); }
+    function clampX(x){ return Math.min(VBW-6, Math.max(6,x)); }
+    function clampY(y){ return Math.min(VBH-6, Math.max(6,y)); }
+
+    function update(){
+      Px=clampX(Px); Py=clampY(Py);
+      var a=Py-T, b=Px-L, c=B-Py, d=R-Px;
+      var pa=a>=0, pb=b>=0, pc=c>=0, pd=d>=0;
+
+      setSign(as,pa); setSign(bs,pb); setSign(cs,pc); setSign(ds,pd);
+      setChip(ca,pa); setChip(cb,pb); setChip(cc,pc); setChip(cd,pd);
+
+      var L2 = (a*d)/(c*b);
+      if(!isFinite(L2)){
+        lam.textContent = isNaN(L2) ? "\u2014" : (L2>0?"+\u221E":"\u2212\u221E");
+        lam.className = "lambig";
+      } else {
+        lam.textContent = (L2>=0?"+":"\u2212") + Math.abs(L2).toFixed(3);
+        lam.className = "lambig " + (L2>=0?"pos":"neg");
+      }
+
+      var neg = (pa?0:1)+(pb?0:1)+(pc?0:1)+(pd?0:1);
+      var msg;
+      if(neg===0) msg = "<b>the rectangle</b> &mdash; every length positive, so &Lambda; &gt; 0. The harmonic value &minus;1 cannot be reached from here.";
+      else if(neg===1) msg = "<b>an edge band</b> &mdash; one length is negative, so &Lambda; &lt; 0. This is where &minus;1 lives.";
+      else msg = "<b>a corner block</b> &mdash; two lengths are negative, so &Lambda; &gt; 0 again.";
+      where.innerHTML = msg;
+
+      vx.setAttribute("x1",Px); vx.setAttribute("y1",0); vx.setAttribute("x2",Px); vx.setAttribute("y2",VBH);
+      hy.setAttribute("x1",0); hy.setAttribute("y1",Py); hy.setAttribute("x2",VBW); hy.setAttribute("y2",Py);
+      halo.setAttribute("cx",Px); halo.setAttribute("cy",Py);
+      p.setAttribute("cx",Px); p.setAttribute("cy",Py);
+      plabel.setAttribute("x",Px+12); plabel.setAttribute("y",Py-12);
+    }
+
+    function toSVG(evt){
+      var pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+      var m=svg.getScreenCTM(); if(!m) return {x:Px,y:Py};
+      return pt.matrixTransform(m.inverse());
+    }
+    svg.addEventListener("pointerdown",function(e){ dragging=true;
+      try{svg.setPointerCapture(e.pointerId);}catch(x){} var s=toSVG(e); Px=s.x; Py=s.y; update(); e.preventDefault(); });
+    svg.addEventListener("pointermove",function(e){ if(!dragging) return; var s=toSVG(e); Px=s.x; Py=s.y; update(); e.preventDefault(); });
+    function end(e){ dragging=false; try{svg.releasePointerCapture(e.pointerId);}catch(x){} }
+    svg.addEventListener("pointerup",end); svg.addEventListener("pointercancel",end);
+    svg.addEventListener("keydown",function(e){
+      var s=e.shiftKey?14:5, ok=true;
+      if(e.key==="ArrowLeft") Px-=s; else if(e.key==="ArrowRight") Px+=s;
+      else if(e.key==="ArrowUp") Py-=s; else if(e.key==="ArrowDown") Py+=s; else ok=false;
+      if(ok){ update(); e.preventDefault(); }
+    });
+
+    update();
+  })();
+
+  // ===================== Figure 2 : harmonic conjugate = inversion =====================
+  (function(){
+    var svg = document.getElementById("figH");
+    var OX=380, OY=120, S=76;                 // origin pixel, units->pixels
+    var CMIN=0.16, CMAX=4.4, EDGEL=34, EDGER=726;
+    var C=0.45, dragging=false;
+
+    function $(id){ return document.getElementById(id); }
+    var seg=$("h_seg"), arc=$("h_arc"), cpt=$("h_cpt"), dpt=$("h_dpt"),
+        clbl=$("h_clbl"), dlbl=$("h_dlbl"), dinf=$("h_dinf"),
+        cr=$("h_cr"), inv=$("h_inv"), io=$("h_io"), cv=$("h_cv"), dv=$("h_dv"),
+        ticks=$("h_ticks");
+
+    function pix(x){ return OX + S*x; }
+    function unpix(px){ return (px-OX)/S; }
+    function clampMag(x){ var s=x<0?-1:1; var m=Math.min(CMAX,Math.max(CMIN,Math.abs(x))); return s*m; }
+    function crossratio(A,Bp,Cc,Dd){ return ((Cc-A)*(Dd-Bp))/((Cc-Bp)*(Dd-A)); }
+
+    // integer ticks
+    for(var k=-4;k<=4;k++){
+      var ln=document.createElementNS("http://www.w3.org/2000/svg","line");
+      ln.setAttribute("class","tick");
+      ln.setAttribute("x1",pix(k)); ln.setAttribute("y1",114);
+      ln.setAttribute("x2",pix(k)); ln.setAttribute("y2",126);
+      ticks.appendChild(ln);
+    }
+
+    function update(){
+      C = clampMag(C);
+      var D = 1/C;
+      var A=-1, Bp=1;
+      var cx=pix(C);
+      var dxTrue=pix(D), off = (dxTrue<EDGEL || dxTrue>EDGER);
+      var dx = off ? (D>0?EDGER:EDGEL) : dxTrue;
+
+      cpt.setAttribute("cx",cx); cpt.setAttribute("cy",OY);
+      clbl.setAttribute("x",cx); clbl.setAttribute("y",OY-15);
+
+      if(off){
+        dpt.setAttribute("opacity",0); dlbl.setAttribute("opacity",0);
+        dinf.setAttribute("opacity",1);
+        dinf.setAttribute("x", (D>0?EDGER-26:EDGEL+26)); dinf.setAttribute("y",OY-14);
+        dinf.textContent = (D>0? "D \u2192 +\u221E" : "D \u2192 \u2212\u221E");
+      } else {
+        dpt.setAttribute("opacity",1); dlbl.setAttribute("opacity",1); dinf.setAttribute("opacity",0);
+        dpt.setAttribute("cx",dx); dpt.setAttribute("cy",OY);
+        dlbl.setAttribute("x",dx); dlbl.setAttribute("y",OY-15);
+      }
+
+      var lo=Math.min(cx,dx), hi=Math.max(cx,dx);
+      arc.setAttribute("d","M "+lo+" "+OY+" Q "+((lo+hi)/2)+" "+(OY-40)+" "+hi+" "+OY);
+
+      cr.innerHTML = fmt(crossratio(A,Bp,C,D));
+      inv.textContent = (C*D).toFixed(3);
+      cv.textContent = C.toFixed(3);
+      dv.textContent = off ? (D>0?"+\u221E (clamped "+D.toFixed(2)+")":"\u2212\u221E") : D.toFixed(3);
+
+      var inside = Math.abs(C)<1;
+      io.innerHTML = inside
+        ? "<i>C</i> is <b>inside</b> <i>AB</i> &nbsp;&rArr;&nbsp; <i>D</i> is thrown <b>outside</b>."
+        : (Math.abs(C)>1
+            ? "<i>C</i> is <b>outside</b> <i>AB</i> &nbsp;&rArr;&nbsp; <i>D</i> falls <b>inside</b>."
+            : "<i>C</i> sits on an endpoint &mdash; a fixed point, where <i>D</i> = <i>C</i>.");
+    }
+    function fmt(v){ return (v>=0?"+":"\u2212") + Math.abs(v).toFixed(3); }
+
+    function toSVG(evt){
+      var pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+      var m=svg.getScreenCTM(); if(!m) return {x:pix(C),y:OY};
+      return pt.matrixTransform(m.inverse());
+    }
+    function grab(px){
+      var D=1/C, dxTrue=pix(D);
+      var dx = (dxTrue<EDGEL||dxTrue>EDGER) ? (D>0?EDGER:EDGEL) : dxTrue;
+      var x = unpix(px);
+      if(Math.abs(px-pix(C)) <= Math.abs(px-dx)){ C = clampMag(x); }      // grabbed C
+      else { var dval = x; if(Math.abs(dval)<1e-3) dval = (dval<0?-1:1)*1e-3; C = clampMag(1/dval); } // grabbed D -> set via reciprocal
+    }
+    svg.addEventListener("pointerdown",function(e){ dragging=true;
+      try{svg.setPointerCapture(e.pointerId);}catch(x){} grab(toSVG(e).x); update(); e.preventDefault(); });
+    svg.addEventListener("pointermove",function(e){ if(!dragging) return; grab(toSVG(e).x); update(); e.preventDefault(); });
+    function end(e){ dragging=false; try{svg.releasePointerCapture(e.pointerId);}catch(x){} }
+    svg.addEventListener("pointerup",end); svg.addEventListener("pointercancel",end);
+    svg.addEventListener("keydown",function(e){
+      var s=e.shiftKey?0.08:0.02, ok=true;
+      if(e.key==="ArrowLeft") C-=s; else if(e.key==="ArrowRight") C+=s; else ok=false;
+      if(ok){ update(); e.preventDefault(); }
+    });
+
+    update();
+  })();
+
+})();
+</script>
+</body>
+</html>

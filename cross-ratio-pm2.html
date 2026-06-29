@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A split rectangle and its cross-ratio &Lambda; = &plusmn;1</title>
+<style>
+  :root{
+    --cream:#faf6ef; --plum:#43203f; --purple:#6a2c91; --crimson:#c0322b; --gold:#b08948;
+    --ink:#5b3656; --quiet:#7a6a55; --line:#ece2d0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; background:var(--cream); color:var(--plum);
+    font-family:'FreeSerif','Times New Roman',Georgia,serif; -webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px; margin:0 auto; padding:24px 18px 48px;}
+
+  h1{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-weight:700;
+     font-size:clamp(21px,3.8vw,29px); letter-spacing:.2px; line-height:1.14; margin:.1em 0 .28em;}
+  .sub{font-size:clamp(14px,2.5vw,17px); line-height:1.55; color:var(--ink); max-width:64ch; margin:.2em 0 1.0em;}
+  .sub i{font-style:italic;}
+
+  .fig{display:block; width:100%; height:auto; touch-action:none;
+       -webkit-user-select:none; user-select:none;
+       background:#fffdf8; border:1.5px solid var(--line); border-radius:14px;}
+  .fig:focus-visible{outline:3px solid var(--purple); outline-offset:2px;}
+  .hint{font-size:12.5px; color:var(--quiet); margin:9px 3px 0; line-height:1.45;}
+  .hint i{font-style:italic;}
+
+  .toolbar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:12px 2px 2px;}
+  .seg{display:inline-flex; border:1.5px solid var(--plum); border-radius:10px; overflow:hidden;}
+  .seg button{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:13px;
+     background:#fff; color:var(--plum); border:none; border-right:1.5px solid var(--plum);
+     padding:8px 13px; cursor:pointer;}
+  .seg button:last-child{border-right:none;}
+  .seg button.active{background:var(--plum); color:var(--cream);}
+  .seg button:focus-visible{outline:3px solid var(--purple); outline-offset:-3px;}
+  .btn{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:14px;
+       background:#fff; border:1.5px solid var(--plum); color:var(--plum);
+       border-radius:9px; padding:7px 16px; cursor:pointer;}
+  .btn:active{background:#f0e7d8;}
+  .btn:focus-visible{outline:3px solid var(--purple); outline-offset:2px;}
+
+  /* cross-ratio headline */
+  .lamcard{border:1.5px solid var(--line); border-radius:14px; background:#fffdf8;
+           padding:15px 17px 16px; margin-top:16px;}
+  .lamcard h2,.card h2,.ratio h2{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+     font-size:12.5px; text-transform:uppercase; letter-spacing:1.3px; color:var(--purple); margin:0 0 .6em;}
+  .lamtop{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .lamexpr{font-size:16px;} .lamexpr i{font-style:italic;}
+  .lambig{font-family:'FreeSerif','Times New Roman',serif; font-size:32px; line-height:1;
+          font-variant-numeric:tabular-nums; color:var(--plum); min-width:3.2ch;}
+  .lamname{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:11.5px;
+     text-transform:uppercase; letter-spacing:.8px; padding:4px 11px; border-radius:999px;
+     background:#f3eadf; color:#8a6a3a; border:1px solid #e0cda9; white-space:nowrap;}
+  .lamname.plus{background:#efe6d2; color:#7a5a26; border-color:#b08948;}
+  .lamname.minus{background:#efe2ec; color:#6a2c91; border-color:#cdb3d8;}
+  .dial{display:block; width:100%; height:auto; margin:.7em 0 .2em;}
+
+  .panels{display:flex; gap:14px; flex-wrap:wrap; margin-top:14px;}
+  .card{flex:1 1 320px; border:1.5px solid var(--line); border-radius:14px;
+        background:#fffdf8; padding:15px 17px 17px;}
+  .lead{font-size:14px; line-height:1.5; color:var(--ink); margin:0 0 .8em;}
+  .lead i,.lead em{font-style:italic;}
+  .crow{display:flex; justify-content:space-between; align-items:center; gap:8px; margin:.7em 0 .3em;}
+  .crow .lab{font-size:15px;} .crow .lab i{font-style:italic;}
+  .crow .rt{display:flex; align-items:center; gap:8px;}
+  .val{font-variant-numeric:tabular-nums; font-family:'FreeSerif','Times New Roman',serif; font-size:15px;}
+  .chip{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:11px;
+        padding:1px 7px; border-radius:6px; border:1px solid;}
+  .chip.pos{color:#2f6d33; border-color:#b9d6b0; background:#e7f0e3;}
+  .chip.neg{color:#a83a2a; border-color:#e0b6a9; background:#f3e6e0;}
+
+  .sbar{position:relative; height:14px; background:#efe7d6; border-radius:7px; overflow:hidden;}
+  .sbar .center{position:absolute; left:calc(50% - 1px); top:0; bottom:0; width:2px; background:#cdbfa0;}
+  .sfill{position:absolute; top:1px; bottom:1px; width:0; background:#6a2c91; border-radius:3px;}
+  .pillrow{display:flex; justify-content:flex-end; margin-top:.45em;}
+  .pill{font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif; font-size:11px;
+        text-transform:uppercase; letter-spacing:.7px; padding:4px 10px; border-radius:999px; white-space:nowrap;}
+  .pill.ok{background:#e7f0e3; color:#2f6d33; border:1px solid #b9d6b0;}
+  .pill.off{background:#f3eadf; color:#8a6a3a; border:1px solid #e0cda9;}
+  .note{font-size:12.5px; color:var(--quiet); margin:.9em 0 0; line-height:1.45;}
+  .note i{font-style:italic;}
+
+  .ratio{border:1.5px solid var(--line); border-radius:14px; background:#fffdf8; padding:13px 17px; margin-top:14px;}
+  .ratiovals{display:flex; gap:10px; flex-wrap:wrap;}
+  .rv{flex:1 1 130px; text-align:center; font-size:15px; padding:9px 6px; border-radius:9px; background:#f6efe2;}
+  .rv i{font-style:italic;} .rv b{font-variant-numeric:tabular-nums; font-weight:600;}
+  .ratlead{font-size:13px; color:var(--ink); margin:.7em 0 0; line-height:1.5;} .ratlead i{font-style:italic;}
+
+  .ledger{font-size:13px; line-height:1.62; color:var(--ink); margin-top:20px; padding-top:14px; border-top:1px solid #e6dcc9;}
+  .ledger i{font-style:italic;}
+
+  /* SVG presentation — literal hex only */
+  .border{fill:none; stroke:#43203f; stroke-width:2;}
+  .celledge{stroke:#43203f; stroke-opacity:.22; stroke-width:1;}
+  .diagonal{stroke:#43203f; stroke-width:1.7;}
+  .hyper{fill:none; stroke:#43203f; stroke-width:1.7; stroke-dasharray:6 5;}
+  .glowGold{stroke:#b08948; stroke-width:8; stroke-linecap:round; fill:none;}
+  .corner{fill:#43203f;}
+  .elen{fill:#43203f; font-style:italic; font-size:16px; font-family:'FreeSerif','Times New Roman',serif;
+        paint-order:stroke; stroke:#fffdf8; stroke-width:3.4px; stroke-linejoin:round;}
+  .locuslbl{font-style:italic; font-size:13px; font-family:'FreeSerif','Times New Roman',serif;
+        paint-order:stroke; stroke:#fffdf8; stroke-width:3.4px; stroke-linejoin:round;}
+  .cellLbl{font-size:13.5px; font-family:'FreeSerif','Times New Roman',serif;
+        paint-order:stroke; stroke:#fffdf8; stroke-width:3.6px; stroke-linejoin:round;}
+  .tGold{fill:#6f5326;} .tCrim{fill:#a82a23;} .sym{font-style:italic;}
+  .phalo{fill:#6a2c91; fill-opacity:.16;}
+  .phandle{fill:#6a2c91; stroke:#faf6ef; stroke-width:2.5;}
+  .plabel{fill:#6a2c91; font-style:italic; font-weight:700; font-size:15px;
+          font-family:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;}
+
+  @media (max-width:540px){ .panels{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>A split rectangle and its cross&#8209;ratio &Lambda; = &plusmn;1</h1>
+  <p class="sub">Point <i>P</i> cuts the rectangle into four cells. Measured as <em>signed</em> displacements, <i>a</i> = top, <i>c</i> = bottom, <i>b</i> = left, <i>d</i> = right, so a length turns negative once <i>P</i> crosses an edge. The complements <i>ad</i> and <i>cb</i> carry the cross&#8209;ratio &Lambda; = (<i>a</i>/<i>b</i>)&#8202;/&#8202;(<i>c</i>/<i>d</i>) = <i>ad</i>/<i>cb</i>. Exchanging the two complements sends &Lambda; &rarr; 1/&Lambda;; the configurations it fixes are &Lambda; = &plusmn;1 &mdash; <b>+1</b> equal areas, on the diagonal, and <b>&minus;1</b> opposite areas (<i>ad</i> + <i>cb</i> = 0), on the harmonic hyperbola you can only reach by dragging <i>P</i> out of the rectangle.</p>
+
+  <svg id="fig" class="fig" viewBox="0 0 760 550" tabindex="0"
+       role="img" aria-label="A rectangle split by a draggable point P that may leave the rectangle. Arrow keys move P.">
+    <defs>
+      <pattern id="hatchGold" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="7" height="7" fill="#b08948" fill-opacity="0.05"/>
+        <line x1="0" y1="0" x2="0" y2="7" stroke="#b08948" stroke-width="2.4" stroke-opacity="0.55"/>
+      </pattern>
+      <pattern id="hatchCrim" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="7" height="7" fill="#c0322b" fill-opacity="0.05"/>
+        <line x1="0" y1="0" x2="0" y2="7" stroke="#c0322b" stroke-width="2.4" stroke-opacity="0.55"/>
+      </pattern>
+    </defs>
+
+    <!-- cells (corner-anchored to P) -->
+    <rect id="cellTL" class="celledge"/>
+    <rect id="cellTR" class="celledge"/>
+    <rect id="cellBL" class="celledge"/>
+    <rect id="cellBR" class="celledge"/>
+
+    <!-- rectangle -->
+    <rect id="rectBorder" class="border" x="150" y="120" width="480" height="300"/>
+
+    <!-- loci: glow underlays + lines -->
+    <path id="diagGlow" class="glowGold" opacity="0"/>
+    <path id="hypGlow"  class="glowGold" opacity="0"/>
+    <line id="diagLine" class="diagonal" x1="-810" y1="-480" x2="1590" y2="1020"/>
+    <path id="hypPath"  class="hyper"/>
+
+    <text id="diagLbl" class="locuslbl" fill="#6f5326" text-anchor="start">&Lambda; = +1</text>
+    <text id="hypLbl"  class="locuslbl" fill="#6a2c91" text-anchor="start">&Lambda; = &minus;1</text>
+
+    <!-- corner dots -->
+    <circle class="corner" cx="150" cy="120" r="3"/>
+    <circle class="corner" cx="630" cy="120" r="3"/>
+    <circle class="corner" cx="150" cy="420" r="3"/>
+    <circle class="corner" cx="630" cy="420" r="3"/>
+
+    <!-- edge length labels -->
+    <text id="lblA" class="elen" text-anchor="end">a</text>
+    <text id="lblB" class="elen" text-anchor="middle">b</text>
+    <text id="lblC" class="elen" text-anchor="end">c</text>
+    <text id="lblD" class="elen" text-anchor="middle">d</text>
+
+    <!-- cell area labels -->
+    <text id="txtTL" class="cellLbl tGold" text-anchor="middle"><tspan class="sym">ab</tspan><tspan id="nTL"> = 0</tspan></text>
+    <text id="txtTR" class="cellLbl tCrim" text-anchor="middle"><tspan class="sym">ad</tspan><tspan id="nTR"> = 0</tspan></text>
+    <text id="txtBL" class="cellLbl tCrim" text-anchor="middle"><tspan class="sym">cb</tspan><tspan id="nBL"> = 0</tspan></text>
+    <text id="txtBR" class="cellLbl tGold" text-anchor="middle"><tspan class="sym">cd</tspan><tspan id="nBR"> = 0</tspan></text>
+
+    <circle id="phalo" class="phalo" r="16"/>
+    <circle id="phandle" class="phandle" r="7.5"/>
+    <text id="plabel" class="plabel">P</text>
+  </svg>
+
+  <p class="hint">Drag anywhere to move <i>P</i> &mdash; including <i>outside</i> the rectangle, where cells turn negative (shown hatched). Or hold <i>P</i> on either locus and slide along it.</p>
+
+  <div class="toolbar">
+    <span class="seg" role="group" aria-label="Constrain P">
+      <button id="modeFree" class="active" type="button">Drag freely</button>
+      <button id="modeDiag" type="button">Hold &Lambda; = +1</button>
+      <button id="modeHyp"  type="button">Hold &Lambda; = &minus;1</button>
+    </span>
+    <button id="resetBtn" class="btn" type="button">Reset</button>
+  </div>
+
+  <section class="lamcard">
+    <h2>Cross-ratio</h2>
+    <div class="lamtop">
+      <span class="lamexpr">&Lambda; = (<i>a</i>/<i>b</i>) / (<i>c</i>/<i>d</i>) = <i>ad</i>/<i>cb</i> =</span>
+      <span class="lambig" id="lamBig">0</span>
+      <span class="lamname" id="lamName">&mdash;</span>
+    </div>
+    <svg class="dial" id="dial" viewBox="0 0 300 56" aria-hidden="true">
+      <line x1="20" y1="26" x2="280" y2="26" stroke="#cdbfa0" stroke-width="2"/>
+      <line x1="20"  y1="20" x2="20"  y2="32" stroke="#cdbfa0" stroke-width="2"/>
+      <line x1="150" y1="20" x2="150" y2="32" stroke="#cdbfa0" stroke-width="2"/>
+      <line x1="280" y1="20" x2="280" y2="32" stroke="#cdbfa0" stroke-width="2"/>
+      <line x1="85"  y1="16" x2="85"  y2="36" stroke="#6a2c91" stroke-width="2.4"/>
+      <line x1="215" y1="16" x2="215" y2="36" stroke="#b08948" stroke-width="2.4"/>
+      <text x="20"  y="48" text-anchor="middle" font-size="11" fill="#7a6a55" font-family="FreeSerif,serif">&infin;</text>
+      <text x="150" y="48" text-anchor="middle" font-size="11" fill="#7a6a55" font-family="FreeSerif,serif">0</text>
+      <text x="280" y="48" text-anchor="middle" font-size="11" fill="#7a6a55" font-family="FreeSerif,serif">&infin;</text>
+      <text x="85"  y="50" text-anchor="middle" font-size="11.5" fill="#6a2c91" font-family="FreeSerif,serif">&minus;1</text>
+      <text x="215" y="50" text-anchor="middle" font-size="11.5" fill="#6f5326" font-family="FreeSerif,serif">+1</text>
+      <circle id="dialMark" cx="150" cy="26" r="5.5" fill="#43203f"/>
+    </svg>
+    <p class="note">The dial is the cross&#8209;ratio line itself, with &plusmn;&infin; and 0 in the middle of the swap. &minus;1 (harmonic) and +1 (balanced) are the two values fixed by &Lambda; &harr; 1/&Lambda;.</p>
+  </section>
+
+  <div class="panels">
+    <section class="card">
+      <h2>+1 &middot; the diagonal</h2>
+      <p class="lead">The signed <em>difference</em> of the complements. Zero when the two areas are equal &mdash; <i>P</i> on the diagonal.</p>
+      <div class="crow"><span class="lab"><i>ad</i> &minus; <i>cb</i></span><span class="rt"><span class="val" id="diffVal">0</span></span></div>
+      <div class="sbar"><div class="center"></div><div class="sfill" id="diffFill"></div></div>
+      <div class="pillrow"><span class="pill off" id="diffPill">off the diagonal</span></div>
+    </section>
+
+    <section class="card">
+      <h2>&minus;1 &middot; the hyperbola</h2>
+      <p class="lead">The signed <em>sum</em> of the complements. Zero when the two areas cancel &mdash; <i>P</i> on the harmonic hyperbola.</p>
+      <div class="crow"><span class="lab"><i>ad</i> + <i>cb</i></span><span class="rt"><span class="val" id="sumVal">0</span></span></div>
+      <div class="sbar"><div class="center"></div><div class="sfill" id="sumFill"></div></div>
+      <div class="pillrow"><span class="pill off" id="sumPill">off the hyperbola</span></div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:14px;">
+    <h2>Product &middot; holds everywhere (sign and all)</h2>
+    <div class="crow"><span class="lab"><i>ab</i> &middot; <i>cd</i></span><span class="rt"><span class="chip pos" id="pchip1">+</span><span class="val" id="pv1">0</span></span></div>
+    <div class="crow"><span class="lab"><i>ad</i> &middot; <i>cb</i></span><span class="rt"><span class="chip pos" id="pchip2">+</span><span class="val" id="pv2">0</span></span></div>
+    <p class="note">Both equal <i>abcd</i> for every <i>P</i>, inside or out &mdash; the rank&#8209;one invariant is blind to sign.</p>
+  </section>
+
+  <section class="ratio">
+    <h2>Side ratios</h2>
+    <div class="ratiovals">
+      <span class="rv"><i>a</i>/<i>b</i> = <b id="rab">0</b></span>
+      <span class="rv"><i>c</i>/<i>d</i> = <b id="rcd">0</b></span>
+    </div>
+    <p class="ratlead">On the diagonal <i>a</i>/<i>b</i> = <i>c</i>/<i>d</i> (&Lambda; = +1). On the hyperbola <i>a</i>/<i>b</i> = &minus;<i>c</i>/<i>d</i> (&Lambda; = &minus;1) &mdash; same ratio, opposite sign.</p>
+  </section>
+
+  <p class="ledger">Both balances are theorems. The four signed areas are the rank&#8209;one array [<i>a</i>&#8202;&#8202;<i>c</i>] &otimes; [<i>b</i>&#8202;&#8202;<i>d</i>], so <i>ab</i>&middot;<i>cd</i> = <i>ad</i>&middot;<i>cb</i> = <i>abcd</i> for all <i>P</i> (verified to floating&#8209;point noise). The complements are equal, <i>ad</i> = <i>cb</i> (&Lambda; = +1), exactly on the diagonal; they cancel, <i>ad</i> + <i>cb</i> = 0 (&Lambda; = &minus;1), exactly on the rectangular hyperbola &xi;&eta; = <i>HW</i>/4 through the same two corners &mdash; a curve that lies wholly outside the open rectangle, which is why the harmonic conjugate is born only when <i>P</i> steps outside and a length changes sign. The values &plusmn;1 are the fixed points of the complement&#8209;swap &Lambda; &harr; 1/&Lambda; &mdash; two of the six special cross&#8209;ratios, the pair belonging to this one involution of the anharmonic group.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var svg = document.getElementById("fig");
+  var L = 150, T = 120, R = 630, B = 420;   // rectangle, SVG units
+  var W = R - L, H = B - T;                  // 480 x 300
+  var U = 100;                               // px per unit (one unit, both axes)
+  var cx = (L + R) / 2, cy = (T + B) / 2;
+  var K = H * W / 4;                         // 36000 ; harmonic hyperbola constant
+  var MAXP = Math.pow((W * H) / (4 * U * U), 2); // = 12.96
+  var VBW = 760, VBH = 550;
+  var PXMIN = 18, PXMAX = 742, PYMIN = 18, PYMAX = 532;
+  var XIMIN = 140;                           // keep hyperbola lock on-screen
+  var initX = 360, initY = 232;
+
+  var Px = initX, Py = initY;
+  var mode = "free", dragging = false;
+
+  function $(id){ return document.getElementById(id); }
+  var cellTL=$("cellTL"), cellTR=$("cellTR"), cellBL=$("cellBL"), cellBR=$("cellBR");
+  var diagLine=$("diagLine"), hypPath=$("hypPath"), diagGlow=$("diagGlow"), hypGlow=$("hypGlow");
+  var diagLbl=$("diagLbl"), hypLbl=$("hypLbl");
+  var lblA=$("lblA"), lblB=$("lblB"), lblC=$("lblC"), lblD=$("lblD");
+  var txtTL=$("txtTL"), txtTR=$("txtTR"), txtBL=$("txtBL"), txtBR=$("txtBR");
+  var nTL=$("nTL"), nTR=$("nTR"), nBL=$("nBL"), nBR=$("nBR");
+  var phalo=$("phalo"), phandle=$("phandle"), plabel=$("plabel");
+  var lamBig=$("lamBig"), lamName=$("lamName"), dialMark=$("dialMark");
+  var diffVal=$("diffVal"), diffFill=$("diffFill"), diffPill=$("diffPill");
+  var sumVal=$("sumVal"), sumFill=$("sumFill"), sumPill=$("sumPill");
+  var pv1=$("pv1"), pv2=$("pv2"), pchip1=$("pchip1"), pchip2=$("pchip2");
+  var rab=$("rab"), rcd=$("rcd");
+  var modeFree=$("modeFree"), modeDiag=$("modeDiag"), modeHyp=$("modeHyp"), resetBtn=$("resetBtn");
+
+  // --- build the harmonic hyperbola path once (two branches) ---
+  function buildHyperbola(){
+    function branch(sign){
+      var pts=[], N=90, lo=0.14*W, hi=8*W;
+      for(var i=0;i<=N;i++){
+        var xi = lo*Math.pow(hi/lo, i/N) * sign;
+        var eta = K/xi;
+        pts.push((cx+xi).toFixed(2)+" "+(cy+eta).toFixed(2));
+      }
+      return "M"+pts.join(" L");
+    }
+    var d = branch(1)+" "+branch(-1);
+    hypPath.setAttribute("d", d);
+    hypGlow.setAttribute("d", d);
+    // path for the diagonal glow (a long segment matching the line)
+    diagGlow.setAttribute("d","M -810 -480 L 1590 1020");
+  }
+
+  function clampX(x){ return Math.min(PXMAX, Math.max(PXMIN, x)); }
+  function clampY(y){ return Math.min(PYMAX, Math.max(PYMIN, y)); }
+  function diagYof(x){ return T + (x - L) * H / W; }
+
+  function constrain(){
+    if(mode === "diag"){
+      Px = clampX(Px);
+      Py = diagYof(Px);
+    } else if(mode === "hyp"){
+      var xi = Px - cx;
+      var s = xi < 0 ? -1 : 1;
+      if(Math.abs(xi) < XIMIN) xi = s * XIMIN;
+      Px = cx + xi;
+      Py = cy + K / xi;
+    } else {
+      Px = clampX(Px); Py = clampY(Py);
+    }
+  }
+
+  function setRect(el,x,y,w,h){ el.setAttribute("x",x); el.setAttribute("y",y);
+    el.setAttribute("width",w); el.setAttribute("height",h); }
+
+  function paintCell(el, Xc, Yc, signed, hue){
+    setRect(el, Math.min(Xc,Px), Math.min(Yc,Py), Math.abs(Xc-Px), Math.abs(Yc-Py));
+    if(signed >= 0){
+      el.setAttribute("fill", hue === "gold" ? "#b08948" : "#c0322b");
+      el.setAttribute("fill-opacity", hue === "gold" ? 0.10 : 0.16);
+    } else {
+      el.setAttribute("fill", hue === "gold" ? "url(#hatchGold)" : "url(#hatchCrim)");
+      el.setAttribute("fill-opacity", 1);
+    }
+  }
+
+  function placeCellLbl(txtEl, numEl, Xc, Yc, areaUnits){
+    var w = Math.abs(Xc-Px), h = Math.abs(Yc-Py);
+    if(w < 54 || h < 24){ txtEl.setAttribute("opacity",0); return; }
+    txtEl.setAttribute("opacity",1);
+    txtEl.setAttribute("x",(Xc+Px)/2); txtEl.setAttribute("y",(Yc+Py)/2 + 5);
+    numEl.textContent = " = " + (areaUnits>=0?"":"\u2212") + Math.abs(areaUnits).toFixed(2);
+  }
+
+  function signedBar(fillEl, value, scale){
+    var f = scale>1e-9 ? value/scale : 0;
+    if(f>1) f=1; if(f<-1) f=-1;
+    var w = Math.abs(f)*50;
+    fillEl.style.width = w.toFixed(1)+"%";
+    fillEl.style.left = (f>=0 ? 50 : (50 - w)).toFixed(1)+"%";
+  }
+
+  function update(){
+    constrain();
+
+    var a = Py - T, b = Px - L, c = B - Py, d = R - Px;       // signed, px
+    var au=a/U, bu=b/U, cu=c/U, du=d/U;
+    var ab=au*bu, ad=au*du, cb=cu*bu, cd=cu*du;               // signed, units^2
+
+    paintCell(cellTL, L, T, a*b, "gold");
+    paintCell(cellTR, R, T, a*d, "crim");
+    paintCell(cellBL, L, B, c*b, "crim");
+    paintCell(cellBR, R, B, c*d, "gold");
+
+    phalo.setAttribute("cx",Px); phalo.setAttribute("cy",Py);
+    phandle.setAttribute("cx",Px); phandle.setAttribute("cy",Py);
+    plabel.setAttribute("x",Px+13); plabel.setAttribute("y",Py+18);
+
+    var pxc = Math.min(R, Math.max(L, Px));
+    var pyc = Math.min(B, Math.max(T, Py));
+    lblB.setAttribute("x",(L+pxc)/2); lblB.setAttribute("y",T-11);
+    lblD.setAttribute("x",(pxc+R)/2); lblD.setAttribute("y",T-11);
+    lblA.setAttribute("x",L-14); lblA.setAttribute("y",(T+pyc)/2+5);
+    lblC.setAttribute("x",L-14); lblC.setAttribute("y",(pyc+B)/2+5);
+
+    placeCellLbl(txtTL,nTL,L,T,ab);
+    placeCellLbl(txtTR,nTR,R,T,ad);
+    placeCellLbl(txtBL,nBL,L,B,cb);
+    placeCellLbl(txtBR,nBR,R,B,cd);
+
+    // locus labels near the figure
+    diagLbl.setAttribute("x", R-66); diagLbl.setAttribute("y", B-8);
+    hypLbl.setAttribute("x", R+8);  hypLbl.setAttribute("y", T+18);
+
+    // cross-ratio
+    var diff = ad - cb, sum = ad + cb;
+    var scale = Math.abs(ad) + Math.abs(cb) + 1e-9;
+    var lam = ad / cb;              // signed cross-ratio (the unit^2 cancels)
+
+    var lamText, dialPos, onPlus=false, onMinus=false;
+    if(!isFinite(lam)){
+      if(isNaN(lam)){ lamText="indeterminate"; dialPos=0; }
+      else { lamText = (lam>0?"+\u221E":"\u2212\u221E"); dialPos = (lam>0?1:-1); }
+    } else {
+      lamText = (lam>=0?"+":"\u2212") + Math.abs(lam).toFixed(3);
+      dialPos = lam/(1+Math.abs(lam));
+      onPlus  = Math.abs(lam-1) < 0.012;
+      onMinus = Math.abs(lam+1) < 0.012;
+    }
+    lamBig.textContent = lamText;
+    var markX = 150 + dialPos*130;
+    dialMark.setAttribute("cx", markX.toFixed(1));
+    dialMark.setAttribute("fill", onPlus ? "#b08948" : (onMinus ? "#6a2c91" : "#43203f"));
+
+    if(onPlus){ lamName.textContent="+1 \u00b7 balanced"; lamName.className="lamname plus"; }
+    else if(onMinus){ lamName.textContent="\u22121 \u00b7 harmonic"; lamName.className="lamname minus"; }
+    else { lamName.textContent = lam>0 ? "general (+)" : (isFinite(lam)? "general (\u2212)" : "degenerate");
+           lamName.className="lamname"; }
+
+    // +1 card (difference)
+    diffVal.textContent = (diff>=0?"+":"\u2212") + Math.abs(diff).toFixed(3);
+    signedBar(diffFill, diff, scale);
+    var balDiag = Math.abs(diff) < 0.01;
+    diffPill.textContent = balDiag ? "on the diagonal" : "off the diagonal";
+    diffPill.className = "pill " + (balDiag ? "ok" : "off");
+
+    // -1 card (sum)
+    sumVal.textContent = (sum>=0?"+":"\u2212") + Math.abs(sum).toFixed(3);
+    signedBar(sumFill, sum, scale);
+    var balHyp = Math.abs(sum) < 0.01;
+    sumPill.textContent = balHyp ? "on the hyperbola" : "off the hyperbola";
+    sumPill.className = "pill " + (balHyp ? "ok" : "off");
+
+    // product (signed)
+    var p1 = ab*cd, p2 = ad*cb;
+    pv1.textContent = (p1>=0?"+":"\u2212") + Math.abs(p1).toFixed(4);
+    pv2.textContent = (p2>=0?"+":"\u2212") + Math.abs(p2).toFixed(4);
+    pchip1.textContent = p1>=0?"+":"\u2212"; pchip1.className = "chip " + (p1>=0?"pos":"neg");
+    pchip2.textContent = p2>=0?"+":"\u2212"; pchip2.className = "chip " + (p2>=0?"pos":"neg");
+
+    // side ratios (signed)
+    rab.textContent = (Math.abs(b)<1e-6? "\u00b1\u221E" : (a/b).toFixed(3));
+    rcd.textContent = (Math.abs(d)<1e-6? "\u00b1\u221E" : (c/d).toFixed(3));
+
+    // glows
+    diagGlow.setAttribute("opacity", (mode==="diag" || balDiag) ? 1 : 0);
+    hypGlow.setAttribute("opacity",  (mode==="hyp"  || balHyp ) ? 1 : 0);
+  }
+
+  // --- pointer drag ---
+  function toSVG(evt){
+    var pt = svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+    var ctm = svg.getScreenCTM(); if(!ctm) return {x:Px,y:Py};
+    return pt.matrixTransform(ctm.inverse());
+  }
+  function start(evt){ dragging=true; try{svg.setPointerCapture(evt.pointerId);}catch(e){}
+    var p=toSVG(evt); Px=p.x; Py=p.y; update(); evt.preventDefault(); }
+  function moveTo(evt){ if(!dragging) return; var p=toSVG(evt); Px=p.x; Py=p.y; update(); evt.preventDefault(); }
+  function end(evt){ dragging=false; try{svg.releasePointerCapture(evt.pointerId);}catch(e){} }
+  svg.addEventListener("pointerdown",start);
+  svg.addEventListener("pointermove",moveTo);
+  svg.addEventListener("pointerup",end);
+  svg.addEventListener("pointercancel",end);
+
+  svg.addEventListener("keydown",function(evt){
+    var step = evt.shiftKey ? 14 : 4, done=true;
+    if(evt.key==="ArrowLeft") Px-=step;
+    else if(evt.key==="ArrowRight") Px+=step;
+    else if(evt.key==="ArrowUp"){ if(mode==="free") Py-=step; }
+    else if(evt.key==="ArrowDown"){ if(mode==="free") Py+=step; }
+    else done=false;
+    if(done){ update(); evt.preventDefault(); }
+  });
+
+  function setMode(m){
+    mode = m;
+    modeFree.className = m==="free" ? "active" : "";
+    modeDiag.className = m==="diag" ? "active" : "";
+    modeHyp.className  = m==="hyp"  ? "active" : "";
+    if(m==="hyp" && Math.abs(Px-cx) < XIMIN) Px = cx + XIMIN; // nudge onto a branch
+    update();
+  }
+  modeFree.addEventListener("click",function(){ setMode("free"); });
+  modeDiag.addEventListener("click",function(){ setMode("diag"); });
+  modeHyp.addEventListener("click",function(){ setMode("hyp"); });
+  resetBtn.addEventListener("click",function(){ Px=initX; Py=initY; setMode("free"); });
+
+  buildHyperbola();
+  update();
+})();
+</script>
+</body>
+</html>
