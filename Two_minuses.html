@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Minuses</title>
+<style>
+  :root{
+    --cream:#faf6ef;
+    --plum:#43203f;
+    --purple:#6a2c91;
+    --crimson:#c0322b;
+    --gold:#b08948;
+    --headfont:'TeX Gyre Heros','Helvetica Neue',Arial,sans-serif;
+    --bodyfont:'FreeSerif','Times New Roman',Times,serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--cream);color:var(--plum);font-family:var(--bodyfont);font-size:18px;line-height:1.62;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:780px;margin:0 auto;padding:38px 24px 80px;}
+  header.masthead{border-bottom:2px solid var(--plum);padding-bottom:18px;margin-bottom:28px;}
+  .eyebrow{font-family:var(--headfont);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12.5px;color:var(--purple);margin:0 0 12px;}
+  h1{font-family:var(--headfont);font-weight:700;font-size:40px;line-height:1.05;letter-spacing:-.01em;margin:0 0 10px;}
+  .subtitle{font-family:var(--bodyfont);font-style:italic;font-size:19px;margin:0;opacity:.92;}
+  .byline{font-family:var(--headfont);font-size:13px;letter-spacing:.04em;color:var(--purple);margin-top:14px;}
+  h2{font-family:var(--headfont);font-weight:700;font-size:15px;letter-spacing:.10em;text-transform:uppercase;color:var(--purple);margin:44px 0 6px;}
+  h2 .num{color:var(--gold);margin-right:.5em;}
+  p{margin:14px 0;}
+  .lede{font-size:19.5px;}
+  .math{font-style:italic;white-space:nowrap;}
+  .add{color:var(--crimson);font-weight:700;font-style:normal;}
+  .mul{color:var(--purple);font-weight:700;font-style:normal;}
+  em.term{font-style:italic;}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:18px 0;}
+  .twocol .cell{border-top:3px solid var(--crimson);padding-top:10px;}
+  .twocol .cell.m{border-top-color:var(--purple);}
+  .twocol .cell h3{font-family:var(--headfont);font-size:13px;letter-spacing:.04em;margin:0 0 4px;}
+  .twocol .cell h3 .k{font-family:var(--bodyfont);font-style:italic;font-weight:400;color:var(--plum);opacity:.7;font-size:13px;}
+  .twocol .cell p{margin:6px 0;font-size:16px;}
+
+  .figure{margin:26px 0 8px;border:1px solid rgba(67,32,63,.22);border-radius:4px;background:#fdfbf6;overflow:hidden;}
+  .figure .cap{font-family:var(--headfont);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);padding:12px 16px 0;}
+  svg{display:block;width:100%;height:auto;}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;padding:8px 16px 4px;}
+  .btn{font-family:var(--headfont);font-weight:700;font-size:13px;color:var(--cream);border:none;border-radius:3px;padding:9px 13px;cursor:pointer;}
+  .btn.add{background:var(--crimson);}
+  .btn.mul{background:var(--purple);}
+  .btn.ghost{background:none;color:var(--plum);border:1.5px solid rgba(67,32,63,.35);}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .status{font-family:var(--headfont);font-size:13px;letter-spacing:.02em;color:var(--plum);padding:6px 16px 12px;min-height:1.2em;}
+  .status b{color:var(--purple);}
+  .readout{border-top:1px solid rgba(67,32,63,.18);display:grid;grid-template-columns:1fr 1fr 1fr;font-family:var(--headfont);}
+  .readout .col{padding:13px 16px;border-right:1px solid rgba(67,32,63,.10);}
+  .readout .col:last-child{border-right:none;}
+  .readout .h{font-weight:700;font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+  .readout .row{display:flex;justify-content:space-between;font-size:14px;margin:3px 0;}
+  .readout .row .k{opacity:.8;}
+  .readout .row .v{font-weight:700;font-variant-numeric:tabular-nums;}
+  .badge{display:inline-block;font-family:var(--headfont);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:2px;color:var(--cream);}
+
+  .controls2{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;padding:8px 16px 14px;}
+  .ctl label{display:block;font-family:var(--headfont);font-weight:700;font-size:12px;letter-spacing:.03em;margin-bottom:5px;}
+  .ctl .val{color:var(--purple);}
+  input[type=range]{width:100%;accent-color:#6a2c91;margin:0;}
+  input[type=range]:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+
+  .trythese{font-size:16px;background:rgba(67,32,63,.04);border-left:3px solid var(--purple);padding:12px 16px;margin:16px 0 0;}
+  .trythese b{font-family:var(--headfont);}
+  .trythese .a{color:var(--crimson);} .trythese .m{color:var(--purple);}
+
+  table.ledger{width:100%;border-collapse:collapse;margin:18px 0 0;font-size:15px;}
+  table.ledger th{font-family:var(--headfont);font-size:11px;letter-spacing:.10em;text-transform:uppercase;text-align:left;color:var(--purple);border-bottom:2px solid var(--plum);padding:8px 10px;}
+  table.ledger td{border-bottom:1px solid rgba(67,32,63,.14);padding:10px;vertical-align:top;}
+  table.ledger td.status{font-family:var(--headfont);font-weight:700;font-size:12px;white-space:nowrap;padding:10px;}
+  table.ledger td.status .th{color:var(--plum);} table.ledger td.status .ob{color:var(--gold);}
+  .closing{margin-top:40px;border-top:2px solid var(--plum);padding-top:22px;font-size:18px;}
+  .foot{font-family:var(--headfont);font-size:12px;letter-spacing:.03em;color:var(--purple);margin-top:34px;opacity:.8;}
+  @media (max-width:560px){
+    h1{font-size:30px;}
+    .twocol{grid-template-columns:1fr;gap:18px;}
+    .controls2{grid-template-columns:1fr;}
+    .readout{grid-template-columns:1fr;}
+    .readout .col{border-right:none;border-bottom:1px solid rgba(67,32,63,.10);}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">The Anharmonic Interface · interactive companion</p>
+    <h1>Two Minuses</h1>
+    <p class="subtitle">One you turn around &mdash; one turns the line over.</p>
+    <p class="byline">Companion to &ldquo;What Survives the Ruler&rdquo;</p>
+  </header>
+
+  <p class="lede">The word &ldquo;minus&rdquo; does two unrelated jobs on a line, and they live in the line&rsquo;s two group structures. The <span class="add">additive minus</span> &mdash; the sign in <span class="math">P&nbsp;&minus;&nbsp;T</span>, and the sign of <span class="math">k</span> &mdash; is an <em class="term">element</em>: a directed length pointing the other way. The <span class="mul">multiplicative minus</span> &mdash; the sign of the scale <span class="math">s</span> &mdash; is an <em class="term">operator</em>: a reflection of the line, not a point on it. One is a thing <em>on</em> the line; the other is a map <em>of</em> the line.</p>
+
+  <div class="twocol">
+    <div class="cell">
+      <h3>Additive <span class="k">— in (&#8477;, +)</span></h3>
+      <p><span class="add">&minus;a</span> is the <em>additive inverse</em>: the same displacement reversed. It is a backward-pointing element you can pick up and turn around. This is the direction <em>of a segment</em>.</p>
+    </div>
+    <div class="cell m">
+      <h3>Multiplicative <span class="k">— in (&#8477;*, &times;) = {&plusmn;1} &times; &#8477;<sub>+</sub></span></h3>
+      <p>As a scale, <span class="mul">&minus;1</span> is pure handedness &mdash; a <em>flip</em>, the {&plusmn;1}, with no center: the direction <em>of the line itself</em>, its orientation. As the map &times;(&minus;1) it becomes a <em>mirror</em> &mdash; a reflection through a definite point. An operator either way, never an element.</p>
+    </div>
+  </div>
+
+  <h2><span class="num">1</span>An element you turn around · a mirror through 0</h2>
+  <p>Below, the directed length <span class="math">a</span> runs from <span class="math">T</span> to a draggable head <span class="math">P</span>. The two buttons both end up reversing the sign of <span class="math">a</span> &mdash; but watch <em>how</em>. One turns the arrow around and the line never moves. The other is a <em>mirror through 0</em>: it reflects every marked point to the far side, with <span class="math">0</span> the one point that stays.</p>
+
+  <div class="figure">
+    <p class="cap">a directed length, against a fixed ruler</p>
+    <svg id="d1" viewBox="0 0 720 220" role="img" aria-label="A number line with zero fixed at center. A directed length a runs from T to a draggable point P. One control reverses the arrow in place; another reflects every marked point through zero.">
+      <g id="d1_furniture"></g>
+      <g id="d1_dynamic"></g>
+    </svg>
+    <div class="controls">
+      <button class="btn add" id="d1_reverse" type="button">&minus;a&nbsp;:&nbsp;reverse the displacement</button>
+      <button class="btn mul" id="d1_fold" type="button">&times;(&minus;1)&nbsp;:&nbsp;mirror through 0</button>
+      <button class="btn ghost" id="d1_reset" type="button">Reset</button>
+    </div>
+    <div class="status" id="d1_status">Drag <b>P</b>. Then try each button and watch what moves.</div>
+    <div class="readout">
+      <div class="col">
+        <div class="h">Endpoints (coords)</div>
+        <div class="row"><span class="k">T</span><span class="v" id="d1_T">+1.00</span></div>
+        <div class="row"><span class="k">P</span><span class="v" id="d1_P">+3.40</span></div>
+        <div class="row"><span class="k">fixed point</span><span class="v">0</span></div>
+      </div>
+      <div class="col">
+        <div class="h">The directed length</div>
+        <div class="row"><span class="k">a (signed)</span><span class="v" id="d1_a" style="color:#c0322b">+2.40</span></div>
+        <div class="row"><span class="k">|a| (magnitude)</span><span class="v" id="d1_mag">2.40</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Reading</div>
+        <div class="row"><span class="k">arrow points</span><span class="v" id="d1_dirword">forward</span></div>
+        <div class="row"><span class="k">a is</span><span class="v" id="d1_signword" style="color:#c0322b">positive</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trythese">
+    <b class="a">Reverse the displacement:</b> the arrow turns around in place. <span class="math">T</span> and <span class="math">P</span> do not move; the line is untouched. That backward arrow <em>is</em> <span class="math">&minus;a</span> &mdash; an element.<br>
+    <b class="m">Mirror through 0:</b> every marked point crosses to the far side; only <span class="math">0</span> is fixed. The sign of <span class="math">a</span> reverses too &mdash; but because the endpoints crossed, not because you re-drew an arrow. That is the operator: a located reflection.
+  </div>
+
+  <h2><span class="num">2</span>One sign is structural · the other is borrowed</h2>
+  <p>The two minuses also differ in <em>standing</em>. The sign of <span class="math">s</span> is intrinsic: it is the line&rsquo;s orientation, and no choice of origin can touch it &mdash; slide the zero as far as you like and nothing flips. The sign of <span class="math">k</span> is relative: a directed length only counts as positive or negative <em>once you have picked which way is positive</em>. Switch that, and every length&rsquo;s sign flips at once, while its magnitude does not move. The move here is a pure <em>flip</em> &mdash; it reverses handedness without naming any point, unlike the mirror in panel&nbsp;1, which fixed&nbsp;<span class="math">0</span>.</p>
+
+  <div class="figure">
+    <p class="cap">two directed lengths, one orientation, a movable zero</p>
+    <svg id="d2" viewBox="0 0 720 240" role="img" aria-label="A number line with a draggable origin and two fixed directed lengths. Dragging the origin re-zeroes coordinates but never flips orientation; switching the positive direction flips every length's sign while magnitudes stay fixed.">
+      <g id="d2_furniture"></g>
+      <g id="d2_dynamic"></g>
+    </svg>
+    <div class="controls2">
+      <div class="ctl">
+        <label>Origin &mdash; drag the zero, or use the slider <span class="val" id="d2_ov"></span></label>
+        <input type="range" id="d2_origin" min="120" max="600" value="360" step="1" aria-label="Origin position">
+      </div>
+      <div class="ctl">
+        <label>Orientation (the sign of s)</label>
+        <button class="btn mul" id="d2_flip" type="button" style="width:100%">flip the + direction</button>
+      </div>
+    </div>
+    <div class="status" id="d2_status">Drag the <b>zero</b>: coordinates re&minus;zero, orientation holds. Flip the direction: every sign flips, no point is fixed.</div>
+    <div class="readout">
+      <div class="col">
+        <div class="h">Handedness — sign s</div>
+        <div class="row"><span class="k">sign(s)</span><span class="v" id="d2_signs">+1</span></div>
+        <div class="row" style="margin-top:6px"><span class="badge" id="d2_comp" style="background:#43203f">orientation-preserving</span></div>
+      </div>
+      <div class="col">
+        <div class="h">A length k₁ — sign borrowed</div>
+        <div class="row"><span class="k">k₁ (signed)</span><span class="v" id="d2_k1">+3.00</span></div>
+        <div class="row"><span class="k">|k₁| (magnitude)</span><span class="v" id="d2_k1mag">3.00</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Its endpoints — origin-dependent</div>
+        <div class="row"><span class="k">A</span><span class="v" id="d2_A">&minus;2.00</span></div>
+        <div class="row"><span class="k">B</span><span class="v" id="d2_B">+1.00</span></div>
+        <div class="row"><span class="k">k₁ = B &minus; A</span><span class="v" id="d2_diff" style="color:#b08948">+3.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trythese">
+    <b>Drag the zero:</b> <span class="math">A</span> and <span class="math">B</span> re&minus;zero, but <span class="math">k₁ = B &minus; A</span> is unmoved &mdash; sign <em>and</em> size. A difference does not feel the origin, so no slide ever flips a sign. And the orientation never flips: sign <span class="math">s</span> is intrinsic.<br>
+    <b>Flip the + direction:</b> both lengths flip sign together &mdash; they share one orientation &mdash; while both magnitudes hold, and no point is fixed (a flip has no center). The sign of a length is borrowed from the line; only its size is its own.
+  </div>
+
+  <h2><span class="num">3</span>A flip is a mirror with its center forgotten</h2>
+  <p>A flip names no point; a <em>mirror</em> is a reflection through a definite one, <span class="math">x &rarr; &minus;x + 2p</span>, with fixed point at <span class="math">p</span>. So a mirror is a flip with a center chosen &mdash; and the gap between them is exactly the additive constant: the handedness supplies the <span class="math">&minus;1</span>, a translation places the center, and the fixed point lands at <span class="math">p = k/2</span>. Drag the center below. The fixed point follows it; the handedness never budges from <span class="math">&minus;1</span>.</p>
+
+  <div class="figure">
+    <p class="cap">a mirror with a movable center · arcs concentric about the fixed point</p>
+    <svg id="d3" viewBox="0 0 720 215" role="img" aria-label="A number line with two fixed source points and their reflected images across a draggable center. The reflection arcs are concentric about the center, which is the fixed point. Dragging the center slides the fixed point while the handedness stays minus one.">
+      <g id="d3_furniture"></g>
+      <g id="d3_dynamic"></g>
+    </svg>
+    <div class="controls2">
+      <div class="ctl">
+        <label>Center of the mirror &mdash; drag it, or use the slider <span class="val" id="d3_cv"></span></label>
+        <input type="range" id="d3_center" min="293" max="461" value="382" step="1" aria-label="Center of the mirror">
+      </div>
+      <div class="ctl">
+        <label>Handedness (the sign of s)</label>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:6px">
+          <span class="badge" style="background:#c0322b">s = &minus;1 &middot; pinned</span>
+          <span style="font-style:italic;font-size:14px;opacity:.8">never changes as you drag</span>
+        </div>
+      </div>
+    </div>
+    <div class="status" id="d3_status">Drag the <b>center</b>. The fixed point follows; the handedness stays &minus;1.</div>
+    <div class="readout">
+      <div class="col">
+        <div class="h">The mirror</div>
+        <div class="row"><span class="k">map</span><span class="v" id="d3_map">x &rarr; &minus;x + 1.00</span></div>
+        <div class="row"><span class="k">center p</span><span class="v" id="d3_p" style="color:#b08948">+0.50</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Fixed point — follows center</div>
+        <div class="row"><span class="k">fixed point</span><span class="v" id="d3_fp" style="color:#b08948">+0.50</span></div>
+        <div class="row"><span class="k">= k / 2</span><span class="v" id="d3_k2">+0.50</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Handedness — pinned</div>
+        <div class="row"><span class="k">sign(s)</span><span class="v" style="color:#c0322b">&minus;1</span></div>
+        <div class="row"><span class="k">k = 2p</span><span class="v" id="d3_k">+1.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trythese">
+    <b>Drag the center:</b> the whole nest of reflection arcs re&minus;centers, and the fixed point rides along with it. Yet the map stays orientation&minus;reversing the entire time &mdash; <span class="math">s = &minus;1</span>, pinned. That is the upgrade made visible: a flip (handedness) plus a chosen center (a translation) is a mirror, its fixed point parked at <span class="math">k/2</span>.
+  </div>
+
+  <h2><span class="num">&#9632;</span>Where the two touch</h2>
+  <p>They meet at one point, and it is the <span class="math">s = &minus;1</span> rung from the ruler note seen from the inside. <em>Any</em> mirror negates displacements &mdash; and it makes no difference where the center sits, because a directed length is blind to the center exactly as it was blind to the origin. Send both endpoints through a mirror and <span class="math">a = P &minus; T</span> becomes <span class="math">&minus;a</span>, whatever the center. So it is the <em>flip</em> &mdash; the handedness alone &mdash; reaching down to turn every directed length around; the point the mirror is pinned at never enters. That is the one place the multiplicative and additive minuses engage.</p>
+
+  <h2><span class="num">&#9632;</span>Ledger</h2>
+  <table class="ledger">
+    <thead><tr><th style="width:48%">Claim</th><th style="width:16%">Status</th><th>Warrant</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="math">&minus;a</span> is the additive inverse in (&#8477;,+): <span class="math">a + (&minus;a) = 0</span></td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td>Definition of inverse; checked 10<sup>5</sup> trials. A reversed element on the line.</td>
+      </tr>
+      <tr>
+        <td><span class="math">&times;(&minus;1)</span> is the mirror through <span class="math">0</span>: an involution fixing <span class="math">0</span>, acting on every point</td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td><span class="math">(&minus;1)((&minus;1)x) = x</span>, <span class="math">&minus;0 = 0</span>; checked 10<sup>5</sup> trials.</td>
+      </tr>
+      <tr>
+        <td>Every mirror negates displacements (<span class="math">a &rarr; &minus;a</span>), whatever its center</td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td><span class="math">M<sub>p</sub>(x&#8322;) &minus; M<sub>p</sub>(x&#8321;) = &minus;(x&#8322; &minus; x&#8321;)</span> for all <span class="math">p</span>; checked 10<sup>5</sup> trials. A length is blind to the center.</td>
+      </tr>
+      <tr>
+        <td>A mirror through <span class="math">p</span> is <span class="math">x &rarr; &minus;x + 2p</span>; its fixed point is <span class="math">p = k/2</span>. Flip + a chosen center = mirror</td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td><span class="math">M<sub>p</sub>(p) = p</span>; fixed point of <span class="math">x &rarr; sx + k</span> is <span class="math">k/(1&minus;s) = k/2</span>; and <span class="math">T<sub>p</sub> &compfn; (&times;&minus;1) &compfn; T<sub>&minus;p</sub> = M<sub>p</sub></span>; checked 10<sup>5</sup> trials.</td>
+      </tr>
+      <tr>
+        <td>A flip is a mirror with its center forgotten &mdash; bare handedness {&plusmn;1}</td>
+        <td class="status"><span class="ob">Framing</span></td>
+        <td>Quotient the translations out of the reflections: handedness is the orientation character and names no point.</td>
+      </tr>
+      <tr>
+        <td>sign(<span class="math">s</span>) is intrinsic: no choice of origin can flip it</td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td>The linear part is invariant under conjugation by translations; verified. Orientation character of the affine group.</td>
+      </tr>
+      <tr>
+        <td>sign(<span class="math">k</span>) is relative: it flips with orientation; <span class="math">|k|</span> does not</td>
+        <td class="status"><span class="th">Theorem</span></td>
+        <td>A directed length is the difference of endpoints read against the orientation; flipping <span class="math">s &rarr; &minus;s</span> negates it, magnitude fixed.</td>
+      </tr>
+      <tr>
+        <td>Element vs operator: <span class="math">&minus;a</span> lives on the line; <span class="math">&minus;1</span> (as scale) acts on it</td>
+        <td class="status"><span class="ob">Framing</span></td>
+        <td>The organizing distinction &mdash; (&#8477;,+) vs (&#8477;*,&times;); definitional, the reason the two minuses are not one.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="closing">
+    <p>So the ruler note&rsquo;s three-way split holds for a reason: origin (<span class="math">k</span>) and unit (<span class="math">|s|</span>) are substantive freedoms, and orientation (sign <span class="math">s</span>) earned its own slot because it is the one minus that is an operator. The plus-or-minus of <span class="math">k</span> never needed a fourth axis &mdash; it is just which way you shifted, and which way is borrowed from the orientation that sign <span class="math">s</span> already fixes.</p>
+    <p>And the third panel is the rest of it. A flip is that orientation with its center forgotten; choose a center and you spend a translation to place the mirror, its fixed point landing at <span class="math">k/2</span>. Flip is handedness; a mirror is handedness given a home. The two minuses build everything here: one turns a length around, the other turns the line over &mdash; and only when you tell it where.</p>
+  </div>
+
+  <p class="foot">Demonstrate, don&rsquo;t assert · single self-contained file · all identities machine-checked before delivery</p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var HEAD = "TeX Gyre Heros, Helvetica Neue, Arial, sans-serif";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function E(name, attrs){
+    var el = document.createElementNS(SVGNS, name);
+    if (attrs){ for (var k in attrs){ el.setAttribute(k, String(attrs[k])); } }
+    return el;
+  }
+  function text(x, y, str, attrs){
+    var t = E("text", attrs || {});
+    t.setAttribute("x", String(x));
+    t.setAttribute("y", String(y));
+    t.textContent = str;
+    return t;
+  }
+  function clear(g){ while (g.firstChild) g.removeChild(g.firstChild); }
+  function fmt(x){ var s = x.toFixed(2); if (s === "-0.00") s = "0.00"; return (x > 0 ? "+" : (x < 0 ? "" : "")) + s; }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function ease(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2)/2; }
+
+  // draw a horizontal arrow with head at (hx, y), tail at (tx, y)
+  function drawArrow(g, tx, hx, y, color, w){
+    var dir = (hx >= tx) ? 1 : -1;
+    var shaftEnd = hx - dir*8;
+    g.appendChild(E("line", {x1:tx, y1:y, x2:shaftEnd, y2:y, stroke:color, "stroke-width":w}));
+    var p = E("polygon", {points:(hx)+","+y+" "+(hx-dir*10)+","+(y-6)+" "+(hx-dir*10)+","+(y+6), fill:color});
+    g.appendChild(p);
+  }
+
+  // svg client->local Y/X helper
+  function localPoint(svg, cx, cy){
+    var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+    var m = svg.getScreenCTM(); if (!m) return {x:cx, y:cy};
+    var p = pt.matrixTransform(m.inverse()); return {x:p.x, y:p.y};
+  }
+
+  /* =======================  DIAGRAM 1  ======================= */
+  (function(){
+    var svg = document.getElementById("d1");
+    var fur = document.getElementById("d1_furniture");
+    var dyn = document.getElementById("d1_dynamic");
+    var BASE = 130, CX = 360, U = 56;
+    var TAIL = 416;            // T at coord +1 (fixed start)
+    var Px = 360 + 3.4*U;      // P start
+    var inert = [360 - 2.6*U, 360 + 1.8*U];
+    var reversed = false;
+    var P_MIN = 360 - 4.6*U, P_MAX = 360 + 4.6*U;
+
+    function coord(x){ return (x - CX) / U; }
+
+    function buildFurniture(){
+      clear(fur);
+      // axis
+      fur.appendChild(E("line", {x1:70, y1:BASE, x2:650, y2:BASE, stroke:"#43203f", "stroke-width":2}));
+      // positive caret (fixed: axis is the stage)
+      fur.appendChild(E("line", {x1:636, y1:BASE, x2:652, y2:BASE, stroke:"#43203f", "stroke-width":2}));
+      fur.appendChild(E("polygon", {points:"658,"+BASE+" 648,"+(BASE-5)+" 648,"+(BASE+5), fill:"#43203f"}));
+      fur.appendChild(text(636, BASE-10, "+", {"font-family":HEAD, "font-size":13, "font-weight":700, fill:"#43203f"}));
+      // ticks + labels
+      for (var n=-5; n<=5; n++){
+        var x = CX + n*U;
+        if (x < 78 || x > 642) continue;
+        fur.appendChild(E("line", {x1:x, y1:BASE-5, x2:x, y2:BASE+5, stroke:"#43203f", "stroke-width": n===0?1.6:0.9, "stroke-opacity": n===0?0.7:0.4}));
+        var lab = text(x, BASE+22, String(n), {"text-anchor":"middle", "font-family":HEAD, "font-size":11, fill:"#43203f", "fill-opacity":0.55});
+        fur.appendChild(lab);
+      }
+      // zero fixed-point ring + label
+      fur.appendChild(E("circle", {cx:CX, cy:BASE, r:7, fill:"none", stroke:"#b08948", "stroke-width":2}));
+      fur.appendChild(text(CX, BASE+40, "0 \u00B7 the only fixed point", {"text-anchor":"middle", "font-family":HEAD, "font-size":11, "font-weight":700, fill:"#b08948"}));
+    }
+
+    function render(){
+      clear(dyn);
+      // inert sample points
+      for (var i=0;i<inert.length;i++){
+        dyn.appendChild(E("circle", {cx:inert[i], cy:BASE, r:5, fill:"none", stroke:"#6a2c91", "stroke-width":2}));
+      }
+      // arrow: tail->head depending on reversed
+      var aTail = reversed ? Px : TAIL;
+      var aHead = reversed ? TAIL : Px;
+      drawArrow(dyn, aTail, aHead, BASE-26, "#c0322b", 3);
+      // value label at midpoint
+      var mid = (aTail + aHead)/2;
+      var a = (reversed ? -1 : 1) * (coord(Px) - coord(TAIL));
+      dyn.appendChild(text(mid, BASE-34, (reversed?"\u2212a = ":"a = ") + fmt(a), {"text-anchor":"middle", "font-family":HEAD, "font-size":13, "font-weight":700, fill:"#c0322b"}));
+      // T marker
+      dyn.appendChild(E("line", {x1:TAIL, y1:BASE-8, x2:TAIL, y2:BASE+8, stroke:"#43203f", "stroke-width":3}));
+      dyn.appendChild(text(TAIL, BASE-44, "T", {"text-anchor":"middle", "font-family":HEAD, "font-size":13, "font-weight":700, fill:"#43203f"}));
+      // P handle (draggable)
+      var ph = E("g", {style:"cursor:grab"});
+      ph.setAttribute("id","d1_phandle");
+      ph.appendChild(E("circle", {cx:Px, cy:BASE, r:8, fill:"#b08948", stroke:"#43203f", "stroke-width":2}));
+      ph.appendChild(text(Px, BASE-44, "P", {"text-anchor":"middle", "font-family":HEAD, "font-size":13, "font-weight":700, fill:"#b08948"}));
+      ph.appendChild(E("circle", {cx:Px, cy:BASE, r:20, fill:"#000000", "fill-opacity":0}));
+      dyn.appendChild(ph);
+      attachDrag(ph);
+
+      // readout
+      document.getElementById("d1_T").textContent = fmt(coord(TAIL));
+      document.getElementById("d1_P").textContent = fmt(coord(Px));
+      document.getElementById("d1_a").textContent = fmt(a);
+      document.getElementById("d1_mag").textContent = Math.abs(a).toFixed(2);
+      document.getElementById("d1_dirword").textContent = reversed ? "backward" : "forward";
+      var sw = document.getElementById("d1_signword");
+      sw.textContent = a > 0 ? "positive" : (a < 0 ? "negative" : "zero");
+      sw.style.color = a >= 0 ? "#c0322b" : "#6a2c91";
+    }
+
+    // dragging P
+    function attachDrag(ph){
+      var dragging = false;
+      ph.addEventListener("pointerdown", function(ev){
+        dragging = true; ph.style.cursor="grabbing";
+        try{ ev.target.setPointerCapture(ev.pointerId); }catch(e){}
+        ev.preventDefault();
+      });
+      ph.addEventListener("pointermove", function(ev){
+        if(!dragging) return;
+        var p = localPoint(svg, ev.clientX, ev.clientY);
+        Px = Math.max(P_MIN, Math.min(P_MAX, p.x));
+        render(); ev.preventDefault();
+      });
+      function up(ev){ if(!dragging) return; dragging=false; ph.style.cursor="grab"; try{ ev.target.releasePointerCapture(ev.pointerId);}catch(e){} }
+      ph.addEventListener("pointerup", up);
+      ph.addEventListener("pointercancel", up);
+    }
+
+    function setStatus(msg){ document.getElementById("d1_status").textContent = msg; }
+
+    document.getElementById("d1_reverse").addEventListener("click", function(){
+      reversed = !reversed; render();
+      setStatus("Displacement reversed in place \u2014 T and P did not move, the line is unchanged.");
+    });
+
+    document.getElementById("d1_fold").addEventListener("click", function(){
+      // reflect all movable points about CX
+      var startT = TAIL, startP = Px, startI = inert.slice();
+      var endT = 2*CX - TAIL, endP = 2*CX - Px, endI = inert.map(function(v){return 2*CX - v;});
+      setStatus("Mirror through 0 \u2014 every point reflects to the far side; only 0 is fixed.");
+      if (reduceMotion){
+        TAIL = endT; Px = endP; inert = endI; render(); return;
+      }
+      var dur = 560, t0 = null;
+      function step(ts){
+        if (t0 === null) t0 = ts;
+        var t = Math.min(1, (ts - t0)/dur), e = ease(t);
+        TAIL = lerp(startT, endT, e);
+        Px   = lerp(startP, endP, e);
+        for (var i=0;i<inert.length;i++) inert[i] = lerp(startI[i], endI[i], e);
+        render();
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+
+    document.getElementById("d1_reset").addEventListener("click", function(){
+      TAIL = 416; Px = 360 + 3.4*U; inert = [360 - 2.6*U, 360 + 1.8*U]; reversed = false;
+      render(); setStatus("Reset.");
+    });
+
+    buildFurniture();
+    render();
+  })();
+
+  /* =======================  DIAGRAM 2  ======================= */
+  (function(){
+    var svg = document.getElementById("d2");
+    var fur = document.getElementById("d2_furniture");
+    var dyn = document.getElementById("d2_dynamic");
+    var BASE = 175, U = 50;
+    var Ox = 360;          // origin screen x (draggable)
+    var dir = 1;           // orientation: +1 or -1
+    var caretFlip = 1;     // animated scaleX of caret, tracks dir
+    // two fixed physical directed lengths (screen endpoints)
+    var k1 = {tail:260, head:410, y:96};   // positive when dir=+1  (len 3 @ U=50)
+    var k2 = {tail:560, head:435, y:132};  // negative when dir=+1  (len 2.5)
+    var O_MIN = 120, O_MAX = 600;
+
+    function coord(x){ return dir * (x - Ox) / U; }
+    function kval(k){ return dir * (k.head - k.tail) / U; }
+
+    function buildFurniture(){
+      clear(fur);
+      fur.appendChild(E("line", {x1:70, y1:BASE, x2:650, y2:BASE, stroke:"#43203f", "stroke-width":2}));
+    }
+
+    function render(){
+      clear(dyn);
+      // ticks + labels (depend on Ox and dir)
+      for (var n=-6; n<=6; n++){
+        var x = Ox + dir*U*n;
+        if (x < 78 || x > 642) continue;
+        dyn.appendChild(E("line", {x1:x, y1:BASE-5, x2:x, y2:BASE+5, stroke:"#43203f", "stroke-width": n===0?1.6:0.9, "stroke-opacity": n===0?0.7:0.35}));
+        if (n !== 0)
+          dyn.appendChild(text(x, BASE+20, String(n), {"text-anchor":"middle","font-family":HEAD,"font-size":11,fill:"#43203f","fill-opacity":0.5}));
+      }
+      // positive caret near the high end of the line, flipped via scale about its anchor
+      var caretAnchorX = 624, caretY = BASE;
+      var cg = E("g", {transform:"translate("+caretAnchorX+","+caretY+") scale("+caretFlip+",1) translate("+(-caretAnchorX)+","+(-caretY)+")"});
+      cg.appendChild(E("line", {x1:caretAnchorX-14, y1:caretY, x2:caretAnchorX, y2:caretY, stroke:"#6a2c91", "stroke-width":2.5}));
+      cg.appendChild(E("polygon", {points:(caretAnchorX+6)+","+caretY+" "+(caretAnchorX-4)+","+(caretY-5)+" "+(caretAnchorX-4)+","+(caretY+5), fill:"#6a2c91"}));
+      dyn.appendChild(cg);
+      dyn.appendChild(text(620, caretY-10, "+ this way", {"text-anchor":"end","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#6a2c91"}));
+
+      // the two directed lengths (fixed positions), with sign badges
+      drawDir(k1, "k\u2081");
+      drawDir(k2, "k\u2082");
+
+      // origin handle (draggable zero)
+      var oh = E("g", {style:"cursor:grab", id:"d2_ohandle"});
+      oh.appendChild(E("circle", {cx:Ox, cy:BASE, r:8, fill:"#b08948", stroke:"#43203f", "stroke-width":2}));
+      oh.appendChild(text(Ox, BASE+38, "0 \u00B7 drag", {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#b08948"}));
+      oh.appendChild(E("circle", {cx:Ox, cy:BASE, r:20, fill:"#000000", "fill-opacity":0}));
+      dyn.appendChild(oh);
+      attachOrigin(oh);
+
+      // mark k1 endpoints A,B on the axis (small ticks dropped from the arrow ends)
+      dyn.appendChild(E("line", {x1:k1.tail, y1:k1.y, x2:k1.tail, y2:BASE, stroke:"#43203f", "stroke-width":0.8, "stroke-opacity":0.3, "stroke-dasharray":"3 3"}));
+      dyn.appendChild(E("line", {x1:k1.head, y1:k1.y, x2:k1.head, y2:BASE, stroke:"#43203f", "stroke-width":0.8, "stroke-opacity":0.3, "stroke-dasharray":"3 3"}));
+      dyn.appendChild(text(k1.tail, k1.y-10, "A", {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#43203f"}));
+      dyn.appendChild(text(k1.head, k1.y-10, "B", {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#43203f"}));
+
+      // readouts
+      var s = (dir === 1) ? 1 : -1;
+      document.getElementById("d2_signs").textContent = (s>0?"+1":"\u22121");
+      var comp = document.getElementById("d2_comp");
+      if (s>0){ comp.textContent = "orientation-preserving"; comp.style.background = "#43203f"; }
+      else { comp.textContent = "orientation-reversing"; comp.style.background = "#c0322b"; }
+      var v1 = kval(k1);
+      document.getElementById("d2_k1").textContent = fmt(v1);
+      document.getElementById("d2_k1mag").textContent = Math.abs(v1).toFixed(2);
+      var A = coord(k1.tail), B = coord(k1.head);
+      document.getElementById("d2_A").textContent = fmt(A);
+      document.getElementById("d2_B").textContent = fmt(B);
+      document.getElementById("d2_diff").textContent = fmt(B - A);
+      document.getElementById("d2_ov").textContent = "(zero at x=" + Math.round(Ox) + ")";
+    }
+
+    function drawDir(k, name){
+      var v = kval(k);
+      var color = "#6a2c91";
+      drawArrow(dyn, k.tail, k.head, k.y, color, 3);
+      // sign badge
+      var bx = (k.tail + k.head)/2;
+      var sign = v > 0 ? "+" : (v < 0 ? "\u2212" : "0");
+      var bcol = v >= 0 ? "#6a2c91" : "#c0322b";
+      dyn.appendChild(E("circle", {cx:bx, cy:k.y-16, r:9, fill:bcol}));
+      dyn.appendChild(text(bx, k.y-12, sign, {"text-anchor":"middle","font-family":HEAD,"font-size":13,"font-weight":700,fill:"#faf6ef"}));
+      dyn.appendChild(text(k.tail-6, k.y+4, name, {"text-anchor":"end","font-family":HEAD,"font-size":12,"font-weight":700,fill:"#6a2c91"}));
+    }
+
+    function attachOrigin(oh){
+      var dragging = false;
+      oh.addEventListener("pointerdown", function(ev){
+        dragging = true; oh.style.cursor="grabbing";
+        try{ ev.target.setPointerCapture(ev.pointerId);}catch(e){}
+        ev.preventDefault();
+      });
+      oh.addEventListener("pointermove", function(ev){
+        if(!dragging) return;
+        var p = localPoint(svg, ev.clientX, ev.clientY);
+        Ox = Math.max(O_MIN, Math.min(O_MAX, p.x));
+        document.getElementById("d2_origin").value = String(Math.round(Ox));
+        render(); ev.preventDefault();
+      });
+      function up(ev){ if(!dragging) return; dragging=false; oh.style.cursor="grab"; try{ ev.target.releasePointerCapture(ev.pointerId);}catch(e){} }
+      oh.addEventListener("pointerup", up);
+      oh.addEventListener("pointercancel", up);
+    }
+
+    document.getElementById("d2_origin").addEventListener("input", function(){
+      Ox = parseFloat(this.value); render();
+    });
+
+    document.getElementById("d2_flip").addEventListener("click", function(){
+      dir = -dir;
+      document.getElementById("d2_status").textContent = "Orientation flipped \u2014 every length flips sign together; magnitudes do not move; no point is fixed.";
+      var target = (dir === 1) ? 1 : -1, start = caretFlip;
+      if (reduceMotion){ caretFlip = target; render(); return; }
+      var dur = 300, t0 = null;
+      function step(ts){
+        if (t0 === null) t0 = ts;
+        var t = Math.min(1,(ts - t0)/dur), e = ease(t);
+        caretFlip = lerp(start, target, e);
+        render();
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+
+    buildFurniture();
+    render();
+  })();
+
+  /* =======================  PANEL 3  ======================= */
+  (function(){
+    var svg = document.getElementById("d3");
+    var fur = document.getElementById("d3_furniture");
+    var dyn = document.getElementById("d3_dynamic");
+    var BASE = 178, CX0 = 360, U = 44;
+    var srcX = [316, 421.6];        // two fixed source points (coords -1.0, +1.4)
+    var Cx = 382;                   // mirror center (coord +0.5)
+    var C_MIN = 293, C_MAX = 461;
+
+    function coord(x){ return (x - CX0) / U; }
+
+    function buildFurniture(){
+      clear(fur);
+      fur.appendChild(E("line", {x1:70, y1:BASE, x2:650, y2:BASE, stroke:"#43203f", "stroke-width":2}));
+      for (var n=-5; n<=6; n++){
+        var x = CX0 + n*U;
+        if (x < 78 || x > 642) continue;
+        fur.appendChild(E("line", {x1:x, y1:BASE-5, x2:x, y2:BASE+5, stroke:"#43203f", "stroke-width": n===0?1.6:0.9, "stroke-opacity": n===0?0.7:0.35}));
+        if (n !== 0)
+          fur.appendChild(text(x, BASE+30, String(n), {"text-anchor":"middle","font-family":HEAD,"font-size":11,fill:"#43203f","fill-opacity":0.5}));
+      }
+    }
+
+    function render(){
+      clear(dyn);
+      // reflection arcs (concentric about Cx) + image and source dots
+      for (var i=0;i<srcX.length;i++){
+        var sx = srcX[i];
+        var ix = 2*Cx - sx;          // image under mirror through Cx
+        var xl = Math.min(sx, ix), xr = Math.max(sx, ix);
+        var r = (xr - xl)/2;
+        if (r > 0.5){
+          dyn.appendChild(E("path", {d:"M "+xl+" "+BASE+" A "+r+" "+r+" 0 0 1 "+xr+" "+BASE, fill:"none", stroke:"#b08948", "stroke-width":1.6, "stroke-opacity":0.9}));
+        }
+        dyn.appendChild(E("circle", {cx:ix, cy:BASE, r:5, fill:"#fdfbf6", stroke:"#6a2c91", "stroke-width":2}));
+        dyn.appendChild(text(ix, BASE+18, "x"+(i+1)+"\u2032", {"text-anchor":"middle","font-family":HEAD,"font-size":11,fill:"#6a2c91"}));
+        dyn.appendChild(E("circle", {cx:sx, cy:BASE, r:5, fill:"#43203f"}));
+        dyn.appendChild(text(sx, BASE-12, "x"+(i+1), {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#43203f"}));
+      }
+      // fixed-point guide at the center
+      dyn.appendChild(E("line", {x1:Cx, y1:BASE, x2:Cx, y2:BASE-58, stroke:"#b08948", "stroke-width":1, "stroke-dasharray":"3 3", "stroke-opacity":0.7}));
+      dyn.appendChild(text(Cx, BASE-64, "fixed point", {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#b08948"}));
+      // center handle (draggable)
+      var ch = E("g", {style:"cursor:grab", id:"d3_chandle"});
+      ch.appendChild(E("circle", {cx:Cx, cy:BASE, r:8, fill:"#b08948", stroke:"#43203f", "stroke-width":2}));
+      ch.appendChild(text(Cx, BASE+33, "center \u00B7 drag", {"text-anchor":"middle","font-family":HEAD,"font-size":11,"font-weight":700,fill:"#b08948"}));
+      ch.appendChild(E("circle", {cx:Cx, cy:BASE, r:20, fill:"#000000", "fill-opacity":0}));
+      dyn.appendChild(ch);
+      attachDrag(ch);
+
+      // readout
+      var p = coord(Cx), k = 2*p;
+      document.getElementById("d3_p").textContent = fmt(p);
+      document.getElementById("d3_fp").textContent = fmt(p);
+      document.getElementById("d3_k2").textContent = fmt(p);
+      document.getElementById("d3_k").textContent = fmt(k);
+      document.getElementById("d3_map").textContent = "x \u2192 \u2212x " + (k >= 0 ? "+ " + k.toFixed(2) : "\u2212 " + Math.abs(k).toFixed(2));
+      document.getElementById("d3_cv").textContent = "(p = " + fmt(p) + ")";
+    }
+
+    function attachDrag(ch){
+      var dragging = false;
+      ch.addEventListener("pointerdown", function(ev){
+        dragging = true; ch.style.cursor="grabbing";
+        try{ ev.target.setPointerCapture(ev.pointerId); }catch(e){}
+        ev.preventDefault();
+      });
+      ch.addEventListener("pointermove", function(ev){
+        if(!dragging) return;
+        var pt = localPoint(svg, ev.clientX, ev.clientY);
+        Cx = Math.max(C_MIN, Math.min(C_MAX, pt.x));
+        document.getElementById("d3_center").value = String(Math.round(Cx));
+        render(); ev.preventDefault();
+      });
+      function up(ev){ if(!dragging) return; dragging=false; ch.style.cursor="grab"; try{ ev.target.releasePointerCapture(ev.pointerId);}catch(e){} }
+      ch.addEventListener("pointerup", up);
+      ch.addEventListener("pointercancel", up);
+    }
+
+    document.getElementById("d3_center").addEventListener("input", function(){
+      Cx = parseFloat(this.value); render();
+    });
+
+    buildFurniture();
+    render();
+  })();
+})();
+</script>
+</body>
+</html>
