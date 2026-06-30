@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Ceiling of the Tower — when a group acts on itself</title>
+<style>
+  /* ============================================================
+     THE CEILING OF THE TOWER
+     Anharmonic Interface — the group S₃ acting on itself.
+     Two voices: mono = the instrument; serif = the argument.
+     One accent: violet = the meta-level (automorphisms, the fold).
+     ============================================================ */
+
+  :root{
+    --ground:#13161b;
+    --panel:#1a1e25;
+    --raised:#20252e;
+    --hair:#2c323c;
+    --hair-bright:#3a4150;
+    --ink:#eaeced;
+    --muted:#99a1ad;
+    --faint:#6b7280;
+
+    --e:#8a93a0;     /* identity — neutral steel */
+    --s:#37b9a4;     /* σ  — teal  */
+    --s2:#4c97da;    /* σ² — azure */
+    --p:#e7a24c;     /* p  — amber */
+    --q:#e06b4e;     /* q  — vermilion */
+    --r:#d07cb4;     /* r  — orchid */
+    --meta:#a586e8;  /* automorphisms · the fold */
+    --meta-dim:#5a4d82;
+
+    --harm:#e0a45a;  /* harmonic triple tint  {−1,½,2} */
+    --degen:#5ba6dc; /* degenerate triple tint {0,1,∞} */
+
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --serif:"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--serif); line-height:1.62;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px 120px}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:64px 0 30px; border-bottom:1px solid var(--hair)}
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--meta); margin:0 0 22px;
+  }
+  h1{
+    font-family:var(--mono); font-weight:600; letter-spacing:-.01em;
+    font-size:clamp(27px,5.4vw,44px); line-height:1.04; margin:0 0 18px;
+  }
+  h1 .fold{color:var(--meta)}
+  .standfirst{font-size:clamp(16px,2.4vw,19px); color:var(--muted); max-width:60ch; margin:0}
+  .standfirst em{color:var(--ink); font-style:italic}
+
+  /* ---------- section scaffold ---------- */
+  section{padding:52px 0 8px; border-bottom:1px solid var(--hair)}
+  .level{
+    font-family:var(--mono); font-size:12px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--faint); display:flex; gap:12px; align-items:baseline;
+    margin:0 0 6px;
+  }
+  .level b{color:var(--meta); font-weight:600}
+  h2{font-family:var(--mono); font-weight:600; font-size:clamp(20px,3.4vw,26px); margin:0 0 14px; letter-spacing:-.01em}
+  .lede{color:var(--muted); max-width:64ch; margin:0 0 26px}
+  p.note{color:var(--muted); max-width:66ch}
+  p.note .ink{color:var(--ink)}
+
+  /* mono inline tokens for formulas */
+  code,.m{font-family:var(--mono); font-size:.92em}
+  .kbd{background:var(--raised); border:1px solid var(--hair); border-radius:5px; padding:.06em .42em}
+
+  /* element colour names */
+  .te{color:var(--e)} .ts{color:var(--s)} .ts2{color:var(--s2)}
+  .tp{color:var(--p)} .tq{color:var(--q)} .tr{color:var(--r)} .tm{color:var(--meta)}
+
+  /* ---------- generic instrument panel ---------- */
+  .panel{
+    background:var(--panel); border:1px solid var(--hair); border-radius:12px;
+    padding:20px; margin:6px 0 20px;
+  }
+  .panel.tight{padding:14px}
+  figcaption,.cap{font-family:var(--serif); color:var(--muted); font-size:15px; margin-top:14px}
+  .cap .ink{color:var(--ink)}
+
+  /* segmented control of the six transforms */
+  .seg{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px}
+  .seg button{
+    font-family:var(--mono); font-size:13px; color:var(--ink);
+    background:var(--raised); border:1px solid var(--hair); border-radius:8px;
+    padding:9px 12px; min-height:42px; cursor:pointer; transition:border-color .15s, background .15s, transform .05s;
+    display:flex; flex-direction:column; align-items:flex-start; gap:2px; line-height:1.15;
+  }
+  .seg button .sym{font-weight:600}
+  .seg button .frm{font-size:11px; color:var(--faint)}
+  .seg button:active{transform:translateY(1px)}
+  .seg button[aria-pressed="true"]{background:#262c37; border-color:currentColor}
+  .seg button.kind-e[aria-pressed="true"]{color:var(--e)}
+  .seg button.kind-s[aria-pressed="true"]{color:var(--s)}
+  .seg button.kind-s2[aria-pressed="true"]{color:var(--s2)}
+  .seg button.kind-p[aria-pressed="true"]{color:var(--p)}
+  .seg button.kind-q[aria-pressed="true"]{color:var(--q)}
+  .seg button.kind-r[aria-pressed="true"]{color:var(--r)}
+
+  svg{display:block; width:100%; height:auto; overflow:visible; touch-action:manipulation}
+  .node-label{font-family:var(--mono); font-size:13px; fill:var(--ink)}
+  .node-sub{font-family:var(--mono); font-size:11px; fill:var(--faint)}
+
+  /* ---------- Cayley table ---------- */
+  .tablewrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  table.cayley{border-collapse:collapse; margin:0 auto; font-family:var(--mono); font-size:15px; min-width:340px}
+  table.cayley th,table.cayley td{
+    width:46px; height:46px; text-align:center; border:1px solid var(--hair);
+    color:var(--ink); cursor:pointer; user-select:none; transition:background .12s;
+  }
+  table.cayley thead th, table.cayley tbody th{background:var(--raised); cursor:default}
+  table.cayley .corner{background:transparent; border-color:transparent}
+  table.cayley td.rowhi{background:#23303a}
+  table.cayley td.colhi{background:#23303a}
+  table.cayley td.cellhi{background:var(--meta-dim); color:#fff; font-weight:600}
+  table.cayley td.id{outline:2px solid var(--meta); outline-offset:-3px}
+  .corner small{font-family:var(--serif); color:var(--faint); font-size:11px; display:block; line-height:1.1}
+
+  .toggles{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 0}
+  .toggles button{
+    font-family:var(--mono); font-size:12px; color:var(--muted);
+    background:transparent; border:1px solid var(--hair); border-radius:7px;
+    padding:7px 11px; min-height:38px; cursor:pointer; transition:.15s;
+  }
+  .toggles button[aria-pressed="true"]{color:var(--meta); border-color:var(--meta)}
+
+  /* ---------- conjugation constellation ---------- */
+  .relabel{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 14px}
+  .relabel .lab{font-family:var(--mono); font-size:12px; color:var(--faint); letter-spacing:.08em; text-transform:uppercase}
+  .gpick{display:flex; gap:6px; flex-wrap:wrap}
+  .gpick button{
+    font-family:var(--mono); font-weight:600; font-size:15px; color:var(--ink);
+    background:var(--raised); border:1px solid var(--hair); border-radius:9px;
+    width:46px; height:46px; cursor:pointer; transition:.12s;
+  }
+  .gpick button:active{transform:translateY(1px)}
+  .gpick button[aria-pressed="true"]{box-shadow:0 0 0 2px currentColor inset}
+  .gpick .ge[aria-pressed="true"]{color:var(--e)} .gpick .gs[aria-pressed="true"]{color:var(--s)}
+  .gpick .gs2[aria-pressed="true"]{color:var(--s2)} .gpick .gp[aria-pressed="true"]{color:var(--p)}
+  .gpick .gq[aria-pressed="true"]{color:var(--q)} .gpick .gr[aria-pressed="true"]{color:var(--r)}
+
+  .readout{display:flex; flex-wrap:wrap; gap:10px 26px; margin:14px 0 2px; font-family:var(--mono); font-size:14px}
+  .readout .k{color:var(--faint); margin-right:8px; letter-spacing:.04em}
+  .readout .v{color:var(--ink)}
+
+  /* tally of the six automorphisms */
+  .tally{margin-top:18px}
+  .tally h4{font-family:var(--mono); font-weight:600; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin:0 0 10px; display:flex; gap:10px; align-items:baseline}
+  .tally .count{color:var(--meta)}
+  .tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+  @media(max-width:560px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  .tile{
+    font-family:var(--mono); font-size:13px; color:var(--faint);
+    background:var(--raised); border:1px solid var(--hair); border-radius:8px;
+    padding:10px 12px; transition:.2s; min-height:46px; display:flex; align-items:center; gap:8px;
+  }
+  .tile.lit{color:var(--ink); border-color:var(--meta); background:#241f33}
+  .tile .dot{width:7px; height:7px; border-radius:50%; background:var(--hair-bright); transition:.2s}
+  .tile.lit .dot{background:var(--meta); box-shadow:0 0 8px var(--meta)}
+  .verdict{
+    margin-top:16px; padding:14px 16px; border-left:3px solid var(--meta);
+    background:#1d1930; border-radius:0 8px 8px 0; color:var(--ink); font-family:var(--serif); font-size:16px;
+    opacity:0; transform:translateY(4px); transition:.4s;
+  }
+  .verdict.show{opacity:1; transform:none}
+  .verdict .m{color:var(--meta)}
+
+  /* ---------- the sandwich ---------- */
+  .sandwich{display:grid; grid-template-columns:1fr; gap:0; margin:8px 0 6px;
+    border:1px solid var(--hair); border-radius:12px; overflow:hidden}
+  .wall{padding:16px 18px; background:var(--raised); display:flex; justify-content:space-between; align-items:center; gap:14px}
+  .wall .bound{font-family:var(--mono); font-size:13px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase}
+  .wall .num{font-family:var(--mono); font-size:30px; font-weight:600; color:var(--meta)}
+  .squeeze{padding:18px; background:var(--panel)}
+  .squeeze .lab{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 10px}
+  .permpick{display:flex; flex-wrap:wrap; gap:6px}
+  .permpick button{
+    font-family:var(--mono); font-size:13px; color:var(--ink); background:var(--raised);
+    border:1px solid var(--hair); border-radius:8px; padding:8px 11px; min-height:42px; cursor:pointer; transition:.12s;
+  }
+  .permpick button[aria-pressed="true"]{color:var(--meta); border-color:var(--meta); background:#241f33}
+  .forced{margin-top:14px; font-family:var(--mono); font-size:14px; color:var(--ink); line-height:1.7}
+  .forced .lab2{color:var(--faint)}
+  .forced .ok{color:var(--s)}
+  .squeeze-line{margin-top:8px; padding:14px 16px; border-top:1px solid var(--hair); background:#181c22}
+
+  /* ---------- the tower ---------- */
+  .towers{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:6px 0 8px}
+  @media(max-width:560px){.towers{grid-template-columns:1fr}}
+  .tower{background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:16px; position:relative}
+  .tower h3{font-family:var(--mono); font-size:14px; margin:0 0 4px; color:var(--ink)}
+  .tower .sub{font-family:var(--serif); font-size:13px; color:var(--faint); margin:0 0 16px}
+  .rungs{display:flex; flex-direction:column-reverse; gap:10px; min-height:220px; justify-content:flex-start}
+  .rung{
+    font-family:var(--mono); font-size:15px; text-align:center; padding:11px 8px;
+    border:1px solid var(--hair); border-radius:8px; background:var(--raised); color:var(--ink);
+    position:relative; animation:rise .35s ease both;
+  }
+  @keyframes rise{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+  .rung .flr{font-size:10px; color:var(--faint); letter-spacing:.1em; display:block; margin-bottom:2px}
+  .rung.s3{color:var(--meta); border-color:var(--meta-dim)}
+  .rung.die{color:var(--faint)}
+  .rung.dot{padding:6px; font-size:13px}
+  .fold-badge{font-family:var(--mono); font-size:11px; color:var(--meta); margin-top:6px; display:flex; align-items:center; gap:6px}
+  .fold-badge svg{width:auto; height:14px}
+  .tower-ctl{display:flex; gap:8px; margin:10px 0 0}
+  .tower-ctl button{
+    font-family:var(--mono); font-size:13px; color:var(--ink); background:var(--raised);
+    border:1px solid var(--hair); border-radius:8px; padding:9px 14px; min-height:42px; cursor:pointer; transition:.12s;
+  }
+  .tower-ctl button:active{transform:translateY(1px)}
+  .tower-ctl button.primary{color:var(--meta); border-color:var(--meta)}
+  .tag{display:inline-block; font-family:var(--mono); font-size:11px; padding:3px 8px; border-radius:5px; margin-top:12px}
+  .tag.keep{color:var(--s); border:1px solid #2a4d48; background:#15201e}
+  .tag.die{color:var(--faint); border:1px solid var(--hair); background:var(--raised)}
+
+  /* guard cards */
+  .guards{display:grid; grid-template-columns:1fr; gap:12px; margin-top:22px}
+  .guard{border:1px solid var(--hair); border-radius:10px; padding:14px 16px; background:var(--panel)}
+  .guard h4{font-family:var(--mono); font-size:13px; margin:0 0 6px; color:var(--ink)}
+  .guard.strike h4{color:var(--q)}
+  .guard.theorem h4{color:var(--s)}
+  .guard p{margin:0; color:var(--muted); font-size:15px}
+  .guard .struck{text-decoration:line-through; text-decoration-color:var(--q); color:var(--faint)}
+
+  /* ledger footer */
+  footer{padding:40px 0 0; color:var(--faint); font-family:var(--mono); font-size:12px; letter-spacing:.03em}
+  footer .led{display:flex; gap:10px; align-items:baseline; margin:6px 0}
+  footer .led .b{color:var(--s)} footer .led .x{color:var(--q)}
+
+  a{color:var(--meta)}
+  :focus-visible{outline:2px solid var(--meta); outline-offset:2px; border-radius:4px}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Anharmonic Interface · the group acts on itself</p>
+    <h1>The ceiling of the tower:<br>when a group <span class="fold">folds back</span> onto itself</h1>
+    <p class="standfirst">The six anharmonic transforms are verbs on the projective line. Promote them to nouns and a single new verb appears — composition. Climb once more, to the symmetries of <em>that</em>, and the tower stops growing. This page lets you do the climbing by hand.</p>
+  </header>
+
+  <!-- ============ §0 — TWO ROLES ============ -->
+  <section id="roles">
+    <p class="level"><b>§0</b> &nbsp;operations on the line</p>
+    <h2>Six verbs that move six points</h2>
+    <p class="lede">Pick a transform. It sends each special value to another — the harmonic triple <span style="color:var(--harm)">{−1, ½, 2}</span> shuffles among itself, the degenerate triple <span style="color:var(--degen)">{0, 1, ∞}</span> among itself. Two orbits, three points each. At this floor, the six are <em>actions</em>.</p>
+
+    <figure class="panel">
+      <div class="seg" id="seg-line" role="group" aria-label="choose a transform"></div>
+      <svg id="line-svg" viewBox="0 0 760 200" role="img" aria-label="projective line with the action of the chosen transform"></svg>
+      <figcaption class="cap" id="line-cap"></figcaption>
+    </figure>
+    <p class="note">Nothing here is new structure — just six maps. The move that follows is the only one that matters: stop watching what they <span class="ink">do</span> and start treating them as things to be <span class="ink">combined</span>.</p>
+  </section>
+
+  <!-- ============ §1 — THE GROUP ============ -->
+  <section id="group">
+    <p class="level"><b>§1</b> &nbsp;operations become elements</p>
+    <h2>The verbs demoted to nouns — and one new verb, ∘</h2>
+    <p class="lede">Set the six side by side as a finished cast. The only operation now is <span class="m">compose</span>: do one, then the next. Tap a cell to read <span class="m">g ∘ h</span> — the convention is <em>h acts first</em>. Every row and column is a reshuffle of the same six: the table is a Latin square, which is what "closed group" looks like.</p>
+
+    <figure class="panel">
+      <div class="tablewrap"><table class="cayley" id="cayley" aria-label="Cayley table of the six transforms"></table></div>
+      <div class="toggles">
+        <button id="tg-latin" aria-pressed="false">show it is a Latin square</button>
+        <button id="tg-inv" aria-pressed="false">show inverses (cells = e)</button>
+      </div>
+      <figcaption class="cap" id="cayley-cap">Tap any cell. <span class="ink">g ∘ h</span> means: apply <span class="ink">h</span>, then <span class="ink">g</span>.</figcaption>
+    </figure>
+    <p class="note">An <span class="ink">operation of operations</span>, exactly as named: ∘ takes two verbs as input and returns a third, seeing them only as elements. Among the six sit three self-undoing ones — the involutions <span class="tp">p</span>=<span class="m">1−x</span>, <span class="tq">q</span>=<span class="m">1/x</span>, <span class="tr">r</span>=<span class="m">x/(x−1)</span> — and two rotations <span class="ts">σ</span>, <span class="ts2">σ²</span> with the identity <span class="te">e</span>. They are the moving parts of the next floor.</p>
+  </section>
+
+  <!-- ============ §2 — CONJUGATION / AUT ============ -->
+  <section id="conj">
+    <p class="level"><b>§2</b> &nbsp;operations on the group itself</p>
+    <h2>Relabel, act, relabel back</h2>
+    <p class="lede">To climb again, act on the <em>whole group</em>. The structure-preserving operations are its automorphisms, and each one is a conjugation: <span class="m">f ↦ g ∘ f ∘ g⁻¹</span> — "relabel the line by <span class="m">g</span>, do <span class="m">f</span>, relabel back." Choose a relabeller <span class="m">g</span> below and watch the cast re-pin. <span class="te">e</span> never moves; the three involutions get permuted.</p>
+
+    <figure class="panel">
+      <div class="relabel">
+        <span class="lab">relabel by g =</span>
+        <div class="gpick" id="gpick" role="group" aria-label="choose the conjugating element g"></div>
+      </div>
+      <svg id="const-svg" viewBox="0 0 760 440" role="img" aria-label="the six elements re-pinned by conjugation"></svg>
+      <div class="readout">
+        <div><span class="k">on involutions</span><span class="v" id="ro-inv">—</span></div>
+        <div><span class="k">on rotations</span><span class="v" id="ro-rot">—</span></div>
+      </div>
+      <figcaption class="cap" id="conj-cap">Conjugation by an <em>involution</em> swaps <span class="ts">σ</span>↔<span class="ts2">σ²</span> and trades two involutions; by a <em>rotation</em> it cycles all three involutions and leaves <span class="ts">σ</span>, <span class="ts2">σ²</span> fixed.</figcaption>
+
+      <div class="tally">
+        <h4>automorphisms realised <span class="count" id="aut-count">0 / 6</span></h4>
+        <div class="tiles" id="aut-tiles"></div>
+      </div>
+      <div class="verdict" id="aut-verdict">All six relabellings give <span class="m">six distinct</span> permutations of the involutions, and none repeats — so the centre is trivial and conjugation alone already supplies <span class="m">six</span> automorphisms. <span class="m">|Aut(S₃)| ≥ 6.</span></div>
+    </figure>
+  </section>
+
+  <!-- ============ §3 — THE SANDWICH ============ -->
+  <section id="sandwich">
+    <p class="level"><b>§2½</b> &nbsp;the count, squeezed</p>
+    <h2>Six ≤ |Aut| ≤ six</h2>
+    <p class="lede">Two walls close on the same number. From below: the six distinct conjugations you just found. From above: an automorphism must permute the three involutions, and since they <em>generate</em> the group, that permutation fixes everything else. Choose where <span class="tp">p</span>, <span class="tq">q</span>, <span class="tr">r</span> go and watch the rest be forced.</p>
+
+    <div class="sandwich">
+      <div class="wall">
+        <span class="bound">at least — distinct conjugations</span>
+        <span class="num">6</span>
+      </div>
+      <div class="squeeze">
+        <p class="lab">send the involutions somewhere — pick a permutation</p>
+        <div class="permpick" id="permpick" role="group" aria-label="choose a permutation of the involutions"></div>
+        <div class="forced" id="forced"></div>
+      </div>
+      <div class="wall">
+        <span class="bound">at most — choices for three generators</span>
+        <span class="num">6</span>
+      </div>
+    </div>
+    <div class="panel squeeze-line">
+      <p class="note" style="margin:0"><span class="ink">Every</span> permutation of the involutions extends — to exactly one automorphism, realised by exactly one <span class="m">g</span>. Count of valid ones: <span class="tm">6</span>. The walls meet: <span class="m">|Aut(S₃)| = 6</span>, and every automorphism is inner. A group whose conjugations are <em>all</em> of its automorphisms — and which has no centre to begin with — is called <span class="tm">complete</span>.</p>
+    </div>
+  </section>
+
+  <!-- ============ §∞ — THE FOLD ============ -->
+  <section id="tower">
+    <p class="level"><b>§∞</b> &nbsp;does the tower fold?</p>
+    <h2>The ceiling — real, but not a law</h2>
+    <p class="lede">Climb the automorphism tower: <span class="m">G → Aut(G) → Aut(Aut(G)) → ⋯</span>. Because <span class="ts">S₃</span> is complete, the map <span class="m">g ↦ (conjugate by g)</span> is already an isomorphism onto its own Aut — so every higher floor is another <span class="ts">S₃</span>. It folds. Most groups do <em>not</em>: <span class="m">ℤ</span>'s tower collapses to a point and stops.</p>
+
+    <div class="towers">
+      <div class="tower">
+        <h3 class="tm">S₃ — complete</h3>
+        <p class="sub">a fixed point of Aut</p>
+        <div class="rungs" id="rungs-s3"></div>
+        <div class="fold-badge" id="fold-badge" style="visibility:hidden">
+          <svg viewBox="0 0 22 14"><path d="M2 12 C 2 2, 20 2, 20 12" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M17 9 l3 3 l3 -3" fill="none" stroke="currentColor" stroke-width="1.5" transform="translate(-3,-1)"/></svg>
+          top rung ≅ base — the tower returns
+        </div>
+        <span class="tag keep" id="tag-s3" style="visibility:hidden">tower constant</span>
+      </div>
+      <div class="tower">
+        <h3>ℤ</h3>
+        <p class="sub">automorphisms run out</p>
+        <div class="rungs" id="rungs-z"></div>
+        <span class="tag die" id="tag-z" style="visibility:hidden">tower dies</span>
+      </div>
+    </div>
+    <div class="tower-ctl">
+      <button class="primary" id="climb">Climb one floor ↑</button>
+      <button id="reset-tower">Reset</button>
+    </div>
+
+    <div class="guards">
+      <div class="guard">
+        <h4>A copy is not a fold</h4>
+        <p>Cayley's embedding <span class="m">S₃ ↪ S₆</span> also "reproduces a copy of S₃" — but inside a group of order 720. That is a copy sitting in something strictly bigger, not a tower stabilising. Same word, different phenomenon; only the automorphism tower actually returns.</p>
+      </div>
+      <div class="guard">
+        <h4>Not generic</h4>
+        <p>Folding-back is the privilege of completeness, and it is rare. A pleasant exception inside an exception: <span class="m">Sₙ</span> is complete for every <span class="m">n</span> except <span class="m">2</span> and <span class="m">6</span>.</p>
+      </div>
+      <div class="guard theorem">
+        <h4>Kept — theorem, demonstrated</h4>
+        <p>S₃ is complete; its automorphism tower is constant. Built here from the table: trivial centre forces ≥ 6, three generators force ≤ 6, the squeeze makes every automorphism a conjugation.</p>
+      </div>
+      <div class="guard strike">
+        <h4>Struck — false rhyme</h4>
+        <p><span class="struck">Every operation-tower folds back onto itself.</span> ℤ → ℤ/2 → 1 never returns. The fold is special to complete groups, not a property of towers as such.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="led"><span class="b">theorem ✓</span> completeness of S₃ ⇒ constant Aut-tower (≅ S₃ at every floor)</div>
+    <div class="led"><span class="x">rhyme ✗</span> "all operation-towers fold back" — struck</div>
+    <div class="led" style="margin-top:14px; color:var(--faint)">Anharmonic Interface · demonstrate, don't assert · self-contained, no dependencies</div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+(function(){
+  /* ---------------- the group, verified offline ---------------- */
+  // order: 0=e 1=σ 2=σ² 3=p 4=q 5=r
+  const E={
+    e:{i:0, sym:"e",  frm:"x",        kind:"e"},
+    s:{i:1, sym:"σ",  frm:"1/(1−x)",  kind:"s"},
+    s2:{i:2,sym:"σ²", frm:"(x−1)/x",  kind:"s2"},
+    p:{i:3, sym:"p",  frm:"1−x",      kind:"p"},
+    q:{i:4, sym:"q",  frm:"1/x",      kind:"q"},
+    r:{i:5, sym:"r",  frm:"x/(x−1)",  kind:"r"}
+  };
+  const ORDER=["e","s","s2","p","q","r"];
+  const byI = ORDER.map(k=>E[k]);
+  const SYM = byI.map(o=>o.sym);
+  const KIND= byI.map(o=>o.kind);
+  const COL = {e:getC("--e"),s:getC("--s"),s2:getC("--s2"),p:getC("--p"),q:getC("--q"),r:getC("--r"),meta:getC("--meta")};
+  const COLI= byI.map(o=>COL[o.kind]);
+  function getC(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+  // mult[row][col] = row ∘ col  (col acts first)
+  const MULT=[
+    [0,1,2,3,4,5],
+    [1,2,0,4,5,3],
+    [2,0,1,5,3,4],
+    [3,5,4,0,2,1],
+    [4,3,5,1,0,2],
+    [5,4,3,2,1,0]
+  ];
+  const INV=[0,2,1,3,4,5];
+  const conj=(g,x)=>MULT[g][ MULT[x][INV[g]] ];
+
+  // value-permutations on [−1,0,½,1,2,∞]
+  const VPERM={
+    e:[0,1,2,3,4,5], s:[2,3,4,5,0,1], s2:[4,5,0,1,2,3],
+    p:[4,3,2,1,0,5], q:[0,5,4,3,2,1], r:[2,1,0,5,4,3]
+  };
+  const VLAB=["−1","0","½","1","2","∞"];
+  const HARM=new Set([0,2,4]);            // {−1,½,2}
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* cycle decomposition -> readable string with given labels */
+  function cycles(perm){
+    const n=perm.length, seen=Array(n).fill(false), out=[];
+    for(let i=0;i<n;i++){
+      if(seen[i]||perm[i]===i) {seen[i]=true; continue;}
+      const c=[i]; seen[i]=true; let j=perm[i];
+      while(j!==i){c.push(j); seen[j]=true; j=perm[j];}
+      out.push(c);
+    }
+    return out; // list of cycles length≥2
+  }
+  function cycleStr(perm,labels){
+    const cs=cycles(perm);
+    if(cs.length===0) return "identity — every point fixed";
+    const fixed=[]; const used=new Set(cs.flat());
+    for(let i=0;i<perm.length;i++) if(!used.has(i)) fixed.push(labels[i]);
+    let s=cs.map(c=>"("+c.map(i=>labels[i]).join(" ")+")").join("");
+    if(fixed.length) s+="  · fix "+fixed.join(", ");
+    return s;
+  }
+
+  /* ===================================================================
+     §0  THE LINE
+     =================================================================== */
+  (function linePanel(){
+    const seg=document.getElementById("seg-line");
+    const svg=document.getElementById("line-svg");
+    const cap=document.getElementById("line-cap");
+    const XS=[80,200,320,440,560,690];   // node x-positions
+    const Y=130;
+    let cur="s";
+
+    ORDER.forEach(k=>{
+      const o=E[k];
+      const b=document.createElement("button");
+      b.className="kind-"+o.kind;
+      b.setAttribute("aria-pressed", k===cur?"true":"false");
+      b.innerHTML=`<span class="sym">${o.sym}</span><span class="frm">${o.frm}</span>`;
+      b.onclick=()=>{cur=k; [...seg.children].forEach(c=>c.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true"); draw();};
+      seg.appendChild(b);
+    });
+
+    function arc(x0,x1){
+      const dx=Math.abs(x1-x0);
+      const h=Math.min(78, 26+dx*0.16);
+      const mx=(x0+x1)/2;
+      const dir = x1>=x0 ? 1 : 1;
+      return `M ${x0} ${Y} Q ${mx} ${Y-h*dir} ${x1} ${Y}`;
+    }
+    function draw(){
+      const perm=VPERM[cur];
+      const ns="http://www.w3.org/2000/svg";
+      svg.innerHTML="";
+      // base line
+      const base=document.createElementNS(ns,"line");
+      base.setAttribute("x1",60); base.setAttribute("x2",710);
+      base.setAttribute("y1",Y); base.setAttribute("y2",Y);
+      base.setAttribute("stroke",getC("--hair-bright")); base.setAttribute("stroke-width","1.5");
+      svg.appendChild(base);
+      // arcs
+      perm.forEach((to,from)=>{
+        const c = HARM.has(from)? getC("--harm") : getC("--degen");
+        if(to===from){
+          const ring=document.createElementNS(ns,"circle");
+          ring.setAttribute("cx",XS[from]); ring.setAttribute("cy",Y-15); ring.setAttribute("r",4);
+          ring.setAttribute("fill","none"); ring.setAttribute("stroke",c); ring.setAttribute("stroke-width","1.5"); ring.setAttribute("opacity",".8");
+          svg.appendChild(ring);
+          return;
+        }
+        const path=document.createElementNS(ns,"path");
+        path.setAttribute("d",arc(XS[from],XS[to]));
+        path.setAttribute("fill","none"); path.setAttribute("stroke",c);
+        path.setAttribute("stroke-width","1.6"); path.setAttribute("opacity",".55");
+        if(!reduce){
+          const len=path.getTotalLength?0:0;
+        }
+        svg.appendChild(path);
+        // arrowhead at target
+        const t=XS[to], s=XS[from], mx=(s+t)/2, h=Math.min(78,26+Math.abs(t-s)*0.16);
+        // approx tangent near end: from control (mx,Y-h) to (t,Y)
+        const ang=Math.atan2(Y-(Y-h), t-mx);
+        const ax=t, ay=Y;
+        const a1=ang+Math.PI- .4, a2=ang+Math.PI+ .4;
+        const head=document.createElementNS(ns,"path");
+        head.setAttribute("d",`M ${ax+8*Math.cos(a1)} ${ay+8*Math.sin(a1)} L ${ax} ${ay} L ${ax+8*Math.cos(a2)} ${ay+8*Math.sin(a2)}`);
+        head.setAttribute("fill","none"); head.setAttribute("stroke",c); head.setAttribute("stroke-width","1.6"); head.setAttribute("opacity",".7");
+        svg.appendChild(head);
+      });
+      // nodes + labels
+      XS.forEach((x,i)=>{
+        const c = HARM.has(i)? getC("--harm") : getC("--degen");
+        const dot=document.createElementNS(ns,"circle");
+        dot.setAttribute("cx",x); dot.setAttribute("cy",Y); dot.setAttribute("r",6.5);
+        dot.setAttribute("fill",getC("--ground")); dot.setAttribute("stroke",c); dot.setAttribute("stroke-width","2.5");
+        svg.appendChild(dot);
+        const lab=document.createElementNS(ns,"text");
+        lab.setAttribute("x",x); lab.setAttribute("y",Y+30); lab.setAttribute("text-anchor","middle");
+        lab.setAttribute("class","node-label"); lab.setAttribute("fill",c); lab.textContent=VLAB[i];
+        svg.appendChild(lab);
+      });
+      // legend
+      const leg=document.createElementNS(ns,"text");
+      leg.setAttribute("x",60); leg.setAttribute("y",30); leg.setAttribute("class","node-sub");
+      leg.innerHTML=`<tspan fill="${getC('--harm')}">■</tspan> harmonic {−1, ½, 2}   <tspan fill="${getC('--degen')}">■</tspan> degenerate {0, 1, ∞}`;
+      svg.appendChild(leg);
+
+      cap.innerHTML = `<span class="ink">${E[cur].sym} : x ↦ ${E[cur].frm}</span> &nbsp;—&nbsp; ${cycleStr(perm,VLAB)}`;
+    }
+    draw();
+  })();
+
+  /* ===================================================================
+     §1  CAYLEY TABLE
+     =================================================================== */
+  (function cayleyPanel(){
+    const tbl=document.getElementById("cayley");
+    const cap=document.getElementById("cayley-cap");
+    const ns="http://www.w3.org/2000/svg";
+    // build
+    const thead=document.createElement("thead");
+    const htr=document.createElement("tr");
+    const corner=document.createElement("th"); corner.className="corner"; corner.innerHTML="<small>g ∘ h<br>↓row ∘ col→</small>";
+    htr.appendChild(corner);
+    for(let c=0;c<6;c++){const th=document.createElement("th"); th.textContent=SYM[c]; th.style.color=COLI[c]; htr.appendChild(th);}
+    thead.appendChild(htr); tbl.appendChild(thead);
+    const tb=document.createElement("tbody");
+    for(let rI=0;rI<6;rI++){
+      const tr=document.createElement("tr");
+      const rh=document.createElement("th"); rh.textContent=SYM[rI]; rh.style.color=COLI[rI]; tr.appendChild(rh);
+      for(let cI=0;cI<6;cI++){
+        const td=document.createElement("td");
+        const v=MULT[rI][cI];
+        td.textContent=SYM[v];
+        td.dataset.r=rI; td.dataset.c=cI; td.dataset.v=v;
+        td.style.color=COLI[v];
+        tr.appendChild(td);
+      }
+      tb.appendChild(tr);
+    }
+    tbl.appendChild(tb);
+
+    const cells=[...tbl.querySelectorAll("td")];
+    let latin=false, showInv=false;
+
+    function clearHi(){cells.forEach(td=>td.classList.remove("rowhi","colhi","cellhi"));}
+    function paintInv(){cells.forEach(td=>td.classList.toggle("id", showInv && +td.dataset.v===0));}
+
+    cells.forEach(td=>{
+      td.addEventListener("click",()=>{
+        clearHi();
+        const r=+td.dataset.r, c=+td.dataset.c, v=+td.dataset.v;
+        cells.forEach(o=>{
+          if(+o.dataset.r===r) o.classList.add("rowhi");
+          if(+o.dataset.c===c) o.classList.add("colhi");
+        });
+        td.classList.add("cellhi");
+        cap.innerHTML=`<span class="ink" style="color:${COLI[r]}">${SYM[r]}</span> ∘ <span class="ink" style="color:${COLI[c]}">${SYM[c]}</span> = <span class="ink" style="color:${COLI[v]}">${SYM[v]}</span> &nbsp;— apply <span class="ink" style="color:${COLI[c]}">${SYM[c]}</span> first, then <span class="ink" style="color:${COLI[r]}">${SYM[r]}</span>.`;
+      });
+    });
+
+    document.getElementById("tg-latin").addEventListener("click",function(){
+      latin=!latin; this.setAttribute("aria-pressed",latin);
+      clearHi();
+      if(latin){
+        // gentle stripe to reveal each value once per row/col
+        cap.innerHTML="Each of the six symbols appears <span class='ink'>exactly once</span> in every row and every column — closed, with unique inverses. That is the signature of a group.";
+        cells.forEach(td=>{td.style.background = "color-mix(in srgb, "+COLI[+td.dataset.v]+" 14%, transparent)";});
+      } else {
+        cells.forEach(td=>td.style.background="");
+        cap.innerHTML="Tap any cell. <span class='ink'>g ∘ h</span> means: apply <span class='ink'>h</span>, then <span class='ink'>g</span>.";
+      }
+    });
+    document.getElementById("tg-inv").addEventListener("click",function(){
+      showInv=!showInv; this.setAttribute("aria-pressed",showInv); paintInv();
+      if(showInv) cap.innerHTML="Ringed cells equal <span class='ink' style='color:"+COL.meta+"'>e</span>. Note <span class='ink'>p, q, r</span> each sit on the diagonal — they are their own inverses, the three <span class='ink'>involutions</span>.";
+    });
+  })();
+
+  /* ===================================================================
+     §2  CONJUGATION CONSTELLATION
+     =================================================================== */
+  (function conjPanel(){
+    const svg=document.getElementById("const-svg");
+    const ns="http://www.w3.org/2000/svg";
+    const pick=document.getElementById("gpick");
+    const roInv=document.getElementById("ro-inv");
+    const roRot=document.getElementById("ro-rot");
+    const cap=document.getElementById("conj-cap");
+    const tilesBox=document.getElementById("aut-tiles");
+    const countEl=document.getElementById("aut-count");
+    const verdict=document.getElementById("aut-verdict");
+
+    // home positions (slots) for each element index
+    const HOME={
+      0:{x:380,y:250},   // e  centre
+      1:{x:300,y:205},   // σ  inner-left
+      2:{x:460,y:205},   // σ² inner-right
+      3:{x:380,y:60},    // p  apex
+      4:{x:150,y:390},   // q  lower-left
+      5:{x:610,y:390}    // r  lower-right
+    };
+
+    // the six target permutations of involutions (as canonical strings) for the tally
+    const realised=new Set();
+    const PERMS=[];      // canonical key -> label
+    // generate all 6 perms of [3,4,5] and label them
+    (function buildPerms(){
+      const base=[3,4,5];
+      const perms=[
+        [3,4,5],[3,5,4],[4,3,5],[4,5,3],[5,3,4],[5,4,3]
+      ];
+      perms.forEach(pm=>{
+        const map={3:pm[0],4:pm[1],5:pm[2]};
+        const key=pm.join(",");
+        // build a length-6 identity-ish perm restricted to involutions for cycleStr
+        const full=[0,1,2,map[3],map[4],map[5]];
+        const lbl=cycleStr(full, ["e","σ","σ²","p","q","r"]);
+        PERMS.push({key,lbl});
+      });
+    })();
+    const tileEls={};
+    PERMS.forEach(P=>{
+      const d=document.createElement("div"); d.className="tile"; d.dataset.key=P.key;
+      d.innerHTML=`<span class="dot"></span><span>${P.lbl}</span>`;
+      tilesBox.appendChild(d); tileEls[P.key]=d;
+    });
+
+    // build g picker
+    let curG=null;
+    ORDER.forEach(k=>{
+      const o=E[k];
+      const b=document.createElement("button");
+      b.className="g"+o.kind; b.textContent=o.sym; b.setAttribute("aria-pressed","false");
+      b.style.color=COL[o.kind];
+      b.onclick=()=>{ setG(o.i,b); };
+      pick.appendChild(b);
+    });
+
+    // draw nodes once; keep references; move via transform
+    const nodeG={};
+    function build(){
+      svg.innerHTML="";
+      // faint slot rings at every home
+      for(let i=0;i<6;i++){
+        const ring=document.createElementNS(ns,"circle");
+        ring.setAttribute("cx",HOME[i].x); ring.setAttribute("cy",HOME[i].y); ring.setAttribute("r",27);
+        ring.setAttribute("fill","none"); ring.setAttribute("stroke",getC("--hair")); ring.setAttribute("stroke-dasharray","2 5");
+        svg.appendChild(ring);
+      }
+      // connecting faint triangle for involutions + segment for rotations (visual scaffold)
+      for(let i=0;i<6;i++){
+        const g=document.createElementNS(ns,"g");
+        g.setAttribute("transform",`translate(${HOME[i].x},${HOME[i].y})`);
+        if(!reduce) g.style.transition="transform .55s cubic-bezier(.5,.05,.2,1)";
+        const c=COLI[i];
+        const circ=document.createElementNS(ns,"circle");
+        circ.setAttribute("r",24); circ.setAttribute("cx",0); circ.setAttribute("cy",0);
+        circ.setAttribute("fill",getC("--panel")); circ.setAttribute("stroke",c); circ.setAttribute("stroke-width","2.5");
+        g.appendChild(circ);
+        const t=document.createElementNS(ns,"text");
+        t.setAttribute("text-anchor","middle"); t.setAttribute("y",6); t.setAttribute("class","node-label");
+        t.setAttribute("fill",c); t.setAttribute("font-weight","600"); t.textContent=SYM[i];
+        g.appendChild(t);
+        svg.appendChild(g);
+        nodeG[i]=g;
+      }
+      // pin label on e
+      const pin=document.createElementNS(ns,"text");
+      pin.setAttribute("x",HOME[0].x); pin.setAttribute("y",HOME[0].y+44); pin.setAttribute("text-anchor","middle");
+      pin.setAttribute("class","node-sub"); pin.setAttribute("fill",getC("--faint")); pin.textContent="always fixed";
+      svg.appendChild(pin);
+    }
+    build();
+
+    function setG(g,btn){
+      curG=g;
+      [...pick.children].forEach(c=>c.setAttribute("aria-pressed","false"));
+      btn.setAttribute("aria-pressed","true");
+      // move each element node x to home[ conj(g,x) ]
+      for(let x=0;x<6;x++){
+        const dest=conj(g,x);
+        const h=HOME[dest];
+        nodeG[x].setAttribute("transform",`translate(${h.x},${h.y})`);
+      }
+      // readouts
+      const invFull=[0,1,2, conj(g,3), conj(g,4), conj(g,5)];
+      const rotFull=[0, conj(g,1), conj(g,2), 3,4,5];
+      roInv.innerHTML = cycleStr(invFull, SYM);
+      const rs=cycles(rotFull);
+      roRot.textContent = rs.length? "(σ σ²) — swapped" : "σ, σ² — both fixed";
+      // tally
+      const key=[conj(g,3),conj(g,4),conj(g,5)].join(",");
+      realised.add(key);
+      if(tileEls[key]) tileEls[key].classList.add("lit");
+      countEl.textContent=`${realised.size} / 6`;
+      if(realised.size===6) verdict.classList.add("show");
+      // caption nuance
+      if(KIND[g]==="p"||KIND[g]==="q"||KIND[g]==="r"){
+        cap.innerHTML=`Relabelling by the involution <span class="ink" style="color:${COLI[g]}">${SYM[g]}</span> fixes itself, swaps the other two involutions, and swaps <span class="ts">σ</span>↔<span class="ts2">σ²</span> — a reflection of the whole cast.`;
+      } else if(KIND[g]==="s"||KIND[g]==="s2"){
+        cap.innerHTML=`Relabelling by the rotation <span class="ink" style="color:${COLI[g]}">${SYM[g]}</span> cycles all three involutions and leaves <span class="ts">σ</span>, <span class="ts2">σ²</span> in place — a rotation of the cast.`;
+      } else {
+        cap.innerHTML=`Relabelling by <span class="ink" style="color:${COLI[0]}">e</span> moves nothing — the identity automorphism.`;
+      }
+    }
+    // start on σ for a non-trivial opening
+    setG(1, pick.children[1]);
+  })();
+
+  /* ===================================================================
+     §3  THE SANDWICH (upper bound interactive)
+     =================================================================== */
+  (function sandwich(){
+    const box=document.getElementById("permpick");
+    const out=document.getElementById("forced");
+    // permutations of (p,q,r) given as target triples (indices 3,4,5)
+    const perms=[
+      {t:[3,4,5], name:"p→p, q→q, r→r"},
+      {t:[3,5,4], name:"p→p, q→r, r→q"},
+      {t:[4,3,5], name:"p→q, q→p, r→r"},
+      {t:[5,4,3], name:"p→r, q→q, r→p"},
+      {t:[4,5,3], name:"p→q, q→r, r→p"},
+      {t:[5,3,4], name:"p→r, q→p, r→q"}
+    ];
+    // which g realises a given involution-permutation? invert the conj map
+    const gByPerm={};
+    for(let g=0;g<6;g++){ gByPerm[[conj(g,3),conj(g,4),conj(g,5)].join(",")]=g; }
+
+    perms.forEach((P,idx)=>{
+      const b=document.createElement("button");
+      b.setAttribute("aria-pressed", idx===0?"true":"false");
+      b.textContent=P.name;
+      b.onclick=()=>{ [...box.children].forEach(c=>c.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true"); render(P);};
+      box.appendChild(b);
+    });
+
+    function render(P){
+      const map={3:P.t[0],4:P.t[1],5:P.t[2]};
+      // σ = q ∘ p  → image is (img q) ∘ (img p)
+      const imgP=map[3], imgQ=map[4];
+      const sImg=MULT[imgQ][imgP];            // (img q) ∘ (img p)
+      const s2Img=MULT[imgP][imgQ];           // (img p) ∘ (img q)  = image of σ²
+      const g=gByPerm[P.t.join(",")];
+      const valid = (sImg!==undefined);       // always true; σ image is a genuine rotation
+      out.innerHTML =
+        `<div><span class="lab2">σ = q ∘ p</span> &nbsp;⇒&nbsp; σ ↦ `+
+          `<span style="color:${COLI[imgQ]}">${SYM[imgQ]}</span> ∘ <span style="color:${COLI[imgP]}">${SYM[imgP]}</span> = `+
+          `<span style="color:${COLI[sImg]}">${SYM[sImg]}</span> &nbsp;<span class="lab2">(forced)</span></div>`+
+        `<div><span class="lab2">and σ² ↦</span> <span style="color:${COLI[s2Img]}">${SYM[s2Img]}</span>, <span class="lab2">e ↦</span> <span style="color:${COLI[0]}">e</span> — the whole map is fixed.</div>`+
+        `<div style="margin-top:6px"><span class="ok">✓ a genuine automorphism</span>, realised by conjugation with <span style="color:${COLI[g]}; font-weight:600">${SYM[g]}</span>.</div>`;
+    }
+    render(perms[0]);
+  })();
+
+  /* ===================================================================
+     §∞  THE TOWER
+     =================================================================== */
+  (function towerPanel(){
+    const s3=document.getElementById("rungs-s3");
+    const z=document.getElementById("rungs-z");
+    const climb=document.getElementById("climb");
+    const reset=document.getElementById("reset-tower");
+    const foldBadge=document.getElementById("fold-badge");
+    const tagS3=document.getElementById("tag-s3");
+    const tagZ=document.getElementById("tag-z");
+
+    const S3SEQ=["S₃","S₃","S₃","S₃","S₃"];
+    const ZSEQ =["ℤ","ℤ/2","1","1","1"];
+    let level=0;
+    const MAX=4;
+
+    function rung(text, floor, cls){
+      const d=document.createElement("div"); d.className="rung "+(cls||"");
+      d.innerHTML=`<span class="flr">${floor}</span>${text}`;
+      return d;
+    }
+    function lbl(i){ return i===0?"G": (i===1?"Aut G":"Aut".repeat(1)+`⁽${i}⁾`); }
+
+    function paint(){
+      s3.innerHTML=""; z.innerHTML="";
+      for(let i=0;i<=level;i++){
+        const flo = i===0?"floor 0 · G" : `floor ${i} · Aut${i>1?" ".repeat(0)+`(${i})`:""}`;
+        s3.appendChild(rung(S3SEQ[i], i===0?"floor 0 · G":`floor ${i} · Aut`, "s3"));
+        const zt=ZSEQ[i];
+        z.appendChild(rung(zt, i===0?"floor 0 · G":`floor ${i} · Aut`, zt==="1"?"die dot":"die"));
+      }
+      foldBadge.style.visibility = level>=1 ? "visible":"hidden";
+      tagS3.style.visibility = level>=1 ? "visible":"hidden";
+      // ℤ tower "dies" once it reaches 1 and you climb again
+      const zDead = level>=2;
+      tagZ.style.visibility = zDead ? "visible":"hidden";
+      climb.disabled = level>=MAX;
+      climb.style.opacity = level>=MAX ? .5 : 1;
+      climb.textContent = level>=MAX ? "Top of the demonstration" : "Climb one floor ↑";
+    }
+    climb.onclick=()=>{ if(level<MAX){ level++; paint(); } };
+    reset.onclick=()=>{ level=0; paint(); };
+    paint();
+  })();
+
+})();
+</script>
+</body>
+</html>
