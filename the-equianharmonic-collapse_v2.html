@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Equianharmonic Collapse — six into two, off the line</title>
+<style>
+  :root{
+    --ground:#faf6ef; --panel:#f3ebde; --raised:#ede3d3;
+    --hair:#ddd0bc; --hair-bright:#c6b49a;
+    --ink:#3a2136; --muted:#6b5b66; --faint:#8c7a86;
+    --e:#5f6470; --s:#0c8070; --s2:#2b66b8;
+    --p:#a4660f; --q:#bf3a24; --r:#a84184;
+    --meta:#6a2c91; --meta-dim:#a58bc9;
+    --harm:#8f6a20; --degen:#3b78bd;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --serif:"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--serif); line-height:1.62; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px 110px}
+
+  header.hero{padding:60px 0 28px; border-bottom:1px solid var(--hair)}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--meta); margin:0 0 20px}
+  h1{font-family:var(--mono); font-weight:600; letter-spacing:-.01em; font-size:clamp(26px,5.2vw,42px); line-height:1.05; margin:0 0 16px}
+  h1 .hl{color:var(--meta)}
+  .standfirst{font-size:clamp(16px,2.4vw,19px); color:var(--muted); max-width:62ch; margin:0}
+  .standfirst em{color:var(--ink); font-style:italic}
+
+  section{padding:46px 0 6px; border-bottom:1px solid var(--hair)}
+  .level{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin:0 0 6px}
+  .level b{color:var(--meta)}
+  h2{font-family:var(--mono); font-weight:600; font-size:clamp(20px,3.4vw,26px); margin:0 0 12px; letter-spacing:-.01em}
+  .lede{color:var(--muted); max-width:64ch; margin:0 0 22px}
+  p.note{color:var(--muted); max-width:66ch}
+  p.note .ink{color:var(--ink)}
+  code,.m{font-family:var(--mono); font-size:.92em}
+  .ts{color:var(--s)} .ts2{color:var(--s2)} .tp{color:var(--p)} .tq{color:var(--q)} .tr{color:var(--r)} .te{color:var(--e)} .tm{color:var(--meta)} .th{color:var(--harm)} .td{color:var(--degen)}
+
+  .panel{background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:18px; margin:6px 0 18px}
+
+  /* instrument */
+  .plane-wrap{position:relative}
+  svg.plane{display:block; width:100%; height:auto; touch-action:none; border-radius:8px; background:var(--ground)}
+  .axislab{font-family:var(--mono); font-size:11px; fill:var(--faint)}
+  .ptlab{font-family:var(--mono); font-size:11px}
+
+  .snaps{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+  .snaps button{font-family:var(--mono); font-size:13px; color:var(--ink); background:var(--raised); border:1px solid var(--hair); border-radius:8px; padding:9px 12px; min-height:42px; cursor:pointer; transition:.12s; display:flex; flex-direction:column; gap:2px; align-items:flex-start; line-height:1.15}
+  .snaps button .t{font-weight:600}
+  .snaps button .s{font-size:10px; color:var(--faint)}
+  .snaps button:active{transform:translateY(1px)}
+  .snaps button.eq[aria-pressed="true"]{color:var(--meta); border-color:var(--meta)}
+  .snaps button.hm[aria-pressed="true"]{color:var(--harm); border-color:var(--harm)}
+  .snaps button.dg[aria-pressed="true"]{color:var(--degen); border-color:var(--degen)}
+  .snaps button.gn[aria-pressed="true"]{color:var(--ink); border-color:var(--hair-bright)}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:16px}
+  .card h4{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 12px}
+  .bignum{font-family:var(--mono); font-size:44px; font-weight:600; line-height:1; color:var(--ink)}
+  .bignum.collapse{color:var(--meta)}
+  .sub{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:8px}
+  .lagr{font-family:var(--mono); font-size:14px; color:var(--ink); margin-top:14px; padding-top:12px; border-top:1px solid var(--hair)}
+  .lagr .eq6{color:var(--meta); font-weight:600}
+
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px}
+  .chip{font-family:var(--mono); font-weight:600; font-size:14px; width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:var(--raised); border:1px solid var(--hair); color:var(--faint); transition:.18s}
+  .chip.lit{color:#fff; border-color:currentColor}
+  .chip.lit.e{background:color-mix(in srgb,var(--e) 22%,transparent); color:var(--e); border-color:var(--e)}
+  .chip.lit.s{background:color-mix(in srgb,var(--s) 22%,transparent); color:var(--s); border-color:var(--s)}
+  .chip.lit.s2{background:color-mix(in srgb,var(--s2) 22%,transparent); color:var(--s2); border-color:var(--s2)}
+  .chip.lit.p{background:color-mix(in srgb,var(--p) 22%,transparent); color:var(--p); border-color:var(--p)}
+  .chip.lit.q{background:color-mix(in srgb,var(--q) 22%,transparent); color:var(--q); border-color:var(--q)}
+  .chip.lit.r{background:color-mix(in srgb,var(--r) 22%,transparent); color:var(--r); border-color:var(--r)}
+
+  .jval{font-family:var(--mono); font-size:24px; font-weight:600; color:var(--ink); word-break:break-word}
+  .jflag{font-family:var(--mono); font-size:13px; margin-top:8px}
+  .jflag.eq{color:var(--meta)} .jflag.hm{color:var(--harm)} .jflag.dg{color:var(--degen)} .jflag.gen{color:var(--faint)}
+  .jline{font-family:var(--mono); font-size:12px; color:var(--faint); margin-top:12px; padding-top:10px; border-top:1px solid var(--hair); line-height:1.6}
+
+  .verdict{margin:18px 0 4px; padding:14px 16px; border-left:3px solid var(--meta); background:#eee6f7; border-radius:0 8px 8px 0; color:var(--ink); font-size:16px}
+  .verdict .m{color:var(--meta)}
+
+  .guards{display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px}
+  .guard{border:1px solid var(--hair); border-radius:10px; padding:14px 16px; background:var(--panel)}
+  .guard h4{font-family:var(--mono); font-size:13px; margin:0 0 6px; color:var(--ink)}
+  .guard.theorem h4{color:var(--s)} .guard.strike h4{color:var(--q)}
+  .guard p{margin:0; color:var(--muted); font-size:15px}
+  .guard .struck{text-decoration:line-through; text-decoration-color:var(--q); color:var(--faint)}
+
+  footer{padding:36px 0 0; color:var(--faint); font-family:var(--mono); font-size:12px}
+  footer .led{display:flex; gap:10px; align-items:baseline; margin:6px 0}
+  footer .led .b{color:var(--s)} footer .led .x{color:var(--q)}
+  :focus-visible{outline:2px solid var(--meta); outline-offset:2px; border-radius:4px}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Anharmonic Interface · the orbit that hides off the axis</p>
+    <h1>The equianharmonic collapse:<br>six into <span class="hl">two</span>, where the ruler can't look</h1>
+    <p class="standfirst">A cross-ratio has six values under reordering. The harmonic case merges them to three — and you can watch that happen on the real line. The equianharmonic case merges them to <em>two</em>, but only off the line, at ±60° on the unit circle. Drag <span class="m">λ</span> and make the collapse happen.</p>
+  </header>
+
+  <section id="instrument">
+    <p class="level"><b>drag λ</b> · the live S₃ orbit</p>
+    <h2>One point, six images, colour-coded by their maker</h2>
+    <p class="lede">Each orbit point is tinted by the transform that produced it: the rotations <span class="te">e</span> <span class="ts">σ</span> <span class="ts2">σ²</span> and the involutions <span class="tp">p</span> <span class="tq">q</span> <span class="tr">r</span>. Watch which colours pile together when the orbit shrinks — that pile is a subgroup. Grab the violet ring, or snap to a special configuration.</p>
+
+    <div class="panel plane-wrap">
+      <svg class="plane" id="plane" viewBox="0 0 600 393" role="img" aria-label="complex λ-plane with the six-point cross-ratio orbit; drag the violet handle"></svg>
+      <div class="snaps" id="snaps"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>orbit size — distinct values</h4>
+        <div class="bignum" id="orbit-n">6</div>
+        <div class="sub" id="orbit-sub">generic — all six reorderings differ</div>
+        <div class="lagr">stabiliser <span id="stab-order">order 1</span> &nbsp;·&nbsp; fixed by:
+          <div class="chips" id="stab-chips"></div>
+          <div style="margin-top:12px">|orbit| × |stab| = <span class="eq6" id="lagr-prod">6</span> &nbsp;<span style="color:var(--faint)">(always — orbit–stabiliser)</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>the invariant — j(λ), same across all six</h4>
+        <div class="jval" id="jval">—</div>
+        <div class="jflag" id="jflag"></div>
+        <div class="jline">
+          j = 256·(λ²−λ+1)³ ⁄ (λ²(λ−1)²)<br>
+          <span class="tm">0</span> equianharmonic · <span class="th">1728</span> harmonic · <span class="td">∞</span> degenerate
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">
+      Snap to <span class="m">equianharmonic</span>: the six points merge in <span class="m">triples</span>. The three rotations <span class="te">e</span><span class="ts">σ</span><span class="ts2">σ²</span> stack at +60°, the three involutions <span class="tp">p</span><span class="tq">q</span><span class="tr">r</span> stack at −60°. Orbit 2, stabiliser 3 — and the stabiliser is exactly the rotation σ that spun the cast in <em>The Ceiling</em>.
+    </div>
+  </section>
+
+  <section id="why">
+    <p class="level"><b>why two</b> · orbit–stabiliser, made spatial</p>
+    <h2>The orbit shrinks because the stabiliser grows</h2>
+    <p class="lede">The product is pinned at six. So fewer images means more symmetry holding λ still — never the reverse. The four configurations are the four ways six factors:</p>
+    <p class="note">
+      <span class="ink">generic</span> &nbsp;6 × 1 — nothing but <span class="te">e</span> fixes λ.<br>
+      <span class="th">harmonic</span> &nbsp;3 × 2 — one involution fixes λ (which one depends on the point: <span class="m">−1</span>↦<span class="tq">q</span>, <span class="m">½</span>↦<span class="tp">p</span>, <span class="m">2</span>↦<span class="tr">r</span>).<br>
+      <span class="td">degenerate</span> &nbsp;3 × 2 — same count, different orbit: the points are <span class="m">{0, 1, ∞}</span>, not <span class="m">{−1, ½, 2}</span>.<br>
+      <span class="tm">equianharmonic</span> &nbsp;2 × 3 — the whole rotation subgroup ⟨σ⟩ fixes λ. The deepest collapse, and the only one that is <em>not</em> on the real line.
+    </p>
+  </section>
+
+  <section id="line">
+    <p class="level"><b>off the axis</b> · what the ruler can't see</p>
+    <h2>Harmonic lives on ℝ; equianharmonic needs √−3</h2>
+    <p class="lede">Set λ real and all six images stay real — six marks strung along your original ruler. Push toward <span class="m">−1</span> and three pairs touch: the harmonic collapse, fully visible on the line. But orbit-size-2 demands a stabiliser of order 3, and the order-3 rotation's fixed points solve <span class="m">λ²−λ+1 = 0</span> — discriminant <span class="m">−3</span>, no real roots. The two survivors are complex conjugates the ruler was never able to reach.</p>
+    <div class="guards">
+      <div class="guard theorem">
+        <h4>Kept — theorem, demonstrated</h4>
+        <p>For every λ the action satisfies |orbit| · |stabiliser| = 6. Equianharmonic ⇔ stabiliser = ⟨σ⟩ (order 3) ⇔ orbit 2 ⇔ λ²−λ+1 = 0 ⇔ j = 0. Built here by counting coincidences against the maps, not asserted.</p>
+      </div>
+      <div class="guard strike">
+        <h4>Struck — false rhyme</h4>
+        <p><span class="struck">Orbit size 3 means harmonic.</span> Two different orbits have size 3: the harmonic triple {−1, ½, 2} and the degenerate triple {0, 1, ∞}. Same count is not the same configuration — the j-value separates them (1728 vs ∞).</p>
+      </div>
+      <div class="guard">
+        <h4>The three special j-values</h4>
+        <p>The collapses are exactly the three points where the j-line is special: j = 0 (equianharmonic, orbit 2), j = 1728 (harmonic, orbit 3), j = ∞ (degenerate, orbit 3). Everywhere else the orbit is a full six and j is unremarkable.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="led"><span class="b">theorem ✓</span> |orbit|·|stab| = 6 ; equianharmonic ⇔ stab ⟨σ⟩ ⇔ orbit 2 ⇔ j = 0</div>
+    <div class="led"><span class="x">rhyme ✗</span> "orbit 3 ⇒ harmonic" — harmonic and degenerate both 3; struck</div>
+    <div class="led" style="margin-top:14px; color:var(--faint)">Anharmonic Interface · demonstrate, don't assert · the collapse only the plane can show</div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+(function(){
+  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const COL={e:css('--e'),s:css('--s'),s2:css('--s2'),p:css('--p'),q:css('--q'),r:css('--r'),meta:css('--meta'),harm:css('--harm'),degen:css('--degen'),hair:css('--hair'),hairB:css('--hair-bright'),faint:css('--faint'),muted:css('--muted'),ink:css('--ink')};
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- complex arithmetic (INF as a flag) ---- */
+  const INF={inf:true};
+  const C=(re,im)=>({re,im});
+  const isInf=z=>z===INF||z.inf;
+  const sub=(a,b)=>C(a.re-b.re,a.im-b.im);
+  const mul=(a,b)=>C(a.re*b.re-a.im*b.im, a.re*b.im+a.im*b.re);
+  const div=(a,b)=>{const d=b.re*b.re+b.im*b.im; if(d<1e-14) return INF; return C((a.re*b.re+a.im*b.im)/d,(a.im*b.re-a.re*b.im)/d);};
+  const ONE=C(1,0);
+  const dist=(a,b)=>{ if(isInf(a)&&isInf(b))return 0; if(isInf(a)||isInf(b))return 1e9; return Math.hypot(a.re-b.re,a.im-b.im); };
+
+  /* six maps; slot order tied to group elements */
+  const ELEM=['e','p','q','σ','r','σ²'];          // by slot
+  const KEY =['e','p','q','s','r','s2'];           // css key by slot
+  function images(l){
+    return [
+      l,                                  // e
+      sub(ONE,l),                         // p : 1−λ
+      div(ONE,l),                         // q : 1/λ
+      div(ONE,sub(ONE,l)),                // σ : 1/(1−λ)
+      div(l,sub(l,ONE)),                  // r : λ/(λ−1)
+      div(sub(l,ONE),l)                   // σ²: (λ−1)/λ
+    ];
+  }
+  const EPS=8e-3;
+  function clusters(pts){
+    const cl=[];
+    pts.forEach((p,i)=>{
+      let hit=cl.find(c=>dist(c.pt,p)<EPS);
+      if(hit){hit.members.push(i);} else {cl.push({pt:p, members:[i]});}
+    });
+    return cl;
+  }
+  function stabilizer(l){
+    const im=images(l), out=[];
+    im.forEach((p,i)=>{ if(dist(p,l)<EPS) out.push(i); });
+    return out; // slot indices whose map fixes λ
+  }
+  function jInv(l){
+    const t=sub(mul(l,l),l); const num0=C(t.re+1,t.im);     // λ²−λ+1
+    const num=mul(mul(num0,num0),num0);
+    const den=mul(mul(l,l), mul(sub(l,ONE),sub(l,ONE)));
+    const j=div(num,den);
+    if(isInf(j)) return INF;
+    return C(256*j.re,256*j.im);
+  }
+
+  /* ---- view transform ---- */
+  const VB={w:600,h:393};
+  const reMin=-2.4, reMax=3.4, imMin=-1.9;
+  const scale=VB.w/(reMax-reMin);            // 103.45 px / unit
+  const imMax=imMin+VB.h/scale;
+  const toX=re=>(re-reMin)*scale;
+  const toY=im=>VB.h-(im-imMin)*scale;
+  const fromPx=(px,py)=>C(reMin+px/scale, imMin+(VB.h-py)/scale);
+
+  const svg=document.getElementById('plane');
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(t,a)=>{const e=document.createElementNS(NS,t); for(const k in a)e.setAttribute(k,a[k]); return e;};
+
+  /* static layer */
+  function drawStatic(){
+    const g=mk('g',{});
+    // grid axes
+    g.appendChild(mk('line',{x1:toX(reMin),y1:toY(0),x2:toX(reMax),y2:toY(0),stroke:COL.hair,'stroke-width':1}));
+    g.appendChild(mk('line',{x1:toX(0),y1:toY(imMin),x2:toX(0),y2:toY(imMax),stroke:COL.hair,'stroke-width':1}));
+    // unit circle
+    g.appendChild(mk('circle',{cx:toX(0),cy:toY(0),r:scale,fill:'none',stroke:COL.hairB,'stroke-dasharray':'2 5','stroke-width':1}));
+    // real-axis tick labels for integers
+    [-2,-1,1,2,3].forEach(n=>{ g.appendChild(txt(toX(n),toY(0)+15,String(n),COL.faint,'middle')); });
+    // harmonic points −1, ½, 2
+    [['−1',-1],['½',0.5],['2',2]].forEach(([lab,x])=>{
+      g.appendChild(mk('circle',{cx:toX(x),cy:toY(0),r:4,fill:'none',stroke:COL.harm,'stroke-width':1.6}));
+    });
+    g.appendChild(txt(toX(0.5),toY(0)-12,'harmonic {−1, ½, 2}',COL.harm,'start',10));
+    // degenerate 0,1 (+∞ marker at right edge)
+    [['0',0],['1',1]].forEach(([lab,x])=>{
+      g.appendChild(mk('rect',{x:toX(x)-3.5,y:toY(0)-3.5,width:7,height:7,fill:'none',stroke:COL.degen,'stroke-width':1.6}));
+    });
+    g.appendChild(txt(toX(reMax)-6,toY(0)-7,'∞ →',COL.degen,'end',10));
+    g.appendChild(txt(toX(1)+8,toY(0)+26,'degenerate {0, 1, ∞}',COL.degen,'start',10));
+    // equianharmonic targets at (0.5, ±0.866)
+    [0.8660254,-0.8660254].forEach(y=>{
+      g.appendChild(mk('circle',{cx:toX(0.5),cy:toY(y),r:11,fill:'none',stroke:COL.meta,'stroke-width':1.4,'stroke-dasharray':'3 3',opacity:.8}));
+      g.appendChild(mk('circle',{cx:toX(0.5),cy:toY(y),r:2.2,fill:COL.meta}));
+    });
+    g.appendChild(txt(toX(0.5)+16,toY(0.8660254)-4,'e^{iπ/3}',COL.meta,'start',10));
+    g.appendChild(txt(toX(0.5)+16,toY(-0.8660254)+12,'e^{−iπ/3}',COL.meta,'start',10));
+    svg.appendChild(g);
+  }
+  function txt(x,y,s,fill,anchor,size){const e=mk('text',{x,y,'text-anchor':anchor||'middle',fill,class:'axislab'}); if(size)e.setAttribute('font-size',size); e.textContent=s; return e;}
+
+  /* dynamic layer */
+  const dyn=mk('g',{});
+  let handle, handleRing;
+  function drawDynamic(){
+    while(dyn.firstChild) dyn.removeChild(dyn.firstChild);
+    svg.appendChild(dyn);
+    handleRing=mk('circle',{r:13,fill:'none',stroke:COL.meta,'stroke-width':2});
+    handle=mk('circle',{r:5,fill:COL.meta,cursor:'grab'});
+    dyn.appendChild(handleRing); dyn.appendChild(handle);
+  }
+
+  let lambda=C(-0.35,1.2);
+
+  function render(){
+    while(dyn.firstChild) dyn.removeChild(dyn.firstChild);
+    const im=images(lambda);
+    const cl=clusters(im);
+    // draw each cluster
+    cl.forEach(c=>{
+      const onPlane=!isInf(c.pt);
+      const cx = onPlane? toX(c.pt.re): toX(reMax)-10;
+      const cy = onPlane? toY(c.pt.im): toY(0);
+      const n=c.members.length;
+      const atHandle=c.members.includes(0); // identity image is λ itself — this cluster sits under the violet handle
+      if(n>1){ // enclosing ring to show "one value, several makers"
+        dyn.appendChild(mk('circle',{cx,cy,r:13,fill:'none',stroke:COL.hairB,'stroke-width':1,'stroke-dasharray':'2 4'}));
+      }
+      c.members.forEach((slot,k)=>{
+        let px=cx, py=cy, ang=0;
+        if(n>1){ ang=-Math.PI/2 + k*2*Math.PI/n; px=cx+8*Math.cos(ang); py=cy+8*Math.sin(ang); }
+        const col=COL[KEY[slot]];
+        if(isInf(c.pt)){
+          dyn.appendChild(txt(px,py+4,'∞',col,'middle',13));
+        }else{
+          dyn.appendChild(mk('circle',{cx:px,cy:py,r:6,fill:css('--ground'),stroke:col,'stroke-width':2.4}));
+          if(n>1){
+            // clustered: throw each label radially outward, clear of the r=13 ring
+            const lr=21, lx=cx+lr*Math.cos(ang), ly=cy+lr*Math.sin(ang);
+            const anc=Math.abs(Math.cos(ang))<0.35?'middle':(Math.cos(ang)>0?'start':'end');
+            const by=ly+(Math.sin(ang)>0.35?8:(Math.sin(ang)<-0.35?-1:3));
+            dyn.appendChild(txt(lx,by,ELEM[slot],col,anc,10));
+          }else if(atHandle){
+            // lone identity beneath the violet handle: set its label off to the side so the ring can't eclipse it
+            dyn.appendChild(txt(cx-17,cy-11,ELEM[slot],col,'end',10));
+          }else{
+            dyn.appendChild(txt(px,py-10,ELEM[slot],col,'middle',10));
+          }
+        }
+      });
+    });
+    // handle on top
+    const hx=toX(lambda.re), hy=toY(lambda.im);
+    handleRing=mk('circle',{cx:hx,cy:hy,r:13,fill:'none',stroke:COL.meta,'stroke-width':2});
+    handle=mk('circle',{cx:hx,cy:hy,r:5,fill:COL.meta,cursor:'grab'});
+    dyn.appendChild(handleRing); dyn.appendChild(handle);
+
+    updateReadouts(cl);
+  }
+
+  /* ---- readouts ---- */
+  const orbitN=document.getElementById('orbit-n');
+  const orbitSub=document.getElementById('orbit-sub');
+  const stabOrder=document.getElementById('stab-order');
+  const stabChips=document.getElementById('stab-chips');
+  const lagrProd=document.getElementById('lagr-prod');
+  const jvalEl=document.getElementById('jval');
+  const jflagEl=document.getElementById('jflag');
+  // build chips e σ σ² p q r
+  const chipOrder=[0,3,5,1,2,4]; // slot order: e,σ,σ²,p,q,r
+  const chipEls={};
+  chipOrder.forEach(slot=>{
+    const d=document.createElement('div'); d.className='chip '+KEY[slot]; d.textContent=ELEM[slot];
+    stabChips.appendChild(d); chipEls[slot]=d;
+  });
+
+  function classify(){
+    const j=jInv(lambda);
+    if(isInf(j)) return 'dg';
+    const m=Math.hypot(j.re,j.im);
+    if(m<1) return 'eq';
+    if(Math.hypot(j.re-1728,j.im)<1.5) return 'hm';
+    return 'gen';
+  }
+  function updateReadouts(cl){
+    const n=cl.length;
+    orbitN.textContent=n;
+    orbitN.classList.toggle('collapse', n<6);
+    const stab=stabilizer(lambda);
+    stabOrder.textContent='order '+stab.length;
+    chipOrder.forEach(slot=> chipEls[slot].classList.toggle('lit', stab.includes(slot)) );
+    lagrProd.textContent = n*stab.length;
+    // configuration read straight from the symmetry, not from j — keeps everything consistent
+    const hasInf = cl.some(c=>isInf(c.pt));
+    const s=stab.length;
+    const cls = s===3 ? 'eq' : s===2 ? (hasInf?'dg':'hm') : 'gen';
+    const subs={gen:'generic — all six reorderings differ', eq:'equianharmonic — the rotation ⟨σ⟩ holds λ fixed', hm:'harmonic — one involution holds λ fixed', dg:'degenerate — four points have collided'};
+    orbitSub.textContent=subs[cls];
+    // j value, displayed to match the configuration exactly
+    const j=jInv(lambda);
+    if(cls==='dg'){ jvalEl.textContent='∞'; }
+    else if(cls==='eq'){ jvalEl.textContent='0'; }
+    else if(cls==='hm'){ jvalEl.textContent='1728'; }
+    else { jvalEl.textContent = isInf(j)?'∞':fmtC(j); }
+    const flags={gen:['gen','same value at all six images'],eq:['eq','j = 0 · orbit collapses to two'],hm:['hm','j = 1728 · orbit collapses to three'],dg:['dg','j = ∞ · the nodal / degenerate orbit']};
+    jflagEl.className='jflag '+flags[cls][0];
+    jflagEl.textContent=flags[cls][1];
+  }
+  function fmtC(z){
+    const r=z.re, i=z.im;
+    const rr=Math.abs(r)>=100? r.toFixed(0): r.toFixed(1);
+    const ii=Math.abs(i)>=100? Math.abs(i).toFixed(0): Math.abs(i).toFixed(1);
+    if(Math.abs(i)<0.05) return rr;
+    return `${rr} ${i<0?'−':'+'} ${ii}i`;
+  }
+  const lamLabel=()=>{}; // λ shown via handle position; numeric not cluttered here
+
+  /* ---- dragging ---- */
+  let dragging=false;
+  function clientToVB(ev){
+    const rect=svg.getBoundingClientRect();
+    const x=(ev.clientX-rect.left)*(VB.w/rect.width);
+    const y=(ev.clientY-rect.top)*(VB.h/rect.height);
+    return {x,y};
+  }
+  function setFromPointer(ev){
+    const {x,y}=clientToVB(ev);
+    let z=fromPx(x,y);
+    // clamp to view with margin
+    z.re=Math.max(reMin+0.05,Math.min(reMax-0.05,z.re));
+    z.im=Math.max(imMin+0.05,Math.min(imMax-0.05,z.im));
+    lambda=z; render();
+  }
+  svg.addEventListener('pointerdown',ev=>{
+    const {x,y}=clientToVB(ev);
+    if(Math.hypot(x-toX(lambda.re), y-toY(lambda.im)) < 26){
+      dragging=true; svg.setPointerCapture(ev.pointerId); handle&&handle.setAttribute('cursor','grabbing');
+      clearActive(); ev.preventDefault();
+    }
+  });
+  svg.addEventListener('pointermove',ev=>{ if(dragging){ setFromPointer(ev); ev.preventDefault(); } });
+  svg.addEventListener('pointerup',ev=>{ dragging=false; });
+  svg.addEventListener('pointercancel',ev=>{ dragging=false; });
+
+  /* ---- snaps + animation ---- */
+  const SNAPS=[
+    {cls:'gn', t:'generic',        s:'orbit 6',  z:C(-0.35,1.2)},
+    {cls:'gn', t:'real generic',   s:'six on ℝ', z:C(3,0)},
+    {cls:'hm', t:'harmonic',       s:'λ = −1',   z:C(-1,0)},
+    {cls:'eq', t:'equianharmonic', s:'e^{iπ/3}', z:C(0.5,0.8660254)},
+    {cls:'dg', t:'degenerate',     s:'λ = 0',    z:C(0,0)}
+  ];
+  const snapsBox=document.getElementById('snaps');
+  const snapBtns=[];
+  SNAPS.forEach((sp,idx)=>{
+    const b=document.createElement('button'); b.className=sp.cls; b.setAttribute('aria-pressed','false');
+    b.innerHTML=`<span class="t">${sp.t}</span><span class="s">${sp.s}</span>`;
+    b.onclick=()=>{ clearActive(); b.setAttribute('aria-pressed','true'); animateTo(sp.z); };
+    snapsBox.appendChild(b); snapBtns.push(b);
+  });
+  function clearActive(){ snapBtns.forEach(b=>b.setAttribute('aria-pressed','false')); }
+
+  let raf=null;
+  function animateTo(target){
+    if(raf) cancelAnimationFrame(raf);
+    if(reduce){ lambda=target; render(); return; }
+    const start={...lambda}; const dur=720; const t0=performance.now();
+    function step(now){
+      let u=Math.min(1,(now-t0)/dur); const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2; // easeInOut
+      lambda=C(start.re+(target.re-start.re)*e, start.im+(target.im-start.im)*e);
+      render();
+      if(u<1) raf=requestAnimationFrame(step); else { lambda=target; render(); raf=null; }
+    }
+    raf=requestAnimationFrame(step);
+  }
+
+  /* ---- boot ---- */
+  drawStatic(); drawDynamic(); render();
+})();
+</script>
+</body>
+</html>

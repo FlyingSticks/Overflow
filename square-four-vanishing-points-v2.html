@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The square's four vanishing points</title>
+<style>
+  :root{
+    --paper:#f7f4ec;
+    --ink:#23262d;
+    --faint-ink:#5b606b;
+    --side:#1350c4;      /* the side family — the "reach" pair */
+    --side-soft:#8aa7e6;
+    --diag:#c33b22;      /* the diagonal family — the harmonic conjugates */
+    --diag-soft:#e0a394;
+    --sp:#14161a;
+    --cv:#8a8f99;        /* centre of vision */
+    --line:#c9c2b2;
+    --band-up:#edf1f8;
+    --band-lo:#f3eddf;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    -webkit-text-size-adjust:100%;}
+  .wrap{max-width:1040px;margin:0 auto;padding:22px 18px 60px;}
+  header{margin-bottom:14px;}
+  .eyebrow{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--faint-ink);margin:0 0 6px;}
+  h1{font-size:26px;line-height:1.15;font-weight:600;margin:0 0 6px;letter-spacing:.1px;}
+  h1 em{font-style:italic;color:var(--diag);}
+  .lede{font-size:15px;line-height:1.5;color:var(--faint-ink);max-width:74ch;margin:0;}
+
+  .stage-wrap{margin:16px 0 10px;border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;background:#fefdfb;box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  svg{display:block;width:100%;height:auto;touch-action:none;}
+
+  text{font-family:"Iowan Old Style",Palatino,Georgia,serif;}
+  .glyph{font-style:italic;font-size:19px;}
+  .glyph.small{font-size:15px;}
+  .sub{font-size:12px;baseline-shift:-2px;font-style:italic;}
+  .caption{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;fill:var(--faint-ink);}
+
+  /* instrument readout */
+  .panel{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;margin-top:4px;}
+  .readout{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fefdfb;}
+  .readout .lbl{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint-ink);margin-bottom:2px;}
+  .cr{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:34px;font-weight:600;
+    letter-spacing:.5px;line-height:1;color:var(--ink);}
+  .cr .eq{color:var(--diag);}
+  .rows{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;margin-top:12px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12.5px;}
+  .rows .k{color:var(--faint-ink);}
+  .rows .v{color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;}
+
+  .controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+    border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:#fefdfb;}
+  .controls label{font-size:13px;color:var(--faint-ink);display:flex;align-items:center;gap:8px;}
+  input[type=range]{width:150px;accent-color:var(--ink);}
+  input[type=checkbox]{width:16px;height:16px;accent-color:var(--side);}
+  button{font-family:inherit;font-size:13px;padding:7px 13px;border:1px solid var(--ink);
+    background:var(--ink);color:var(--paper);border-radius:7px;cursor:pointer;}
+  button.ghost{background:transparent;color:var(--ink);}
+  button:active{transform:translateY(1px);}
+
+  .ledger{margin-top:16px;border-top:1px solid var(--line);padding-top:16px;}
+  .ledger h2{font-size:12px;font-family:ui-monospace,Menlo,monospace;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint-ink);margin:0 0 10px;font-weight:600;}
+  .ledger dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:9px 16px;}
+  .ledger dt{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;padding-top:2px;}
+  .ledger dt.thm{color:var(--diag);}
+  .ledger dt.shown{color:var(--side);}
+  .ledger dt.note{color:var(--faint-ink);}
+  .ledger dd{margin:0;font-size:14.5px;line-height:1.5;}
+  .ledger dd b{font-weight:600;}
+  .ledger dd i{font-style:italic;}
+
+  @media (max-width:720px){
+    .panel{grid-template-columns:1fr;}
+    h1{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Anharmonic interface · a construction to drag</p>
+    <h1>Four points on the horizon, and the square they <em>vanish</em> into</h1>
+    <p class="lede">Two vanishing points carry the sides of a square; two more carry its diagonals. Place the side pair
+      wherever you like — the diagonal pair is not free. It is forced to sit as the <em>harmonic conjugate</em>:
+      the cross-ratio of the four reads &minus;1 for every turn and every distance.</p>
+  </header>
+
+  <div class="stage-wrap">
+    <svg id="stage" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Interactive perspective construction">
+      <!-- region bands -->
+      <rect x="0" y="0" width="1000" height="360" fill="var(--band-up)" opacity="0.55"/>
+      <rect x="0" y="360" width="1000" height="340" fill="var(--band-lo)" opacity="0.5"/>
+      <text class="caption" x="16" y="24">Construction — station point &amp; angle bisectors</text>
+      <text class="caption" x="16" y="690">The perspective image — square with its two diagonals</text>
+
+      <!-- generator (upper) -->
+      <g id="gen">
+        <path id="thales" fill="none" stroke="var(--line)" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <line id="dline" stroke="var(--cv)" stroke-width="1" stroke-dasharray="3 4"/>
+        <line id="rayV1" stroke="var(--side)" stroke-width="1.5"/>
+        <line id="rayV2" stroke="var(--side)" stroke-width="1.5"/>
+        <path id="rightang" fill="none" stroke="var(--sp)" stroke-width="1.3"/>
+        <line id="bisD1" stroke="var(--diag)" stroke-width="1.5"/>
+        <line id="bisD2" stroke="var(--diag)" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <text id="dlbl" class="glyph small" fill="var(--cv)"></text>
+      </g>
+
+      <!-- the perspective square (lower) -->
+      <g id="fig">
+        <g id="sideExt" opacity="0"></g>
+        <polygon id="sq" fill="rgba(19,80,196,0.055)" stroke="var(--ink)" stroke-width="2"/>
+        <line id="extPR" stroke="var(--diag)" stroke-width="1.3" stroke-dasharray="5 5" opacity="0.7"/>
+        <line id="extQS" stroke="var(--diag)" stroke-width="1.3" stroke-dasharray="5 5" opacity="0.7"/>
+        <line id="diagPR" stroke="var(--diag)" stroke-width="2"/>
+        <line id="diagQS" stroke="var(--diag)" stroke-width="2"/>
+        <g id="sqverts"></g>
+      </g>
+
+      <!-- horizon: the spine -->
+      <line id="horizon" x1="0" y1="360" x2="1000" y2="360" stroke="var(--ink)" stroke-width="1.6"/>
+
+      <!-- the four points + C + SP live on top -->
+      <g id="pts"></g>
+
+      <!-- draggable handles (large invisible targets) -->
+      <g id="handles"></g>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="readout">
+      <div class="lbl">Cross-ratio&nbsp; (V&#8321; V&#8322; ; D&#8321; D&#8322;)</div>
+      <div class="cr"><span class="eq">=</span> <span id="crval">&minus;1.000</span></div>
+      <div class="rows">
+        <span class="k">square turn α</span><span class="v" id="alphaval">25.0°</span>
+        <span class="k">viewing distance d</span><span class="v" id="dval">140 px</span>
+        <span class="k">closure Δ&nbsp;(QS vs D&#8322;)</span><span class="v" id="deltaval">0.0 px</span>
+      </div>
+    </div>
+    <div class="controls">
+      <label>square size
+        <input id="size" type="range" min="0.2" max="0.72" step="0.005" value="0.42">
+      </label>
+      <label><input id="tSides" type="checkbox"> side lines to V&#8321;,V&#8322;</label>
+      <label><input id="tGen" type="checkbox" checked> show construction</label>
+      <button id="snap" class="ghost">Snap to symmetric</button>
+      <button id="reset" class="ghost">Reset</button>
+    </div>
+  </div>
+
+  <div class="ledger">
+    <h2>Ledger</h2>
+    <dl>
+      <dt class="thm">Theorem (bisector)</dt>
+      <dd>The two <b>diagonal</b> vanishing points are the <b>harmonic conjugates</b> of the two <b>side</b>
+        vanishing points: <i>(V&#8321; V&#8322; ; D&#8321; D&#8322;) = &minus;1</i>, independent of how the square is
+        turned or how far the eye stands. The diagonals bisect the right angle between the sides, so the internal and
+        external bisectors cut V&#8321;V&#8322; in the same ratio — and internal-plus-external division in one ratio
+        <i>is</i> harmonic division.</dd>
+      <dt class="thm">Theorem (closure)</dt>
+      <dd>PQRS is a <b>complete quadrangle</b>, and its three diagonal points are
+        V&#8321; = PQ&#8745;RS, V&#8322; = QR&#8745;SP, and O = PR&#8745;QS. Two of them lie on the horizon, so the
+        horizon <i>is</i> its diagonal-triangle side V&#8321;V&#8322; — and the remaining opposite pair PR, QS must
+        cut that side at the harmonic conjugate: <i>(V&#8321; V&#8322; ; D&#8321; D&#8322;) = &minus;1</i>, for every
+        P and every size, by projection alone. It coincides with the bisector pair by <b>uniqueness</b> of the
+        harmonic conjugate — so Δ is now a redundancy check on a proven identity, rounding to zero because the two
+        constructions name one point.</dd>
+      <dt class="note">Note</dt>
+      <dd>At α = 45° the view is symmetric: the square sits as a diamond, <i>D&#8321;</i> lands exactly on the centre
+        of vision <i>C</i>, and <i>D&#8322;</i> runs off to infinity — the textbook harmonic pair
+        {&thinsp;midpoint, point&nbsp;at&nbsp;infinity&thinsp;} of the two symmetric points. This is the harmonic value
+        λ = &minus;1, whose six-fold S&#8323; orbit collapses to {&minus;1, 2, ½}.</dd>
+    </dl>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.getElementById("stage");
+  const CX=500, HY=360, DMAX=326, RMARGIN=34, LMARGIN=30;
+
+  // ---- state (only the free handles) ----
+  const state={ V1x:800, V2x:435, Px:525, Py:556, t:0.42, showGen:true, showSides:false };
+
+  // ---- helpers ----
+  const cot=t=>Math.cos(t)/Math.sin(t);
+  const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+  function isect(p1,p2,p3,p4){
+    const d=(p1.x-p2.x)*(p3.y-p4.y)-(p1.y-p2.y)*(p3.x-p4.x);
+    if(Math.abs(d)<1e-9) return null;
+    const t=((p1.x-p3.x)*(p3.y-p4.y)-(p1.y-p3.y)*(p3.x-p4.x))/d;
+    return {x:p1.x+t*(p2.x-p1.x), y:p1.y+t*(p2.y-p1.y)};
+  }
+  function meetHorizon(a,b){
+    if(Math.abs(b.y-a.y)<1e-9) return null;         // parallel to horizon -> at infinity
+    const t=(HY-a.y)/(b.y-a.y);
+    return a.x+t*(b.x-a.x);
+  }
+
+  // derive everything from the two side vanishing points (C fixed between them)
+  function derive(){
+    const a=state.V1x-CX, b=state.V2x-CX;            // a>0, b<0
+    const d=Math.sqrt(-a*b);
+    const alpha=Math.atan2(d,a);                     // direction SP -> V1
+    const SP={x:CX, y:HY-d};
+    let D1x=CX+d*cot(alpha+Math.PI/4);
+    let D2raw=alpha+3*Math.PI/4;
+    let D2x=CX+d*cot(D2raw);
+    const nearSym=Math.abs(alpha-Math.PI/4)<0.004;   // D2 -> infinity
+    return {a,b,d,alpha,SP,D1x,D2x,D2Inf:(nearSym||!isFinite(D2x)||Math.abs(D2x-CX)>1e5)};
+  }
+
+  // ---- build point + handle glyphs once ----
+  const pts=document.getElementById("pts");
+  const handles=document.getElementById("handles");
+
+  function dot(cls,r){const c=document.createElementNS(NS,"circle");c.setAttribute("r",r);c.setAttribute("class",cls);return c;}
+  function txt(cls){const t=document.createElementNS(NS,"text");t.setAttribute("class",cls);return t;}
+
+  // visible markers
+  const mC   = mkPt("var(--cv)","#fff",5);
+  const mSP  = mkPt("var(--sp)","#fff",5);
+  const mV1  = mkPt("var(--side)","#fff",6.5);
+  const mV2  = mkPt("var(--side)","#fff",6.5);
+  const mD1  = mkPt("#fff","var(--diag)",6);   // hollow: constructed
+  const mD2  = mkPt("#fff","var(--diag)",6);
+  function mkPt(fill,stroke,r){
+    const c=document.createElementNS(NS,"circle");
+    c.setAttribute("r",r);c.setAttribute("fill",fill);
+    c.setAttribute("stroke",stroke);c.setAttribute("stroke-width","2.2");
+    pts.appendChild(c);return c;
+  }
+  // labels
+  const lC=txt("glyph small"); lC.setAttribute("fill","var(--cv)"); pts.appendChild(lC);
+  const lSP=txt("glyph small"); lSP.setAttribute("fill","var(--sp)"); pts.appendChild(lSP);
+  const lV1=txt("glyph"); lV1.setAttribute("fill","var(--side)"); pts.appendChild(lV1);
+  const lV2=txt("glyph"); lV2.setAttribute("fill","var(--side)"); pts.appendChild(lV2);
+  const lD1=txt("glyph"); lD1.setAttribute("fill","var(--diag)"); pts.appendChild(lD1);
+  const lD2=txt("glyph"); lD2.setAttribute("fill","var(--diag)"); pts.appendChild(lD2);
+  const lD2inf=txt("glyph small"); lD2inf.setAttribute("fill","var(--diag)"); pts.appendChild(lD2inf);
+
+  function setSub(el,main,sub,x,y,dx,dy){
+    el.textContent="";
+    el.setAttribute("x",x+dx); el.setAttribute("y",y+dy);
+    const t1=document.createElementNS(NS,"tspan"); t1.textContent=main;
+    const t2=document.createElementNS(NS,"tspan"); t2.setAttribute("class","sub"); t2.textContent=sub;
+    el.appendChild(t1); el.appendChild(t2);
+  }
+
+  // invisible drag targets
+  function mkHandle(id){
+    const g=document.createElementNS(NS,"circle");
+    g.setAttribute("r",26); g.setAttribute("fill","transparent");
+    g.setAttribute("data-h",id); g.style.cursor="grab";
+    handles.appendChild(g); return g;
+  }
+  const hV1=mkHandle("v1"), hV2=mkHandle("v2"), hP=mkHandle("p");
+  // a faint ring on the draggable ones to hint interactivity
+  function ring(color){const c=document.createElementNS(NS,"circle");c.setAttribute("r",12);
+    c.setAttribute("fill","none");c.setAttribute("stroke",color);c.setAttribute("stroke-width","1");
+    c.setAttribute("opacity","0.35");pts.appendChild(c);return c;}
+  const rV1=ring("var(--side)"), rV2=ring("var(--side)"), rP=ring("var(--ink)");
+
+  // square vertex dots+labels
+  const fig=document.getElementById("fig");
+  const sqverts=document.getElementById("sqverts");
+  const vName=["P","Q","R","S"]; const vDots=[], vLbls=[];
+  for(let i=0;i<4;i++){
+    const c=document.createElementNS(NS,"circle");c.setAttribute("r",3.4);
+    c.setAttribute("fill","var(--ink)");sqverts.appendChild(c);vDots.push(c);
+    const t=txt("glyph small");t.setAttribute("fill","var(--ink)");sqverts.appendChild(t);vLbls.push(t);
+  }
+  const sideExt=document.getElementById("sideExt");
+
+  // element refs
+  const E={
+    thales:g("thales"), dline:g("dline"), rayV1:g("rayV1"), rayV2:g("rayV2"),
+    rightang:g("rightang"), bisD1:g("bisD1"), bisD2:g("bisD2"),
+    sq:g("sq"), diagPR:g("diagPR"), diagQS:g("diagQS"), extPR:g("extPR"), extQS:g("extQS"),
+    horizon:g("horizon"), gen:g("gen"),
+    crval:g("crval"), alphaval:g("alphaval"), dval:g("dval"), deltaval:g("deltaval")
+  };
+  function g(id){return document.getElementById(id);}
+  function line(el,x1,y1,x2,y2){el.setAttribute("x1",x1);el.setAttribute("y1",y1);el.setAttribute("x2",x2);el.setAttribute("y2",y2);}
+
+  // ---- render ----
+  function render(){
+    const D=derive();
+    const V1={x:state.V1x,y:HY}, V2={x:state.V2x,y:HY}, D1={x:D.D1x,y:HY};
+    const D2={x:D.D2x,y:HY};
+
+    // ---------- generator ----------
+    E.gen.style.display=state.showGen?"":"none";
+    if(state.showGen){
+      // Thales semicircle on V1V2
+      const cx=(V1.x+V2.x)/2, r=Math.abs(V1.x-V2.x)/2;
+      E.thales.setAttribute("d",`M ${V2.x} ${HY} A ${r} ${r} 0 0 1 ${V1.x} ${HY}`);
+      // distance line SP->C
+      line(E.dline, CX, HY, D.SP.x, D.SP.y);
+      // side rays
+      line(E.rayV1, D.SP.x, D.SP.y, V1.x, V1.y);
+      line(E.rayV2, D.SP.x, D.SP.y, V2.x, V2.y);
+      // right-angle marker at SP (between the two side rays)
+      const u1=norm(V1.x-D.SP.x, V1.y-D.SP.y), u2=norm(V2.x-D.SP.x, V2.y-D.SP.y);
+      const s=15;
+      const A={x:D.SP.x+u1.x*s, y:D.SP.y+u1.y*s};
+      const B={x:D.SP.x+(u1.x+u2.x)*s, y:D.SP.y+(u1.y+u2.y)*s};
+      const Cc={x:D.SP.x+u2.x*s, y:D.SP.y+u2.y*s};
+      E.rightang.setAttribute("d",`M ${A.x} ${A.y} L ${B.x} ${B.y} L ${Cc.x} ${Cc.y}`);
+      // internal bisector SP->D1 (extended to horizon)
+      line(E.bisD1, D.SP.x, D.SP.y, D1.x, HY);
+      // external bisector SP->D2
+      if(D.D2Inf){
+        const bd=norm(u1.x-u2.x, u1.y-u2.y); const L=1400;
+        line(E.bisD2, D.SP.x-bd.x*L, D.SP.y-bd.y*L, D.SP.x+bd.x*L, D.SP.y+bd.y*L);
+      } else {
+        line(E.bisD2, D.SP.x, D.SP.y, D2.x, HY);
+      }
+    }
+
+    // ---------- the perspective square ----------
+    const P={x:state.Px,y:state.Py};
+    const Q={x:P.x+state.t*(V1.x-P.x), y:P.y+state.t*(HY-P.y)};
+    const R=isect(Q,V2,P,D1);
+    const S=R?isect(P,V2,R,V1):null;
+
+    let deltaTxt="—";
+    if(R&&S){
+      E.sq.style.display=""; E.diagPR.style.display=""; E.diagQS.style.display="";
+      E.extPR.style.display=""; E.extQS.style.display="";
+      sqverts.style.display="";
+      E.sq.setAttribute("points",`${P.x},${P.y} ${Q.x},${Q.y} ${R.x},${R.y} ${S.x},${S.y}`);
+      line(E.diagPR, P.x,P.y, R.x,R.y);
+      line(E.diagQS, Q.x,Q.y, S.x,S.y);
+      // extensions up to the diagonal VPs
+      line(E.extPR, R.x,R.y, D1.x,HY);
+      const near=(S.y>Q.y)?S:Q;
+      if(!D.D2Inf) line(E.extQS, near.x,near.y, D2.x,HY);
+      else { const d2=norm(Q.x-S.x,Q.y-S.y); line(E.extQS, near.x,near.y, near.x+d2.x*900, near.y+d2.y*900); }
+      // vertices
+      const verts=[P,Q,R,S];
+      const off=[[-14,4],[10,-6],[8,-8],[-16,-6]];
+      for(let i=0;i<4;i++){
+        vDots[i].setAttribute("cx",verts[i].x);vDots[i].setAttribute("cy",verts[i].y);
+        vLbls[i].setAttribute("x",verts[i].x+off[i][0]);vLbls[i].setAttribute("y",verts[i].y+off[i][1]);
+        vLbls[i].textContent=vName[i];
+      }
+      // closure: where QS actually meets the horizon vs constructed D2
+      const qsx=meetHorizon(Q,S);
+      if(qsx!==null && !D.D2Inf) deltaTxt=(qsx-D.D2x>=0?"+":"")+(qsx-D.D2x).toFixed(1)+" px";
+      else if(D.D2Inf && qsx===null) deltaTxt="0.0 px (∥)";
+      else if(qsx!==null) deltaTxt="→ ∞";
+
+      // optional side lines to V1,V2
+      sideExt.setAttribute("opacity", state.showSides?"0.5":"0");
+      if(state.showSides){
+        sideExt.textContent="";
+        addDash(P,Q,V1); addDash(R,S,V1); addDash(Q,R,V2); addDash(S,P,V2);
+      }
+    } else {
+      E.sq.style.display="none"; E.diagPR.style.display="none"; E.diagQS.style.display="none";
+      E.extPR.style.display="none"; E.extQS.style.display="none"; sqverts.style.display="none";
+      sideExt.setAttribute("opacity","0");
+    }
+
+    // ---------- points, labels, handles ----------
+    place(mC,CX,HY); setSub(lC,"C","",CX,HY,-16,20);
+    place(mSP,D.SP.x,D.SP.y); setSub(lSP,"S","P",D.SP.x,D.SP.y,10,4);
+    place(mV1,V1.x,HY); setSub(lV1,"V","1",V1.x,HY,10,-12);
+    place(mV2,V2.x,HY); setSub(lV2,"V","2",V2.x,HY,-30,-12);
+    place(mD1,D1.x,HY); setSub(lD1,"D","1",D1.x,HY, D1.x>CX?12:-30, 26);
+    if(!D.D2Inf){
+      mD2.style.display=""; place(mD2,D2.x,HY); setSub(lD2,"D","2",D2.x,HY, D2.x>CX?12:-30, 26);
+      lD2inf.textContent="";
+    } else {
+      mD2.style.display="none"; lD2.textContent="";
+      // arrow at the left edge indicating D2 -> infinity
+      lD2inf.setAttribute("x", 40); lD2inf.setAttribute("y", HY+26);
+      lD2inf.textContent="D₂ → ∞";
+    }
+    // distance label
+    const dlbl=document.getElementById("dlbl");
+    if(state.showGen){ dlbl.style.display=""; dlbl.setAttribute("x",CX+8); dlbl.setAttribute("y",(HY+D.SP.y)/2);
+      dlbl.textContent="d"; } else dlbl.style.display="none";
+
+    place(hV1,V1.x,HY); place(hV2,V2.x,HY); place(hP,P.x,P.y);
+    place(rV1,V1.x,HY); place(rV2,V2.x,HY); place(rP,P.x,P.y);
+
+    // ---------- readouts ----------
+    let cr;
+    if(D.D2Inf) cr=(D.D1x-V1.x)/(D.D1x-V2.x);
+    else cr=((D.D1x-V1.x)*(D.D2x-V2.x))/((D.D1x-V2.x)*(D.D2x-V1.x));
+    E.crval.innerHTML=fmtCR(cr);
+    E.alphaval.textContent=(D.alpha*180/Math.PI).toFixed(1)+"°";
+    E.dval.textContent=Math.round(D.d)+" px";
+    E.deltaval.textContent=deltaTxt;
+  }
+
+  function fmtCR(v){
+    const s=v.toFixed(3);
+    return (Math.abs(v+1)<0.001) ? "&minus;1.000" : (v<0?"&minus;"+Math.abs(v).toFixed(3):s);
+  }
+  function norm(x,y){const m=Math.hypot(x,y)||1;return {x:x/m,y:y/m};}
+  function place(el,x,y){el.setAttribute("cx",x);el.setAttribute("cy",y);}
+  function addDash(a,b,VP){
+    const near=(a.y>b.y)?a:b;
+    const l=document.createElementNS(NS,"line");
+    l.setAttribute("x1",near.x);l.setAttribute("y1",near.y);
+    l.setAttribute("x2",VP.x);l.setAttribute("y2",HY);
+    l.setAttribute("stroke","var(--side)");l.setAttribute("stroke-width","1");
+    l.setAttribute("stroke-dasharray","3 5");sideExt.appendChild(l);
+  }
+
+  // ---- interaction ----
+  function toSVG(evt){
+    const pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+    const p=pt.matrixTransform(svg.getScreenCTM().inverse());
+    return {x:p.x,y:p.y};
+  }
+  let active=null;
+  function down(evt){
+    const h=evt.target.getAttribute&&evt.target.getAttribute("data-h");
+    if(!h) return;
+    active=h; evt.target.setPointerCapture(evt.pointerId);
+    evt.target.style.cursor="grabbing"; evt.preventDefault();
+  }
+  function move(evt){
+    if(!active) return;
+    const p=toSVG(evt);
+    if(active==="v1"){
+      let nx=clamp(p.x, CX+22, 1000-RMARGIN);
+      const b=state.V2x-CX; let a=nx-CX;
+      if(Math.sqrt(-a*b)>DMAX){ a=DMAX*DMAX/(-b); nx=CX+a; }
+      state.V1x=nx;
+    } else if(active==="v2"){
+      let nx=clamp(p.x, LMARGIN, CX-22);
+      const a=state.V1x-CX; let b=nx-CX;
+      if(Math.sqrt(-a*b)>DMAX){ b=-DMAX*DMAX/a; nx=CX+b; }
+      state.V2x=nx;
+    } else if(active==="p"){
+      state.Px=clamp(p.x, 44, 956);
+      state.Py=clamp(p.y, HY+28, 686);
+    }
+    render();
+  }
+  function up(evt){
+    if(active){ const t=evt.target; if(t&&t.style)t.style.cursor="grab"; }
+    active=null;
+  }
+  svg.addEventListener("pointerdown",down);
+  svg.addEventListener("pointermove",move);
+  svg.addEventListener("pointerup",up);
+  svg.addEventListener("pointercancel",up);
+
+  // ---- controls ----
+  document.getElementById("size").addEventListener("input",e=>{state.t=parseFloat(e.target.value);render();});
+  document.getElementById("tSides").addEventListener("change",e=>{state.showSides=e.target.checked;render();});
+  document.getElementById("tGen").addEventListener("change",e=>{state.showGen=e.target.checked;render();});
+  document.getElementById("snap").addEventListener("click",()=>{
+    let a=state.V1x-CX; if(a>DMAX)a=DMAX; if(a<40)a=200;
+    state.V1x=CX+a; state.V2x=CX-a; render();
+  });
+  document.getElementById("reset").addEventListener("click",()=>{
+    state.V1x=800; state.V2x=435; state.Px=525; state.Py=556; state.t=0.42;
+    document.getElementById("size").value=0.42; render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
