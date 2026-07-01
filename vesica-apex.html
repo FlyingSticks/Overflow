@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The vesica apex — a compass for the equianharmonic value</title>
+<style>
+  :root{
+    --ground:#faf6ef; --panel:#f3ebde; --raised:#ede3d3;
+    --hair:#ddd0bc; --hair-bright:#c6b49a;
+    --ink:#3a2136; --muted:#6b5b66; --faint:#8c7a86;
+    --c0:#c0322b; --c1:#1f7a6b; --eye:#6a2c91;
+    --rec:#a4660f; --comp:#2b66b8; --harm:#8f6a20;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --serif:"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--serif); line-height:1.62; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px; margin:0 auto; padding:0 20px 110px}
+
+  header.hero{padding:56px 0 26px; border-bottom:1px solid var(--hair)}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--eye); margin:0 0 18px}
+  h1{font-family:var(--mono); font-weight:600; letter-spacing:-.01em; font-size:clamp(23px,4.6vw,38px); line-height:1.08; margin:0 0 16px}
+  h1 .hl{color:var(--eye)}
+  .standfirst{font-size:clamp(16px,2.3vw,19px); color:var(--muted); max-width:64ch; margin:0}
+  .standfirst em{color:var(--ink); font-style:italic}
+
+  section{padding:44px 0 6px; border-bottom:1px solid var(--hair)}
+  .level{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin:0 0 6px}
+  .level b{color:var(--eye)}
+  h2{font-family:var(--mono); font-weight:600; font-size:clamp(19px,3.2vw,25px); margin:0 0 12px; letter-spacing:-.01em}
+  .lede{color:var(--muted); max-width:66ch; margin:0 0 20px}
+  p.note{color:var(--muted); max-width:68ch}
+  p.note .ink{color:var(--ink)}
+  code,.m{font-family:var(--mono); font-size:.92em}
+  .k0{color:var(--c0)} .k1{color:var(--c1)} .ke{color:var(--eye)} .kr{color:var(--rec)} .kc{color:var(--comp)} .kh{color:var(--harm)}
+
+  .panel{background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:16px; margin:6px 0 16px}
+  svg.stage{display:block; width:100%; height:auto; touch-action:none; border-radius:8px; background:var(--ground); cursor:crosshair}
+
+  .snaps{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+  .snaps button{font-family:var(--mono); font-size:13px; color:var(--ink); background:var(--raised); border:1px solid var(--hair); border-radius:8px; padding:9px 12px; min-height:42px; cursor:pointer; transition:.12s; display:flex; flex-direction:column; gap:2px; align-items:flex-start; line-height:1.15}
+  .snaps button .t{font-weight:600}
+  .snaps button .s{font-size:10px; color:var(--faint)}
+  .snaps button:active{transform:translateY(1px)}
+  .snaps button.eye[aria-pressed="true"]{color:var(--eye); border-color:var(--eye)}
+  .snaps button.harm[aria-pressed="true"]{color:var(--harm); border-color:var(--harm)}
+  .extra{display:flex; flex-wrap:wrap; gap:16px 18px; align-items:center; margin:14px 2px 0; font-family:var(--mono); font-size:12.5px; color:var(--muted)}
+  .extra label{display:flex; gap:7px; align-items:center; cursor:pointer}
+  .extra input[type=checkbox]{width:15px; height:15px; accent-color:var(--eye)}
+  .extra button{font-family:var(--mono); font-size:12.5px; padding:7px 12px; border:1px solid var(--ink); background:var(--ink); color:var(--ground); border-radius:7px; cursor:pointer}
+  .extra button:disabled{opacity:.4; cursor:default}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:15px}
+  .card h4{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 12px}
+
+  .polyval{font-family:var(--mono); font-size:15px; color:var(--muted); margin-bottom:6px}
+  .polyval b{color:var(--ink)}
+  .master{font-family:var(--mono); font-size:26px; font-weight:600; letter-spacing:-.01em}
+  .master.on{color:var(--eye)} .master.off{color:var(--ink)}
+  .mastersub{font-family:var(--mono); font-size:12px; margin-top:6px; color:var(--faint)}
+  .lamline{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:12px; padding-top:10px; border-top:1px solid var(--hair)}
+  .lamline b{color:var(--ink)}
+
+  .cond{font-family:var(--mono); font-size:13.5px; color:var(--muted); display:flex; align-items:center; gap:9px; padding:6px 0}
+  .cond .dot{flex:0 0 auto; width:11px; height:11px; border-radius:50%; border:1.5px solid var(--hair-bright); background:transparent; transition:.15s}
+  .cond.on .dot{background:var(--eye); border-color:var(--eye); box-shadow:0 0 0 3px rgba(106,44,145,.14)}
+  .cond .lbl{color:var(--ink)}
+  .cond .cv{margin-left:auto; color:var(--muted); font-variant-numeric:tabular-nums}
+  .cond.on .cv{color:var(--eye)}
+  .condnote{font-family:var(--mono); font-size:11.5px; color:var(--faint); margin-top:10px; padding-top:10px; border-top:1px solid var(--hair); line-height:1.55}
+
+  .verdict{margin:18px 0 4px; padding:14px 16px; border-left:3px solid var(--eye); background:#eee6f7; border-radius:0 8px 8px 0; color:var(--ink); font-size:16px; min-height:54px}
+  .verdict.harm{border-left-color:var(--harm); background:#f4ecdd}
+  .verdict .m{color:var(--eye)} .verdict.harm .m{color:var(--harm)}
+
+  .chain{font-family:var(--mono); font-size:14px; line-height:2.05; color:var(--ink); background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:16px 18px; margin:4px 0 8px; overflow-x:auto}
+  .chain .op{color:var(--faint)}
+
+  .guards{display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px}
+  .guard{border:1px solid var(--hair); border-radius:10px; padding:14px 16px; background:var(--panel)}
+  .guard h4{font-family:var(--mono); font-size:13px; margin:0 0 6px}
+  .guard.theorem h4{color:var(--c1)} .guard.shown h4{color:var(--eye)} .guard.note h4{color:var(--harm)}
+  .guard p{margin:0; color:var(--muted); font-size:15px}
+  .guard p .ink{color:var(--ink)}
+
+  footer{padding:34px 0 0; color:var(--faint); font-family:var(--mono); font-size:12px}
+  footer .led{display:flex; gap:10px; align-items:baseline; margin:6px 0}
+  footer .led .b{color:var(--c1)} footer .led .e{color:var(--eye)}
+  :focus-visible{outline:2px solid var(--eye); outline-offset:2px; border-radius:4px}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Anharmonic Interface · the value the ruler can't reach</p>
+    <h1>A <span class="hl">compass</span> for the<br>equianharmonic value</h1>
+    <p class="standfirst">The equianharmonic cross-ratio lives off the real line, so no directed length reaches it. Yet two compass swings do: it is the point at unit distance from <em>both</em> 0 and 1 — the eye of the vesica, the apex of the equilateral triangle on the unit segment. Drag the probe and watch three conditions fall together.</p>
+  </header>
+
+  <section id="instrument">
+    <p class="level"><b>swing &amp; drag</b> · two circles, one segment</p>
+    <h2>At unit distance from both 0 and 1</h2>
+    <p class="lede">Circle <span class="k0">C₀</span> is every point one unit from <span class="ink">0</span>; circle <span class="k1">C₁</span> is every point one unit from <span class="ink">1</span>. They cross at the two <span class="ke">eyes</span>. Drag the probe <b>λ</b> anywhere: its red arm measures the distance from 0, its green arm the distance from 1. Only where both arms are exactly one — the vesica crossings — is λ equianharmonic.</p>
+
+    <div class="panel">
+      <svg class="stage" id="stage" viewBox="0 0 686 552" role="img" aria-label="two unit circles centred at 0 and 1, meeting at the vesica eyes; drag the probe"></svg>
+
+      <div class="snaps" id="snaps"></div>
+      <div class="extra">
+        <label><input type="checkbox" id="recTog" checked> show <span class="kr">1/λ</span> = <span class="kc">1−λ</span></label>
+        <label><input type="checkbox" id="triTog" checked> show equilateral triangles</label>
+        <button id="playBtn">▷ construct</button>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>the master polynomial</h4>
+        <div class="polyval">λ² − λ + 1 = <b id="polyval">—</b></div>
+        <div class="master off" id="master">—</div>
+        <div class="mastersub" id="mastersub">its two roots are the eyes</div>
+        <div class="lamline">λ = <b id="lamval">—</b></div>
+      </div>
+      <div class="card">
+        <h4>three ways to be an eye — they hold together</h4>
+        <div class="cond" id="condA"><span class="dot"></span><span class="lbl">|λ| = 1</span><span class="cv" id="cvA">—</span></div>
+        <div class="cond" id="condB"><span class="dot"></span><span class="lbl">|λ − 1| = 1</span><span class="cv" id="cvB">—</span></div>
+        <div class="cond" id="condC"><span class="dot"></span><span class="lbl">1/λ = 1 − λ</span><span class="cv" id="cvC">—</span></div>
+        <div class="condnote">A and B place λ on both circles at once. C says the <span class="kr">reciprocal</span> and the <span class="kc">complement</span> coincide — and at each eye they both land on the <em>other</em> eye.</div>
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">—</div>
+  </section>
+
+  <section id="why">
+    <p class="level"><b>why the compass suffices</b> · one equivalence, read six ways</p>
+    <h2>Off the line, but two swings away</h2>
+    <div class="chain">
+λ equianharmonic
+  <span class="op">⇔</span> λ² − λ + 1 = 0
+  <span class="op">⇔</span> |λ| = 1 <span class="op">and</span> |λ − 1| = 1
+  <span class="op">⇔</span> 1/λ = 1 − λ <span class="op">(reciprocal = complement)</span>
+  <span class="op">⇔</span> λ + 1/λ = 1
+  <span class="op">⇔</span> apex of the equilateral triangle on [0, 1]
+    </div>
+    <p class="note" style="margin-top:16px">
+      The harmonic value <span class="kh">−1</span> is a directed length: it sits on the real axis, and a ruler laid along the line reaches it. The equianharmonic eyes sit at height ±√3⁄2 — <span class="ink">off the line entirely</span>, where no signed measurement can go. This is the boundary <em>What Survives the Ruler</em> traced: differences and ratios and the cross-ratio survive projection, but they live on the line. To reach the eyes you must leave it — and the compass is exactly the instrument that does, by swinging equal radii from the two endpoints of the given unit.
+    </p>
+    <p class="note" style="margin-top:16px">
+      The last equivalence is the one <em>Two Minuses</em> anticipated. The additive minus is the <span class="kc">complement</span> λ ↦ 1 − λ, a reflection about ½; the multiplicative minus is folded into the <span class="kr">reciprocal</span> λ ↦ 1/λ. Generically these two operations disagree. They are forced into agreement at exactly one pair of points — and that agreement, 1/λ = 1 − λ, rearranges to λ² − λ + 1 = 0. The equianharmonic value is where the two kinds of inversion become the same act.
+    </p>
+  </section>
+
+  <section id="ledger">
+    <p class="level"><b>ledger</b> · demonstrate, don't assert</p>
+    <h2>What is proven, and what is only pointed at</h2>
+    <div class="guards">
+      <div class="guard theorem">
+        <h4>Theorem</h4>
+        <p>The two unit circles centred at 0 and 1 meet exactly at <span class="ink">½ ± i√3⁄2 = e<sup>±iπ/3</sup></span>, the roots of λ² − λ + 1. Equivalently: a point is equianharmonic ⇔ it is unit-distant from both 0 and 1 ⇔ its reciprocal equals its complement. Elementary and exact — the intersection of two circles, verified here to machine precision.</p>
+      </div>
+      <div class="guard shown">
+        <h4>Shown — live</h4>
+        <p>The probe reads |λ|, |λ − 1|, the reciprocal, the complement, and λ² − λ + 1 as you move it; the three conditions light together only at the eyes, where <span class="ink">1/λ and 1 − λ both settle on the opposite eye</span>. The construct button replays the straightedge-and-compass sequence that produces them from the bare unit segment.</p>
+      </div>
+      <div class="guard note">
+        <h4>Note — the register it belongs to</h4>
+        <p>This is a constructibility fact about a single algebraic value, not a claim about perspective or the Engine. It earns its place beside the sphere's tetrahedron only as the <span class="ink">planar shadow of the same collapse</span>: j = 0 seen with a compass instead of seen as a solid. Two faces of one number; the identification between the faces is the cross-ratio, already proven.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="led"><span class="b">theorem ✓</span> C₀ ∩ C₁ = { e<sup>+iπ/3</sup>, e<sup>−iπ/3</sup> } = roots of λ² − λ + 1 = 0</div>
+    <div class="led"><span class="b">theorem ✓</span> equianharmonic ⇔ |λ| = |λ − 1| = 1 ⇔ 1/λ = 1 − λ ⇔ apex on [0, 1]</div>
+    <div class="led"><span class="e">shown ·</span> the ruler stays on the line ; the compass reaches the eyes</div>
+    <div class="led" style="margin-top:14px; color:var(--faint)">Anharmonic Interface · the equianharmonic value, drawn</div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(t,a)=>{const e=document.createElementNS(NS,t); for(const k in a)e.setAttribute(k,a[k]); return e;};
+  const COL={
+    ground:'#faf6ef', ink:'#3a2136', muted:'#6b5b66', faint:'#8c7a86', hair:'#ddd0bc', hairB:'#c6b49a',
+    c0:'#c0322b', c1:'#1f7a6b', eye:'#6a2c91', rec:'#a4660f', comp:'#2b66b8', harm:'#8f6a20',
+    triFill:'rgba(106,44,145,0.05)'
+  };
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- plane <-> screen ----
+  const U=190, OX=248, OY=276;
+  const sx=re=>OX+U*re, sy=im=>OY-U*im;
+  const CIRC=2*Math.PI*U;
+  const S3=Math.sqrt(3)/2;
+  const EYE_P={re:0.5, im:S3}, EYE_M={re:0.5, im:-S3};
+
+  // ---- complex ----
+  const mod=z=>Math.hypot(z.re,z.im);
+  const sub=(a,b)=>({re:a.re-b.re, im:a.im-b.im});
+  const poly=z=>({re:z.re*z.re-z.im*z.im - z.re + 1, im:2*z.re*z.im - z.im});      // z^2 - z + 1
+  const recip=z=>{const d=z.re*z.re+z.im*z.im; return d<1e-12?null:{re:z.re/d, im:-z.im/d};};
+  const comp=z=>({re:1-z.re, im:-z.im});                                            // 1 - z
+
+  // ---- state ----
+  let P={re:0.5, im:S3};        // the probe (start at upper eye)
+  let showRec=true, showTri=true;
+  let reveal={seg:1,c0:1,c1:1,eye:1,tri:1,probe:true};
+
+  const stage=document.getElementById('stage');
+
+  function line(x1,y1,x2,y2,stroke,w,dash,op){ const a={x1,y1,x2,y2,stroke,'stroke-width':w,fill:'none'}; if(dash)a['stroke-dasharray']=dash; if(op!=null)a.opacity=op; return mk('line',a); }
+  function dot(cx,cy,r,fill,stroke,sw,op){ const a={cx,cy,r,fill}; if(stroke){a.stroke=stroke; a['stroke-width']=sw||1.5;} if(op!=null)a.opacity=op; return mk('circle',a); }
+  function txt(x,y,s,fill,anchor,size){ const e=mk('text',{x,y,'text-anchor':anchor||'middle',fill,'font-family':'ui-monospace, Menlo, monospace','font-size':size||13}); e.textContent=s; return e; }
+
+  function draw(){
+    while(stage.firstChild) stage.removeChild(stage.firstChild);
+
+    // faint axes (the line the ruler lives on)
+    stage.appendChild(line(20,sy(0),666,sy(0),COL.hairB,1,null,0.7));
+    stage.appendChild(line(sx(0),20,sx(0),532,COL.hair,1,'2 4',0.6));
+    stage.appendChild(txt(660,sy(0)-7,'real axis',COL.faint,'end',11));
+
+    // triangles
+    if(showTri){
+      [EYE_P,EYE_M].forEach(E=>{
+        const near = mod(sub(P,E))<0.04;
+        stage.appendChild(mk('polygon',{points:`${sx(0)},${sy(0)} ${sx(1)},${sy(0)} ${sx(E.re)},${sy(E.im)}`,
+          fill:COL.triFill, stroke:COL.eye, 'stroke-width':near?1.6:1, opacity:(near?0.9:0.4)*reveal.tri, 'stroke-dasharray':near?'none':'4 4'}));
+      });
+    }
+
+    // circle C0 (centre 0) and C1 (centre 1), with optional sweep reveal
+    function circle(cx0,frac,stroke){
+      const c=mk('circle',{cx:sx(cx0),cy:sy(0),r:U,fill:'none',stroke,'stroke-width':1.6});
+      if(frac<1){ c.setAttribute('stroke-dasharray', (frac*CIRC).toFixed(1)+' '+CIRC.toFixed(1)); }
+      return c;
+    }
+    stage.appendChild(circle(0,reveal.c0,COL.c0));
+    stage.appendChild(circle(1,reveal.c1,COL.c1));
+    stage.appendChild(txt(sx(0)-U+4, sy(0)-8, 'C₀ · dist 1 from 0', COL.c0,'start',11));
+    stage.appendChild(txt(sx(1)+U-4, sy(0)+16, 'C₁ · dist 1 from 1', COL.c1,'end',11));
+
+    // the given unit segment [0,1]
+    const segX2 = sx(0)+reveal.seg*(sx(1)-sx(0));
+    stage.appendChild(line(sx(0),sy(0),segX2,sy(0),COL.ink,3,null,1));
+    stage.appendChild(dot(sx(0),sy(0),4.5,COL.ink));
+    stage.appendChild(dot(sx(1),sy(0),4.5,COL.ink));
+    stage.appendChild(txt(sx(0)-4,sy(0)+20,'0',COL.ink,'middle',13));
+    stage.appendChild(txt(sx(1)+2,sy(0)+20,'1',COL.ink,'middle',13));
+
+    // eyes
+    [['e^{iπ/3}',EYE_P,-12],['e^{−iπ/3}',EYE_M,18]].forEach(([lab,E,dy])=>{
+      stage.appendChild(dot(sx(E.re),sy(E.im),5.5,COL.eye,COL.ground,1.5,reveal.eye));
+      stage.appendChild(txt(sx(E.re)+12,sy(E.im)+dy*0.0+ (dy<0?-2:6), lab, COL.eye,'start',12));
+    });
+
+    if(!reveal.probe) return;
+
+    // probe arms: red from 0, green from 1
+    stage.appendChild(line(sx(0),sy(0),sx(P.re),sy(P.im),COL.c0,1.6,null,0.9));
+    stage.appendChild(line(sx(1),sy(0),sx(P.re),sy(P.im),COL.c1,1.6,null,0.9));
+
+    // reciprocal & complement
+    if(showRec){
+      const r=recip(P), c=comp(P);
+      if(r){
+        stage.appendChild(line(sx(r.re),sy(r.im),sx(c.re),sy(c.im),COL.faint,1,'3 4',0.8));
+        stage.appendChild(dot(sx(r.re),sy(r.im),5,COL.rec,COL.ground,1.4));
+        stage.appendChild(txt(sx(r.re)+9,sy(r.im)+4,'1/λ',COL.rec,'start',12));
+      }
+      stage.appendChild(dot(sx(c.re),sy(c.im),5,COL.comp,COL.ground,1.4));
+      stage.appendChild(txt(sx(c.re)+9,sy(c.im)+16,'1−λ',COL.comp,'start',12));
+    }
+
+    // the probe itself
+    stage.appendChild(dot(sx(P.re),sy(P.im),7.5,'#43203f',COL.ground,2));
+    stage.appendChild(txt(sx(P.re)-13,sy(P.im)-11,'λ','#43203f','end',14));
+  }
+
+  // ---- readouts ----
+  const $=id=>document.getElementById(id);
+  function fmt(z){ if(!z) return '∞'; const r=Math.abs(z.re)<5e-4?0:z.re, i=z.im;
+    if(Math.abs(i)<5e-4) return r.toFixed(3);
+    return r.toFixed(3)+(i<0?' − ':' + ')+Math.abs(i).toFixed(3)+'i'; }
+  function setCond(id,cvid,val,target,ok){
+    const el=$(id); el.classList.toggle('on',ok);
+    $(cvid).textContent = (val).toFixed(3);
+  }
+  function update(){
+    const pv=poly(P), pmod=mod(pv);
+    const dA=mod(P), dB=mod(sub(P,{re:1,im:0}));
+    const r=recip(P), c=comp(P);
+    const sep = r? mod(sub(r,c)) : Infinity;
+
+    $('lamval').textContent = fmt(P);
+    $('polyval').textContent = fmt(pv);
+
+    const isEye = pmod<0.02;
+    const master=$('master');
+    master.textContent = pmod<0.0005 ? '0.000' : '|λ²−λ+1| = '+pmod.toFixed(3);
+    master.className = 'master '+(isEye?'on':'off');
+    $('mastersub').textContent = isEye ? 'a root — this is an eye' : 'its two roots are the eyes';
+
+    setCond('condA','cvA',dA,1,Math.abs(dA-1)<0.03);
+    setCond('condB','cvB',dB,1,Math.abs(dB-1)<0.03);
+    const elC=$('condC'); elC.classList.toggle('on', sep<0.05);
+    $('cvC').textContent = isFinite(sep)? sep.toFixed(3) : '∞';
+
+    const v=$('verdict');
+    if(isEye){
+      const which = P.im>=0 ? 'e^{+iπ/3}' : 'e^{−iπ/3}';
+      const other = P.im>=0 ? 'e^{−iπ/3}' : 'e^{+iπ/3}';
+      v.className='verdict';
+      v.innerHTML='<span class="m">equianharmonic</span> — λ = '+which+'. Unit-distant from both 0 and 1, so it lies on both circles at once; its reciprocal and complement have both collapsed onto '+other+', the other eye. j = 0.';
+    } else if(Math.abs(P.im)<0.02 && Math.abs(dA-1)<0.03){
+      v.className='verdict harm';
+      v.innerHTML='On <span class="m">C₀</span> but not C₁ — one unit from 0, but '+dB.toFixed(2)+' from 1. A real value on the line (λ = −1 is <span class="m">harmonic</span>, j = 1728), not an eye: the ruler reaches here, the second circle does not.';
+    } else {
+      v.className='verdict';
+      v.innerHTML='Generic λ — '+dA.toFixed(2)+' from 0, '+dB.toFixed(2)+' from 1. Drag onto a vesica crossing to make λ²−λ+1 vanish and the three conditions light together.';
+    }
+    draw();
+  }
+
+  // ---- drag ----
+  function toPlane(ev){
+    const pt=stage.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    const m=stage.getScreenCTM(); if(!m) return null;
+    const p=pt.matrixTransform(m.inverse());
+    return {re:(p.x-OX)/U, im:(OY-p.y)/U};
+  }
+  let dragging=false;
+  stage.addEventListener('pointerdown',ev=>{ const q=toPlane(ev); if(!q) return;
+    dragging=true; stage.setPointerCapture(ev.pointerId);
+    // snap to a nearby eye for a satisfying landing
+    [EYE_P,EYE_M].forEach(E=>{ if(mod(sub(q,E))<0.06){ q.re=E.re; q.im=E.im; } });
+    P=q; clearSnaps(); update(); ev.preventDefault(); });
+  stage.addEventListener('pointermove',ev=>{ if(!dragging) return; const q=toPlane(ev); if(!q) return;
+    [EYE_P,EYE_M].forEach(E=>{ if(mod(sub(q,E))<0.05){ q.re=E.re; q.im=E.im; } });
+    P=q; update(); ev.preventDefault(); });
+  stage.addEventListener('pointerup',()=>{dragging=false;});
+  stage.addEventListener('pointercancel',()=>{dragging=false;});
+
+  // ---- snaps ----
+  const SNAPS=[
+    {cls:'eye',  t:'upper eye',   s:'e^{+iπ/3}',      re:0.5, im:S3},
+    {cls:'eye',  t:'lower eye',   s:'e^{−iπ/3}',      re:0.5, im:-S3},
+    {cls:'harm', t:'harmonic −1', s:'on C₀, not C₁',  re:-1,  im:0}
+  ];
+  const snapsBox=$('snaps'), snapBtns=[];
+  SNAPS.forEach(sp=>{ const b=document.createElement('button'); b.className=sp.cls; b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="t">'+sp.t+'</span><span class="s">'+sp.s+'</span>';
+    b.onclick=()=>{ clearSnaps(); b.setAttribute('aria-pressed','true'); animateTo({re:sp.re,im:sp.im}); };
+    snapsBox.appendChild(b); snapBtns.push(b);
+  });
+  function clearSnaps(){ snapBtns.forEach(b=>b.setAttribute('aria-pressed','false')); }
+
+  let raf=null;
+  function animateTo(target){
+    if(raf) cancelAnimationFrame(raf);
+    if(reduce){ P={...target}; update(); return; }
+    const p0={...P}, T0=performance.now(), dur=520;
+    (function step(now){ let u=Math.min(1,(now-T0)/dur); const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+      P={re:p0.re+(target.re-p0.re)*e, im:p0.im+(target.im-p0.im)*e};
+      update(); if(u<1) raf=requestAnimationFrame(step); else { P={...target}; raf=null; update(); }
+    })(performance.now());
+  }
+
+  // ---- toggles ----
+  $('recTog').addEventListener('change',e=>{ showRec=e.target.checked; draw(); });
+  $('triTog').addEventListener('change',e=>{ showTri=e.target.checked; draw(); });
+
+  // ---- construct (replay the compass sequence) ----
+  const playBtn=$('playBtn');
+  let playing=false;
+  playBtn.addEventListener('click',()=>{
+    if(playing) return; playing=true; playBtn.disabled=true;
+    if(reduce){ reveal={seg:1,c0:1,c1:1,eye:1,tri:1,probe:true}; playing=false; playBtn.disabled=false; update(); return; }
+    // phases in ms: segment, circle0, circle1, eyes, triangles
+    const ph=[['seg',0,450],['c0',450,1150],['c1',1150,1900],['eye',1900,2200],['tri',2200,2650]];
+    reveal={seg:0,c0:0,c1:0,eye:0,tri:0,probe:false};
+    const T0=performance.now(), END=2650;
+    (function step(now){ const t=now-T0;
+      ph.forEach(([k,a,b])=>{ reveal[k]=Math.max(0,Math.min(1,(t-a)/(b-a))); });
+      draw();
+      if(t<END) requestAnimationFrame(step);
+      else { reveal={seg:1,c0:1,c1:1,eye:1,tri:1,probe:true}; playing=false; playBtn.disabled=false; update(); }
+    })(performance.now());
+  });
+
+  // ---- boot ----
+  snapBtns[0].setAttribute('aria-pressed','true');
+  update();
+})();
+</script>
+</body>
+</html>
