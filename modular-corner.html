@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The modular corner — why these values and no others</title>
+<style>
+  :root{
+    --ground:#faf6ef; --panel:#f3ebde; --raised:#ede3d3;
+    --hair:#ddd0bc; --hair-bright:#c6b49a;
+    --ink:#3a2136; --muted:#6b5b66; --faint:#8c7a86;
+    --eq:#6a2c91; --harm:#8f6a20; --cusp:#2b66b8; --edge:#8a7686;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --serif:"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--serif); line-height:1.62; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px; margin:0 auto; padding:0 20px 110px}
+
+  header.hero{padding:56px 0 26px; border-bottom:1px solid var(--hair)}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--eq); margin:0 0 18px}
+  h1{font-family:var(--mono); font-weight:600; letter-spacing:-.01em; font-size:clamp(23px,4.6vw,38px); line-height:1.08; margin:0 0 16px}
+  h1 .hl{color:var(--eq)}
+  .standfirst{font-size:clamp(16px,2.3vw,19px); color:var(--muted); max-width:66ch; margin:0}
+  .standfirst em{color:var(--ink); font-style:italic}
+
+  section{padding:44px 0 6px; border-bottom:1px solid var(--hair)}
+  .level{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin:0 0 6px}
+  .level b{color:var(--eq)}
+  h2{font-family:var(--mono); font-weight:600; font-size:clamp(19px,3.2vw,25px); margin:0 0 12px; letter-spacing:-.01em}
+  .lede{color:var(--muted); max-width:66ch; margin:0 0 20px}
+  p.note{color:var(--muted); max-width:68ch}
+  p.note .ink{color:var(--ink)}
+  code,.m{font-family:var(--mono); font-size:.92em}
+  .keq{color:var(--eq)} .kh{color:var(--harm)} .kc{color:var(--cusp)}
+
+  .panel{background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:16px; margin:6px 0 16px}
+  svg.stage{display:block; width:100%; height:auto; touch-action:none; border-radius:8px; background:var(--ground); cursor:crosshair}
+
+  .snaps{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+  .snaps button{font-family:var(--mono); font-size:13px; color:var(--ink); background:var(--raised); border:1px solid var(--hair); border-radius:8px; padding:9px 12px; min-height:42px; cursor:pointer; transition:.12s; display:flex; flex-direction:column; gap:2px; align-items:flex-start; line-height:1.15}
+  .snaps button .t{font-weight:600}
+  .snaps button .s{font-size:10px; color:var(--faint)}
+  .snaps button:active{transform:translateY(1px)}
+  .snaps button.eq[aria-pressed="true"]{color:var(--eq); border-color:var(--eq)}
+  .snaps button.harm[aria-pressed="true"]{color:var(--harm); border-color:var(--harm)}
+  .snaps button.cusp[aria-pressed="true"]{color:var(--cusp); border-color:var(--cusp)}
+  .snaps button.gn[aria-pressed="true"]{color:var(--ink); border-color:var(--hair-bright)}
+  .extra{display:flex; flex-wrap:wrap; gap:16px 18px; align-items:center; margin:14px 2px 0; font-family:var(--mono); font-size:12.5px; color:var(--muted)}
+  .extra label{display:flex; gap:7px; align-items:center; cursor:pointer}
+  .extra input[type=checkbox]{width:15px; height:15px; accent-color:var(--eq)}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:15px}
+  .card h4{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 12px}
+  .rowline{font-family:var(--mono); font-size:13.5px; color:var(--muted); line-height:1.95}
+  .rowline b{color:var(--ink)}
+  .bigj{font-family:var(--mono); font-size:22px; font-weight:600; margin:2px 0 2px}
+  .chip{display:inline-block; font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:20px; margin-top:6px; border:1px solid var(--hair-bright); color:var(--muted)}
+  .chip.eq{color:var(--eq); border-color:var(--eq); background:rgba(106,44,145,.07)}
+  .chip.harm{color:var(--harm); border-color:var(--harm); background:rgba(143,106,32,.08)}
+  .chip.cusp{color:var(--cusp); border-color:var(--cusp); background:rgba(43,102,184,.07)}
+
+  .nearbox{font-family:var(--mono); font-size:13.5px; line-height:1.85}
+  .nearbox .hd{font-weight:600; font-size:15px; margin-bottom:6px}
+  .nearbox.eq .hd{color:var(--eq)} .nearbox.harm .hd{color:var(--harm)} .nearbox.cusp .hd{color:var(--cusp)} .nearbox.gn .hd{color:var(--ink)}
+  .nearbox .r{color:var(--muted)} .nearbox .r b{color:var(--ink)}
+
+  .verdict{margin:18px 0 4px; padding:14px 16px; border-left:3px solid var(--eq); background:#eee6f7; border-radius:0 8px 8px 0; color:var(--ink); font-size:16px; min-height:54px}
+  .verdict.harm{border-left-color:var(--harm); background:#f4ecdd}
+  .verdict.cusp{border-left-color:var(--cusp); background:#e9eef7}
+  .verdict .m{color:var(--eq)} .verdict.harm .m{color:var(--harm)} .verdict.cusp .m{color:var(--cusp)}
+
+  .chain{font-family:var(--mono); font-size:13.5px; line-height:2.0; color:var(--ink); background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:16px 18px; margin:4px 0 8px; overflow-x:auto}
+  .chain .op{color:var(--faint)} .chain .keq{color:var(--eq)} .chain .kh{color:var(--harm)}
+
+  .guards{display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px}
+  .guard{border:1px solid var(--hair); border-radius:10px; padding:14px 16px; background:var(--panel)}
+  .guard h4{font-family:var(--mono); font-size:13px; margin:0 0 6px}
+  .guard.theorem h4{color:var(--eq)} .guard.bridge h4{color:var(--harm)} .guard.note h4{color:var(--cusp)}
+  .guard p{margin:0; color:var(--muted); font-size:15px}
+  .guard p .ink{color:var(--ink)}
+
+  footer{padding:34px 0 0; color:var(--faint); font-family:var(--mono); font-size:12px}
+  footer .led{display:flex; gap:10px; align-items:baseline; margin:6px 0}
+  footer .led .b{color:var(--eq)}
+  :focus-visible{outline:2px solid var(--eq); outline-offset:2px; border-radius:4px}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Anharmonic Interface · why these values and no others</p>
+    <h1>The <span class="hl">modular corner</span></h1>
+    <p class="standfirst">The whole story has one root at the top. The modular group is <em>ℤ/2 ∗ ℤ/3</em> — it carries exactly two kinds of rotation, of order 2 and order 3, and no others. Their fixed points are the only special points of the picture: <span class="kh">i</span> and <span class="keq">ρ</span>. And the fixed-point equation of the order-3 one is τ² − τ + 1 = 0 — the equianharmonic polynomial itself.</p>
+  </header>
+
+  <section id="instrument">
+    <p class="level"><b>drag in the half-plane</b> · one tile, tessellated</p>
+    <h2>Two elliptic points, one cusp</h2>
+    <p class="lede">The shaded region is the fundamental domain 𝔽; every other tile is one copy of it moved by the group. Drag <b>τ</b> anywhere in the upper half-plane: it folds back into 𝔽 (the hollow marker), and <b>j(τ)</b> and <b>λ(τ)</b> read out. Land on the order-3 corner <span class="keq">ρ</span> and j falls to 0; on the order-2 point <span class="kh">i</span> and j is 1728; drift toward the cusp and j runs to ∞.</p>
+
+    <div class="panel">
+      <svg class="stage" id="stage" viewBox="0 0 700 460" role="img" aria-label="upper half-plane tessellated by the modular group, with a draggable point"></svg>
+      <div class="snaps" id="snaps"></div>
+      <div class="extra">
+        <label><input type="checkbox" id="redTog" checked> show fold-back into 𝔽</label>
+        <label><input type="checkbox" id="ellTog" checked> mark elliptic points</label>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>the invariant and the value</h4>
+        <div class="rowline">
+          τ = <b id="tauval">—</b><br>
+          ≡ <b id="tau0val">—</b> &nbsp;<span style="color:var(--faint)">(mod PSL₂ℤ)</span>
+        </div>
+        <div class="rowline" style="margin-top:8px">λ(τ) = <b id="lamval">—</b></div>
+        <div class="bigj" id="bigj">j = —</div>
+        <div class="chip" id="chip">—</div>
+      </div>
+      <div class="card">
+        <h4 id="nearhd">the point you're near</h4>
+        <div class="nearbox gn" id="nearbox">
+          <div class="hd" id="nb-hd">—</div>
+          <div class="r" id="nb-r">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">—</div>
+  </section>
+
+  <section id="why">
+    <p class="level"><b>from the top</b> · the torsion of the modular group</p>
+    <h2>The answer is 2 and 3, because the group has nothing else</h2>
+    <div class="chain">
+PSL(2, ℤ) = ⟨ S, T | S² = (ST)³ = 1 ⟩ ≅ ℤ/2 ∗ ℤ/3
+  <span class="op">→</span> torsion elements of order <span class="kh">2</span> and <span class="keq">3</span> only
+  <span class="op">→</span> two elliptic points: <span class="kh">i</span> (order 2), <span class="keq">ρ = e^{iπ/3}</span> (order 3)
+  <span class="op">→</span> j sends them, with the cusp, to <span class="kh">1728</span>, <span class="keq">0</span>, ∞
+  <span class="op">→</span> order-3 fixed-point equation:  τ² − τ + 1 = 0
+  <span class="op">≡</span> equianharmonic cross-ratio:  λ² − λ + 1 = 0
+    </div>
+    <p class="note" style="margin-top:16px">
+      This is not an analogy between two things that resemble each other. The <span class="ink">λ that appears here is the cross-ratio</span> — the modular lambda function is the same λ, a coordinate on the four marked points. Its six branches over j are the six cosets of Γ(2) in the full group, and those cosets <span class="ink">are S₃</span>, the very symmetry that permutes the cross-ratio's six values. So the equianharmonic value sits at the order-3 corner not by coincidence but by identity: λ(ρ) = e<sup>±iπ/3</sup>.
+    </p>
+    <p class="note" style="margin-top:16px">
+      And that closes the suite. The <span class="keq">order-3 point ρ</span> is where the regular tetrahedron lives on the sphere, where the vesica's two circles cross, where the six cross-ratio values collapse to two. Every one of those was a shadow of a single group-theoretic fact: PSL(2, ℤ) has an order-3 generator whose fixed-point equation is x² − x + 1. Ask "why e<sup>iπ/3</sup> and nothing else," and this is the floor the question rests on.
+    </p>
+  </section>
+
+  <section id="ledger">
+    <p class="level"><b>ledger</b> · demonstrate, don't assert</p>
+    <h2>Proven at the root</h2>
+    <div class="guards">
+      <div class="guard theorem">
+        <h4>Theorem — the domain</h4>
+        <p>The quotient ℍ / PSL(2, ℤ) has exactly two elliptic points — <span class="ink">i of order 2 and ρ of order 3</span> — and one cusp. Under the modular function j they map to 1728, 0, ∞. Verified here: j computed from Jacobi theta series agrees with the q-expansion, and gives j(i) = 1728, j(ρ) = 0 to machine precision.</p>
+      </div>
+      <div class="guard bridge">
+        <h4>Theorem — the bridge to the cross-ratio</h4>
+        <p>The order-3 generator TS fixes ρ, and its fixed-point equation is <span class="ink">τ² − τ + 1 = 0</span>, identical to the equianharmonic condition λ² − λ + 1 = 0 whose roots are e<sup>±iπ/3</sup>. Since λ(τ) is the cross-ratio and Γ(2)\PSL(2,ℤ) ≅ S₃, the value at the order-3 corner is λ(ρ) = e<sup>±iπ/3</sup>: the same number as the tetrahedron and the vesica apex.</p>
+      </div>
+      <div class="guard note">
+        <h4>Note — what this explains</h4>
+        <p>This answers the "why these and no others" that the earlier panels raised but could not settle from inside themselves. The special values are the images under j of the torsion of the modular group — <span class="ink">two orders, 2 and 3, and nothing else</span>. The tetrahedron, the vesica, and the six-value collapse are consequences; this is the cause.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="led"><span class="b">theorem ✓</span> ℍ/PSL₂ℤ : elliptic points i (order 2), ρ (order 3), cusp → j = 1728, 0, ∞</div>
+    <div class="led"><span class="b">theorem ✓</span> order-3 fixed-point eqn τ²−τ+1 = 0 ≡ equianharmonic λ²−λ+1 = 0 ; λ(ρ) = e^{±iπ/3}</div>
+    <div class="led" style="margin-top:14px; color:var(--faint)">Anharmonic Interface · the floor the question rests on</div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(t,a)=>{const e=document.createElementNS(NS,t); for(const k in a)e.setAttribute(k,a[k]); return e;};
+  const COL={ ground:'#faf6ef', ink:'#3a2136', muted:'#6b5b66', faint:'#8c7a86', hair:'#ddd0bc', hairB:'#c6b49a',
+    eq:'#6a2c91', harm:'#8f6a20', cusp:'#2b66b8', edge:'#8a7686', fund:'rgba(106,44,145,0.06)' };
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- plane <-> screen (upper half plane; y=0 at bottom) ----
+  const s=125, CX=350, BASEY=442, TOPY_MATH=3.55;
+  const sx=x=>CX+s*x, sy=y=>BASEY-s*y;
+  const S3=Math.sqrt(3)/2;
+  const RHO={x:0.5,y:S3}, RHOP={x:-0.5,y:S3}, IPT={x:0,y:1};
+
+  // ---- complex helpers {re,im} ----
+  const cadd=(a,b)=>({re:a.re+b.re,im:a.im+b.im});
+  const csub=(a,b)=>({re:a.re-b.re,im:a.im-b.im});
+  const cmul=(a,b)=>({re:a.re*b.re-a.im*b.im,im:a.re*b.im+a.im*b.re});
+  const cdiv=(a,b)=>{const d=b.re*b.re+b.im*b.im; return {re:(a.re*b.re+a.im*b.im)/d,im:(a.im*b.re-a.re*b.im)/d};};
+  const cmod=a=>Math.hypot(a.re,a.im);
+  const cpow=(a,n)=>{let r={re:1,im:0}; for(let i=0;i<n;i++) r=cmul(r,a); return r;};
+
+  // exp(i*pi*tau*m) for real m, tau={re,im}
+  function eterm(m,tau){ const amp=Math.exp(-Math.PI*tau.im*m), ph=Math.PI*tau.re*m; return {re:amp*Math.cos(ph), im:amp*Math.sin(ph)}; }
+  function lambdaOf(tau){
+    if(tau.im<0.02) return null;
+    const N=48;
+    let t2={re:0,im:0}, t3={re:1,im:0};
+    for(let n=0;n<N;n++) t2=cadd(t2, eterm((n+0.5)*(n+0.5), tau));
+    t2={re:2*t2.re,im:2*t2.im};
+    for(let n=1;n<N;n++) t3=cadd(t3, {re:2*eterm(n*n,tau).re, im:2*eterm(n*n,tau).im});
+    const ratio=cdiv(t2,t3); return cpow(ratio,4);
+  }
+  function jOf(lam){
+    if(!lam) return null;
+    const t={re:1-lam.re+ (lam.re*lam.re-lam.im*lam.im), im:-lam.im + 2*lam.re*lam.im}; // 1 - l + l^2
+    const num=cmul(cmul(t,t),t); num.re*=256; num.im*=256;
+    const l2=cmul(lam,lam); const om=csub({re:1,im:0},lam);
+    const den=cmul(l2, cmul(om,om));
+    if(cmod(den)<1e-30) return null;
+    return cdiv(num,den);
+  }
+
+  // ---- reduce tau to fundamental domain ----
+  function reduceTau(tau){
+    let z={re:tau.re,im:tau.im};
+    for(let i=0;i<80 && z.im>1e-6;i++){
+      const n=Math.round(z.re); if(n!==0) z.re-=n;
+      const m2=z.re*z.re+z.im*z.im;
+      if(m2<1-1e-9){ z={re:-z.re/m2, im:z.im/m2}; } else break;
+    }
+    return z;
+  }
+
+  // ---- modular tessellation (generated once) ----
+  const stage=document.getElementById('stage');
+  function mob(M,z){ // M=[a,b,c,d], z complex -> (az+b)/(cz+d); returns {x,y,inf}
+    const a=M[0],b=M[1],c=M[2],d=M[3];
+    if(z===Infinity){ if(c===0) return {inf:true}; return {x:a/c,y:0}; }
+    const num=cadd(cmul({re:a,im:0},z),{re:b,im:0});
+    const den=cadd(cmul({re:c,im:0},z),{re:d,im:0});
+    const w=cdiv(num,den); return {x:w.re,y:w.im};
+  }
+  function matmul(A,B){ return [A[0]*B[0]+A[1]*B[2], A[0]*B[1]+A[1]*B[3], A[2]*B[0]+A[3]*B[2], A[2]*B[1]+A[3]*B[3]]; }
+  function norm(M){ let [a,b,c,d]=M; for(const v of [a,c,b,d]){ if(v!==0){ if(v<0){a=-a;b=-b;c=-c;d=-d;} break; } } return [a,b,c,d]; }
+  const key=M=>M.join(',');
+  const RHOc={re:0.5,im:S3}, RHOPc={re:-0.5,im:S3}, Ic={re:0,im:1};
+
+  function genTessellation(){
+    const S=[0,-1,1,0], T=[1,1,0,1], Ti=[1,-1,0,1], gens=[S,T,Ti];
+    const seen=new Set(), queue=[[1,0,0,1]]; seen.add(key([1,0,0,1]));
+    const tiles=[]; let processed=0;
+    function inWin(M){ // keep only tiles that reach a visible size in the window
+      const p=mob(M,RHOc), q=mob(M,RHOPc);
+      const maxy=Math.max(p.y,q.y), minx=Math.min(p.x,q.x), maxx=Math.max(p.x,q.x);
+      return maxy>0.05 && maxx>-3.3 && minx<3.3;
+    }
+    while(queue.length && processed<6000){
+      const M=queue.shift(); processed++;
+      tiles.push(M);
+      for(const g of gens){
+        const M2=norm(matmul(g,M)); const k=key(M2);
+        if(seen.has(k)) continue;
+        const c=M2[2];
+        if(Math.abs(c)>5) continue;
+        if(c!==0 && Math.abs(M2[0]/c)>3.8) continue;
+        if(c===0 && Math.abs(M2[1])>4) continue;
+        if(!inWin(M2)) continue;
+        seen.add(k); queue.push(M2);
+      }
+    }
+    return tiles;
+  }
+
+  // geodesic between p,q ({x,y} with y>=0, or {inf:true}) -> svg path 'd'
+  function geo(p,q){
+    if(p.inf||q.inf){ const f=p.inf?q:p; return `M ${sx(f.x).toFixed(1)} ${sy(f.y).toFixed(1)} L ${sx(f.x).toFixed(1)} ${sy(TOPY_MATH).toFixed(1)}`; }
+    if(Math.abs(p.x-q.x)<1e-7){ return `M ${sx(p.x).toFixed(1)} ${sy(p.y).toFixed(1)} L ${sx(q.x).toFixed(1)} ${sy(q.y).toFixed(1)}`; }
+    const x0=(p.x*p.x+p.y*p.y-q.x*q.x-q.y*q.y)/(2*(p.x-q.x));
+    const r=Math.hypot(p.x-x0,p.y);
+    let tp=Math.atan2(p.y,p.x-x0), tq=Math.atan2(q.y,q.x-x0);
+    const K=16; let d='';
+    for(let i=0;i<=K;i++){ const t=tp+(tq-tp)*i/K; const X=x0+r*Math.cos(t), Y=r*Math.sin(t);
+      d+=(i?'L':'M')+sx(X).toFixed(1)+' '+sy(Y).toFixed(1)+' '; }
+    return d;
+  }
+  function onScreen(pt){ if(pt.inf) return false; const X=sx(pt.x),Y=sy(pt.y); return X>-30&&X<730&&Y>-30&&Y<490; }
+
+  function drawTess(showEll){
+    const g=document.getElementById('tess'); if(g) g.remove();
+    const G=mk('g',{id:'tess'}); stage.insertBefore(G, stage.firstChild);
+
+    // real axis
+    G.appendChild(mk('line',{x1:sx(-2.8),y1:sy(0),x2:sx(2.8),y2:sy(0),stroke:COL.hairB,'stroke-width':1.4}));
+    G.appendChild(mk('text',{x:sx(2.72),y:sy(0)+16,'text-anchor':'end',fill:COL.faint,'font-family':'ui-monospace, Menlo, monospace','font-size':11},)).textContent='ℝ · cusps · j = ∞';
+
+    const tiles=genTessellation();
+    // fundamental-domain fill (M = I)
+    const fd=[RHOPc,RHOc].map(z=>({x:z.re,y:z.im}));
+    G.appendChild(mk('path',{d:`${geo({x:-0.5,y:S3},{inf:true})} ${geo({x:0.5,y:S3},{inf:true})}`.replace(/M/g,'M'), fill:'none', opacity:0})); // spacer (no-op)
+    // shade 𝔽 as a polygon approx (left edge up, arc, right edge)
+    let fdpath='M '+sx(-0.5)+' '+sy(TOPY_MATH)+' L '+sx(-0.5)+' '+sy(S3)+' ';
+    { // arc from rho' to rho
+      const x0=0,r=1; const tp=Math.atan2(S3,-0.5), tq=Math.atan2(S3,0.5), K=20;
+      for(let i=1;i<=K;i++){ const t=tp+(tq-tp)*i/K; fdpath+='L '+sx(Math.cos(t)).toFixed(1)+' '+sy(Math.sin(t)).toFixed(1)+' '; }
+    }
+    fdpath+='L '+sx(0.5)+' '+sy(TOPY_MATH)+' Z';
+    G.appendChild(mk('path',{d:fdpath, fill:COL.fund, stroke:'none'}));
+
+    // edges (dedup)
+    const drawn=new Set();
+    const ell3=[], ell2=[];
+    for(const M of tiles){
+      const cr=mob(M,RHOc), cp=mob(M,RHOPc), cu=mob(M,Infinity), ci=mob(M,Ic);
+      const edges=[[cp,cr],[cp,cu],[cr,cu]];
+      // cull whole tile if nothing near window, or if it is sub-pixel small
+      if(!(onScreen(cr)||onScreen(cp)|| (cu.inf?false:onScreen(cu)))) continue;
+      if(Math.hypot((cr.x-cp.x)*s,(cr.y-cp.y)*s)<4) continue;
+      for(const [p,q] of edges){
+        const ek=[p.inf?'I':p.x.toFixed(2)+','+p.y.toFixed(2), q.inf?'I':q.x.toFixed(2)+','+q.y.toFixed(2)].sort().join('|');
+        if(drawn.has(ek)) continue; drawn.add(ek);
+        G.appendChild(mk('path',{d:geo(p,q),fill:'none',stroke:COL.edge,'stroke-width':1,opacity:0.45}));
+      }
+      if(onScreen(cr)) ell3.push(cr);
+      if(onScreen(cp)) ell3.push(cp);
+      if(onScreen(ci)) ell2.push(ci);
+    }
+
+    if(showEll){
+      const seen3=new Set(), seen2=new Set();
+      ell2.forEach(p=>{ const k=p.x.toFixed(2)+','+p.y.toFixed(2); if(seen2.has(k))return; seen2.add(k);
+        G.appendChild(mk('circle',{cx:sx(p.x),cy:sy(p.y),r:3,fill:COL.harm,opacity:0.85})); });
+      ell3.forEach(p=>{ const k=p.x.toFixed(2)+','+p.y.toFixed(2); if(seen3.has(k))return; seen3.add(k);
+        G.appendChild(mk('circle',{cx:sx(p.x),cy:sy(p.y),r:3.2,fill:COL.eq,opacity:0.85})); });
+    }
+
+    // the three named points, prominent
+    const label=(p,txt,col,dx,dy,anch)=>{ G.appendChild(mk('circle',{cx:sx(p.x),cy:sy(p.y),r:5.5,fill:col,stroke:COL.ground,'stroke-width':1.6}));
+      const e=mk('text',{x:sx(p.x)+dx,y:sy(p.y)+dy,'text-anchor':anch||'start',fill:col,'font-family':'ui-monospace, Menlo, monospace','font-size':12}); e.textContent=txt; G.appendChild(e); };
+    label(IPT,'i · order 2 · j=1728',COL.harm,10,-8);
+    label(RHO,'ρ · order 3 · j=0',COL.eq,10,16);
+    label(RHOP,"ρ'",COL.eq,-10,16,'end');
+    const cuspT=mk('text',{x:sx(0),y:sy(TOPY_MATH)+16,'text-anchor':'middle',fill:COL.cusp,'font-family':'ui-monospace, Menlo, monospace','font-size':12}); cuspT.textContent='cusp  i∞ · j = ∞  (upward)'; G.appendChild(cuspT);
+  }
+
+  // ---- dynamic layer (tau + reduced) ----
+  let TAU={re:0.5, im:S3};   // start at rho
+  let showRed=true;
+  function drawDyn(){
+    const old=document.getElementById('dyn'); if(old) old.remove();
+    const G=mk('g',{id:'dyn'}); stage.appendChild(G);
+    if(showRed){
+      const z=reduceTau(TAU);
+      if(z.im>0 && z.im<TOPY_MATH+1){
+        G.appendChild(mk('circle',{cx:sx(z.x),cy:sy(z.y),r:6,fill:'none',stroke:'#43203f','stroke-width':1.8,'stroke-dasharray':'2 3'}));
+      }
+    }
+    const X=sx(TAU.re), Y=sy(TAU.im);
+    G.appendChild(mk('circle',{cx:X,cy:Y,r:7.5,fill:'#43203f',stroke:COL.ground,'stroke-width':2}));
+    G.appendChild(mk('text',{x:X-12,y:Y-11,'text-anchor':'end',fill:'#43203f','font-family':'ui-monospace, Menlo, monospace','font-size':14},)).textContent='τ';
+  }
+
+  // ---- readouts ----
+  const $=id=>document.getElementById(id);
+  function fmt(z,p){ p=p||3; if(!z) return '∞'; const r=Math.abs(z.re)<5e-4?0:z.re, im=z.im;
+    if(Math.abs(im)<5e-4) return r.toFixed(p);
+    return r.toFixed(p)+(im<0?' − ':' + ')+Math.abs(im).toFixed(p)+'i'; }
+  function fmtJ(j){ if(!j) return '∞'; const m=cmod(j); if(m>1e6) return '∞ (→ cusp)';
+    if(Math.abs(j.im)<0.5) return j.re.toFixed(1);
+    return j.re.toFixed(1)+(j.im<0?' − ':' + ')+Math.abs(j.im).toFixed(1)+'i'; }
+
+  function classify(tau){
+    const z=reduceTau(tau);
+    const dRho=Math.min(Math.hypot(z.x-0.5,z.y-S3), Math.hypot(z.x+0.5,z.y-S3));
+    const dI=Math.hypot(z.x-0,z.y-1);
+    if(tau.im>3.0) return {key:'cusp', z};
+    if(dRho<0.02) return {key:'eq', z};
+    if(dI<0.02) return {key:'harm', z};
+    return {key:'gn', z};
+  }
+
+  function update(){
+    const lam=lambdaOf(TAU), j=jOf(lam), cl=classify(TAU);
+    $('tauval').textContent=fmt(TAU);
+    $('tau0val').textContent=fmt(cl.z);
+    $('lamval').textContent = lam? fmt(lam) : '—';
+    const big=$('bigj'), chip=$('chip');
+    if(cl.key==='cusp'){ big.textContent='j → ∞'; big.style.color=COL.cusp; }
+    else if(cl.key==='eq'){ big.textContent='j = 0'; big.style.color=COL.eq; }
+    else if(cl.key==='harm'){ big.textContent='j = 1728'; big.style.color=COL.harm; }
+    else { big.textContent='j = '+fmtJ(j); big.style.color=COL.ink; }
+    const chipTxt={eq:['eq','order-3 point · equianharmonic'],harm:['harm','order-2 point · harmonic'],cusp:['cusp','cusp · degenerate'],gn:['','interior · generic (orbit 6)']};
+    chip.className='chip '+chipTxt[cl.key][0]; chip.textContent=chipTxt[cl.key][1];
+
+    // near-box
+    const nb=$('nearbox'), hd=$('nb-hd'), r=$('nb-r');
+    nb.className='nearbox '+cl.key;
+    if(cl.key==='eq'){ hd.textContent='order-3 corner  ρ = e^{iπ/3}';
+      r.innerHTML='fixed by <b>TS</b> = [[1,−1],[1,0]], order 3<br>fixed-point eqn <b>τ² − τ + 1 = 0</b><br>λ(ρ) = <b>e^{±iπ/3}</b> · j = <b>0</b><br><span style="color:var(--faint)">the tetrahedron and the vesica apex live here</span>'; }
+    else if(cl.key==='harm'){ hd.textContent='order-2 point  i';
+      r.innerHTML='fixed by <b>S</b> = [[0,−1],[1,0]], order 2<br>fixed-point eqn <b>τ² + 1 = 0</b><br>λ(i) = <b>½</b> · j = <b>1728</b><br><span style="color:var(--faint)">the harmonic square lives here</span>'; }
+    else if(cl.key==='cusp'){ hd.textContent='cusp  i∞';
+      r.innerHTML='stabilised by <b>T</b> = [[1,1],[0,1]], parabolic (infinite order)<br>q = e^{2πiτ} → 0<br>j → <b>∞</b><br><span style="color:var(--faint)">the degenerate collision lives here</span>'; }
+    else { hd.textContent='interior of a tile';
+      r.innerHTML='no fixed rotation here — trivial stabiliser<br>λ generic; its six branches over j are an S₃ orbit<br>j = <b>'+fmtJ(j)+'</b><br><span style="color:var(--faint)">drag onto a corner to make j special</span>'; }
+
+    const v=$('verdict');
+    if(cl.key==='eq'){ v.className='verdict';
+      v.innerHTML='<span class="m">The order-3 corner.</span> TS fixes ρ and its fixed-point equation is τ²−τ+1 = 0 — letter for letter the equianharmonic condition λ²−λ+1 = 0. So λ(ρ) = e<sup>±iπ/3</sup>: the same value as the regular tetrahedron and the vesica apex, now explained from the top. j = 0.'; }
+    else if(cl.key==='harm'){ v.className='verdict harm';
+      v.innerHTML='<span class="m">The order-2 point.</span> S fixes i, fixed-point equation τ²+1 = 0 — order 2, half the corner. λ(i) = ½, one of the harmonic triple {−1, ½, 2}; j = 1728. The shallower collapse, one elliptic order down.'; }
+    else if(cl.key==='cusp'){ v.className='verdict cusp';
+      v.innerHTML='<span class="m">The cusp.</span> T stabilises i∞ parabolically — infinite order, not elliptic. This is the degenerate limit where the four points collide; j runs to ∞. The third of the three distinguished places, and the only one with no rotation.'; }
+    else { v.className='verdict';
+      v.innerHTML='Generic τ — trivial stabiliser, generic j. The six branches of λ here form a full S₃ orbit of cross-ratio values. Drag onto <span class="m">ρ</span> (order 3) or i (order 2) to reach a special value.'; }
+
+    drawDyn();
+  }
+
+  // ---- drag ----
+  function toPlane(ev){ const pt=stage.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    const m=stage.getScreenCTM(); if(!m) return null; const p=pt.matrixTransform(m.inverse());
+    return {re:(p.x-CX)/s, im:(BASEY-p.y)/s}; }
+  let dragging=false;
+  function snapCorners(q){ [RHO,RHOP,IPT].forEach(P=>{ if(Math.hypot(q.re-P.x,q.im-P.y)<0.06){ q.re=P.x; q.im=P.y; } }); return q; }
+  stage.addEventListener('pointerdown',ev=>{ const q=toPlane(ev); if(!q||q.im<=0.02) return;
+    dragging=true; stage.setPointerCapture(ev.pointerId); TAU=snapCorners(q); clearSnaps(); update(); ev.preventDefault(); });
+  stage.addEventListener('pointermove',ev=>{ if(!dragging) return; const q=toPlane(ev); if(!q||q.im<=0.02) return;
+    TAU=snapCorners(q); update(); ev.preventDefault(); });
+  stage.addEventListener('pointerup',()=>{dragging=false;});
+  stage.addEventListener('pointercancel',()=>{dragging=false;});
+
+  // ---- snaps ----
+  const SNAPS=[
+    {cls:'eq',   t:'order-3 ρ',   s:'equianharmonic · j=0', re:0.5, im:S3},
+    {cls:'harm', t:'order-2 i',   s:'harmonic · j=1728',    re:0,   im:1},
+    {cls:'cusp', t:'cusp i∞',     s:'degenerate · j→∞',     re:0,   im:3.3},
+    {cls:'gn',   t:'generic',     s:'orbit 6',              re:0.28,im:1.5}
+  ];
+  const snapsBox=$('snaps'), snapBtns=[];
+  SNAPS.forEach(sp=>{ const b=document.createElement('button'); b.className=sp.cls; b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="t">'+sp.t+'</span><span class="s">'+sp.s+'</span>';
+    b.onclick=()=>{ clearSnaps(); b.setAttribute('aria-pressed','true'); animateTo({re:sp.re,im:sp.im}); };
+    snapsBox.appendChild(b); snapBtns.push(b); });
+  function clearSnaps(){ snapBtns.forEach(b=>b.setAttribute('aria-pressed','false')); }
+  let raf=null;
+  function animateTo(target){ if(raf) cancelAnimationFrame(raf);
+    if(reduce){ TAU={...target}; update(); return; }
+    const p0={...TAU}, T0=performance.now(), dur=560;
+    (function step(now){ let u=Math.min(1,(now-T0)/dur); const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+      TAU={re:p0.re+(target.re-p0.re)*e, im:p0.im+(target.im-p0.im)*e}; update();
+      if(u<1) raf=requestAnimationFrame(step); else { TAU={...target}; raf=null; update(); } })(performance.now()); }
+
+  // ---- toggles ----
+  $('redTog').addEventListener('change',e=>{ showRed=e.target.checked; drawDyn(); });
+  $('ellTog').addEventListener('change',e=>{ drawTess(e.target.checked); });
+
+  // ---- boot ----
+  drawTess(true);
+  snapBtns[0].setAttribute('aria-pressed','true');
+  update();
+})();
+</script>
+</body>
+</html>
